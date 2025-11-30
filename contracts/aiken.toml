@@ -1,0 +1,14 @@
+name = "idsee/contracts"
+version = "0.1.0"
+license = "MIT"
+description = "IDSee - Decentralized Pet Origin Verification"
+
+[repository]
+user = "idsee"
+project = "contracts"
+platform = "github"
+
+[[dependencies]]
+name = "aiken-lang/stdlib"
+version = "v2"
+source = "github"
