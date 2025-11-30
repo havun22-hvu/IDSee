@@ -1,135 +1,160 @@
-import { useState } from 'react'
-import type { WalletState } from './types'
+// IDSee - Main Application
+
+import { WalletConnect, VerifyAnimal } from "./components";
+import { useWallet, useVerification } from "./hooks";
 
 function App() {
-  const [wallet, setWallet] = useState<WalletState>({
-    connected: false,
-    address: null,
-    walletName: null,
-  })
-
-  const [chipId, setChipId] = useState('')
-  const [verifying, setVerifying] = useState(false)
-
-  async function connectWallet(name: 'nami' | 'eternl' | 'lace') {
-    try {
-      const cardano = (window as any).cardano
-      if (!cardano?.[name]) {
-        alert(`${name} wallet niet gevonden. Installeer de browser extensie.`)
-        return
-      }
-
-      const api = await cardano[name].enable()
-      // In production: setup Lucid here
-
-      setWallet({
-        connected: true,
-        address: 'addr_test1...', // Would come from Lucid
-        walletName: name,
-      })
-    } catch (error) {
-      console.error('Wallet connection failed:', error)
-    }
-  }
-
-  function disconnectWallet() {
-    setWallet({
-      connected: false,
-      address: null,
-      walletName: null,
-    })
-  }
-
-  async function verifyAnimal() {
-    if (!chipId || chipId.length < 15) {
-      alert('Voer een geldig 15-cijferig chipnummer in')
-      return
-    }
-
-    setVerifying(true)
-    // TODO: Implement actual verification via Lucid
-    setTimeout(() => {
-      setVerifying(false)
-      alert('Verificatie functionaliteit wordt nog geïmplementeerd')
-    }, 1000)
-  }
+  const wallet = useWallet();
+  const verification = useVerification(wallet.lucid);
 
   return (
-    <div style={{ fontFamily: 'system-ui', padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-      <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ color: '#1a365d' }}>IDSee</h1>
-        <p style={{ color: '#4a5568' }}>Privacy-bewarende verificatie van dierlijke afkomst</p>
+    <div style={styles.container}>
+      <header style={styles.header}>
+        <h1 style={styles.title}>IDSee</h1>
+        <p style={styles.subtitle}>
+          Privacy-bewarende verificatie van dierlijke afkomst
+        </p>
       </header>
 
-      {/* Wallet Section */}
-      <section style={{ marginBottom: '2rem', padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-        <h2>Wallet</h2>
-        {wallet.connected ? (
-          <div>
-            <p>Verbonden met: <strong>{wallet.walletName}</strong></p>
-            <p style={{ fontSize: '0.875rem', color: '#718096' }}>{wallet.address}</p>
-            <button onClick={disconnectWallet} style={{ marginTop: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer' }}>
-              Verbinding verbreken
-            </button>
-          </div>
-        ) : (
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button onClick={() => connectWallet('nami')} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
-              Nami
-            </button>
-            <button onClick={() => connectWallet('eternl')} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
-              Eternl
-            </button>
-            <button onClick={() => connectWallet('lace')} style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>
-              Lace
-            </button>
-          </div>
-        )}
-      </section>
+      <main style={styles.main}>
+        {/* Wallet Section */}
+        <WalletConnect
+          availableWallets={wallet.availableWallets}
+          connected={wallet.connected}
+          address={wallet.address}
+          balance={wallet.balance}
+          walletName={wallet.walletName}
+          loading={wallet.loading}
+          error={wallet.error}
+          onConnect={wallet.connect}
+          onDisconnect={wallet.disconnect}
+        />
 
-      {/* Verification Section */}
-      <section style={{ padding: '1rem', border: '1px solid #e2e8f0', borderRadius: '8px' }}>
-        <h2>Pup Verifiëren</h2>
-        <p style={{ color: '#4a5568', marginBottom: '1rem' }}>
-          Voer het chipnummer in om de afkomst te verifiëren
-        </p>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <input
-            type="text"
-            placeholder="528-XXXX-XXXX-XXXX"
-            value={chipId}
-            onChange={(e) => setChipId(e.target.value.replace(/\D/g, ''))}
-            maxLength={15}
-            style={{ flex: 1, padding: '0.5rem', fontSize: '1rem' }}
+        {/* Verification Section */}
+        <VerifyAnimal
+          onVerify={verification.verify}
+          result={verification.result}
+          loading={verification.loading}
+          error={verification.error}
+          onReset={verification.reset}
+        />
+
+        {/* Info Cards */}
+        <div style={styles.infoGrid}>
+          <InfoCard
+            title="Voor Kopers"
+            description="Controleer of een pup afkomstig is van een erkende fokker voordat je koopt."
+            icon="🔍"
           />
-          <button
-            onClick={verifyAnimal}
-            disabled={verifying}
-            style={{
-              padding: '0.5rem 1rem',
-              backgroundColor: '#3182ce',
-              color: 'white',
-              border: 'none',
-              cursor: verifying ? 'wait' : 'pointer'
-            }}
-          >
-            {verifying ? 'Bezig...' : 'Verifiëren'}
-          </button>
+          <InfoCard
+            title="Voor Fokkers"
+            description="Bewijs de legitimiteit van je fokkerij zonder persoonlijke gegevens te delen."
+            icon="🏠"
+          />
+          <InfoCard
+            title="Voor Dierenartsen"
+            description="Registreer dieren en gezondheidsgegevens direct op de blockchain."
+            icon="⚕️"
+          />
         </div>
-      </section>
+      </main>
 
-      {/* Info Section */}
-      <footer style={{ marginTop: '2rem', color: '#718096', fontSize: '0.875rem' }}>
+      <footer style={styles.footer}>
         <p>
-          IDSee is een DApp op de Cardano blockchain voor het verifiëren van de
-          legitieme afkomst van pups met behoud van privacy.
+          IDSee is een DApp op de Cardano blockchain met toekomstige Midnight
+          integratie voor Zero-Knowledge privacy.
         </p>
-        <p style={{ marginTop: '0.5rem' }}>
-          <strong>Tech:</strong> Aiken (Smart Contracts) | TypeScript + React | Lucid
+        <p style={styles.techStack}>
+          <strong>Stack:</strong> Aiken | TypeScript | React | Lucid
         </p>
       </footer>
     </div>
-  )
+  );
 }
 
-export default App
+function InfoCard({
+  title,
+  description,
+  icon,
+}: {
+  title: string;
+  description: string;
+  icon: string;
+}) {
+  return (
+    <div style={styles.infoCard}>
+      <span style={styles.infoIcon}>{icon}</span>
+      <h3 style={styles.infoTitle}>{title}</h3>
+      <p style={styles.infoDescription}>{description}</p>
+    </div>
+  );
+}
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    maxWidth: "900px",
+    margin: "0 auto",
+    padding: "2rem",
+    minHeight: "100vh",
+    display: "flex",
+    flexDirection: "column",
+  },
+  header: {
+    textAlign: "center",
+    marginBottom: "2rem",
+  },
+  title: {
+    fontSize: "2.5rem",
+    color: "#1a365d",
+    margin: 0,
+  },
+  subtitle: {
+    color: "#4a5568",
+    fontSize: "1.1rem",
+    marginTop: "0.5rem",
+  },
+  main: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    gap: "1.5rem",
+  },
+  infoGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "1rem",
+    marginTop: "1rem",
+  },
+  infoCard: {
+    padding: "1.5rem",
+    backgroundColor: "#f7fafc",
+    borderRadius: "8px",
+    textAlign: "center",
+  },
+  infoIcon: {
+    fontSize: "2rem",
+  },
+  infoTitle: {
+    margin: "0.75rem 0 0.5rem",
+    color: "#2d3748",
+  },
+  infoDescription: {
+    margin: 0,
+    color: "#718096",
+    fontSize: "0.9rem",
+  },
+  footer: {
+    marginTop: "3rem",
+    paddingTop: "1.5rem",
+    borderTop: "1px solid #e2e8f0",
+    textAlign: "center",
+    color: "#718096",
+    fontSize: "0.875rem",
+  },
+  techStack: {
+    marginTop: "0.5rem",
+  },
+};
+
+export default App;

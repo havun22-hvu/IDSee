@@ -27,8 +27,8 @@
 
 | Component | Status | Versie |
 |-----------|--------|--------|
-| Contracts | In ontwikkeling | 0.1.0 |
-| Frontend | Niet gestart | - |
+| Contracts | Basis compleet | 0.2.0 |
+| Frontend | Basis compleet | 0.2.0 |
 | Midnight ZK | Gepland | - |
 
 ## Changelog
