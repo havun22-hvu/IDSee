@@ -81,10 +81,25 @@ pub type Animal {
   breeder_hash: PubKeyHash,
   registered_by: PubKeyHash,
   registration_date: Timestamp,
-  breed: ByteArray,
+  breed_info: BreedInfo,
   birth_date: Timestamp,
+  birth_place: ByteArray,    // City/town of birth
+  birth_country: ByteArray,  // ISO 3166-1 alpha-2 country code (e.g. "NL")
+}
+
+pub type BreedInfo {
+  SingleBreed { breed: ByteArray }              // Eén ras
+  CrossBreed { breed_a: ByteArray, breed_b: ByteArray }  // Kruising
 }
 ```
+
+**Voorbeelden:**
+```
+Eén ras:   SingleBreed { breed: "Labrador" }
+Kruising:  CrossBreed { breed_a: "Labrador", breed_b: "Poodle" }
+```
+
+Of het dier stamboom heeft is niet relevant - de testuitslagen bepalen de gezondheid.
 
 **Registratie flow:**
 1. Pup wordt geboren bij erkende fokker

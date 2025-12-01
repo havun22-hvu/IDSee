@@ -53,6 +53,8 @@ Verifieer dat fokker actief is (groene status)
 ```
 - Chipnummer moeder (indien bekend)
 - Geboortedatum
+- Geboorteplaats
+- Land (ISO code, bijv. NL)
 - Ras
 - Eventuele opmerkingen
 ```

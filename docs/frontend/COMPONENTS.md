@@ -96,6 +96,8 @@ interface RegisterAnimalProps {
 - Fokker selectie
 - Ras
 - Geboortedatum
+- Geboorteplaats
+- Land
 
 ---
 

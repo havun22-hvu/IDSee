@@ -43,6 +43,7 @@ IDSee is een systeem waarmee je als erkende fokker de afkomst van je pups kunt b
 - Chipnummer pup (15 cijfers)
 - Chipnummer moeder
 - Geboortedatum
+- Geboorteplaats en land
 - Ras
 
 ### Proces

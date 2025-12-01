@@ -148,7 +148,9 @@ Redeemer:
       registered_by: "vet456...",
       registration_date: 1701360000000,
       breed: "Labrador Retriever",
-      birth_date: 1698768000000
+      birth_date: 1698768000000,
+      birth_place: "Amsterdam",
+      birth_country: "NL"
     }
   }
 
