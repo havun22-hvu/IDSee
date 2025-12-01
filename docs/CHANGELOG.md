@@ -2,6 +2,26 @@
 
 Alle belangrijke wijzigingen aan IDSee worden hier gedocumenteerd.
 
+## [0.3.0] - 2024-12-01
+
+### Toegevoegd
+- **Demo Mode:** Frontend werkt nu zonder Blockfrost API key
+  - Mock verificatie resultaten voor UI testen
+  - Demo badge in wallet component
+  - Console logging voor development
+
+- **Wallet Integratie:**
+  - Native CIP-30 API ondersteuning
+  - Werkt met Nami, Eternl en Lace wallets
+  - Adres en balans weergave
+
+### Gewijzigd
+- `lucid.ts` vereenvoudigd voor demo mode
+- `useWallet.ts` gebruikt nu direct wallet API
+- WalletConnect toont DEMO badge wanneer geen API key
+
+---
+
 ## [0.2.0] - 2024-11-30
 
 ### Toegevoegd
@@ -20,12 +40,6 @@ Alle belangrijke wijzigingen aan IDSee worden hier gedocumenteerd.
 - App.tsx herschreven met component-gebaseerde architectuur
 - Verbeterde chip ID formattering (XXX-XXXX-XXXX-XXXX)
 
-### Volgende stappen
-- [ ] Aiken contracts compileren en testen op Preview testnet
-- [ ] On-chain verificatie implementeren
-- [ ] Registratie flow voor fokkers/dierenartsen
-- [ ] Midnight ZK integratie onderzoeken
-
 ---
 
 ## [0.1.0] - 2024-11-30
@@ -41,3 +55,13 @@ Alle belangrijke wijzigingen aan IDSee worden hier gedocumenteerd.
 - `Breeder` - Erkende fokker
 - `CertifiedProfessional` - Dierenarts/Chipper
 - `HealthRecord` - Gezondheidsgegevens
+
+---
+
+## Roadmap
+
+### Volgende stappen
+- [ ] Aiken contracts compileren en testen op Preview testnet
+- [ ] On-chain verificatie implementeren
+- [ ] Registratie flow voor fokkers/dierenartsen
+- [ ] Midnight ZK integratie onderzoeken
