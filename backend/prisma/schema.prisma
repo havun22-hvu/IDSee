@@ -1,0 +1,205 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  passwordHash      String
+  role              String   @default("BUYER") // BUYER, BREEDER, VET, CHIPPER, ADMIN
+
+  // Email verification
+  emailVerified     Boolean  @default(false)
+  emailVerifyToken  String?
+  emailVerifyExpires DateTime?
+
+  // Professional info
+  professionalId    String?  // Diergeneeskunderegister, UBN, RVO nummer
+  professionalType  String?  // Type registratie
+  verificationStatus String  @default("PENDING") // PENDING, VERIFIED, REJECTED
+
+  // Peer verification
+  verifiedById      String?  // Who verified this user
+  verifiedAt        DateTime?
+  verificationBond  Int      @default(0) // Credits staked as bond
+
+  // Credits
+  credits           Int      @default(0)
+  lockedCredits     Int      @default(0) // Credits locked as verification bonds
+
+  // Reputation
+  warningCount      Int      @default(0)
+  isSuspended       Boolean  @default(false)
+
+  // Timestamps
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  registrations     Registration[]
+  creditTransactions CreditTransaction[]
+  verificationsGiven PeerVerification[] @relation("Verifier")
+  verificationsReceived PeerVerification[] @relation("Verified")
+}
+
+model Animal {
+  id              String    @id @default(uuid())
+  chipIdHash      String    @unique  // Hashed chip ID for privacy
+  species         String    // dog, cat, etc.
+  breed           String?
+  birthDate       DateTime?
+
+  // Links
+  motherChipHash  String?   // Link to mother
+
+  // Timestamps
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  // Relations
+  registrations   Registration[]
+  healthRecords   HealthRecord[]
+}
+
+model Registration {
+  id              String   @id @default(uuid())
+
+  // Links
+  userId          String   // Professional who registered
+  user            User     @relation(fields: [userId], references: [id])
+  animalId        String
+  animal          Animal   @relation(fields: [animalId], references: [id])
+
+  // Breeder confirmation (double confirmation)
+  breederUbn      String?  // UBN of breeder to confirm
+  breederUserId   String?  // Breeder user if registered
+  breederConfirmed Boolean @default(false)
+  breederConfirmedAt DateTime?
+  breederRejectedReason String?
+
+  // Blockchain
+  dataHash        String   // Hash of registration data
+  txHash          String?  // Cardano transaction hash
+  status          String   @default("PENDING") // PENDING, CONFIRMED, DISPUTED, CANCELLED
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  confirmedAt     DateTime?
+}
+
+model HealthRecord {
+  id              String   @id @default(uuid())
+
+  // Links
+  animalId        String
+  animal          Animal   @relation(fields: [animalId], references: [id])
+  vetUserId       String   // Dierenarts die record toevoegde
+
+  // Record data
+  recordType      String   // vaccination, checkup, surgery, etc.
+  recordDate      DateTime
+  dataHash        String   // Hash of health record
+
+  // Blockchain
+  txHash          String?
+  status          String   @default("PENDING") // PENDING, CONFIRMED, FAILED
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+}
+
+model CreditTransaction {
+  id              String   @id @default(uuid())
+
+  // Links
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+
+  // Transaction
+  amount          Int      // Positive = add, negative = subtract
+  type            String   // PURCHASE, USAGE, REFUND
+
+  // Payment info (for purchases)
+  paymentId       String?  // Mollie payment ID
+
+  // Notes
+  description     String?
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+}
+
+model Nest {
+  id              String   @id @default(uuid())
+
+  // Breeder
+  breederUserId   String
+
+  // Parents
+  motherChipHash  String
+  fatherChipHash  String?
+
+  // Nest info
+  breed           String
+  birthDate       DateTime
+  puppyCount      Int
+
+  // Blockchain
+  dataHash        String
+  txHash          String?
+  status          String   @default("PENDING") // PENDING, CONFIRMED, FAILED
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+}
+
+// Peer verification system - professionals verify each other
+model PeerVerification {
+  id              String   @id @default(uuid())
+
+  // Verifier (existing professional)
+  verifierId      String
+  verifier        User     @relation("Verifier", fields: [verifierId], references: [id])
+
+  // Verified (new professional)
+  verifiedId      String
+  verified        User     @relation("Verified", fields: [verifiedId], references: [id])
+
+  // Bond
+  bondAmount      Int      // Credits staked as guarantee
+  bondLockedUntil DateTime // When bond can be released
+  bondStatus      String   @default("LOCKED") // LOCKED, RELEASED, FORFEITED
+
+  // Status
+  status          String   @default("ACTIVE") // ACTIVE, COMPLETED, REVOKED
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  releasedAt      DateTime?
+}
+
+// Verification requests - pending verification requests
+model VerificationRequest {
+  id              String   @id @default(uuid())
+
+  // Requester
+  userId          String   @unique
+
+  // Professional info submitted
+  professionalId  String
+  professionalType String  // UBN, DIERGENEESKUNDE, RVO_CHIPPER
+
+  // Verification
+  status          String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  reviewedById    String?  // Who reviewed (peer or admin)
+  reviewNote      String?
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  reviewedAt      DateTime?
+}

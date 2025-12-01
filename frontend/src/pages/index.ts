@@ -1,0 +1,9 @@
+export { Home } from './Home';
+export { Login } from './Login';
+export { Register } from './Register';
+export { Verify } from './Verify';
+export { Dashboard } from './Dashboard';
+export { Animals } from './Animals';
+export { RegisterAnimal } from './RegisterAnimal';
+export { Credits } from './Credits';
+export { Admin } from './Admin';
