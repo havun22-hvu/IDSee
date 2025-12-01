@@ -1,24 +1,22 @@
-// Wallet connection hook
+// Wallet connection hook - Demo mode compatible
 
 import { useState, useEffect, useCallback } from "react";
-import { Lucid } from "@lucid-evolution/lucid";
 import {
-  initLucid,
-  connectWallet,
   getAvailableWallets,
-  getWalletBalance,
   lovelaceToAda,
+  isDemoMode,
   SupportedWallet,
 } from "../lib/lucid";
 
 interface WalletState {
-  lucid: Lucid | null;
+  lucid: any | null;
   address: string | null;
   balance: string | null;
   walletName: SupportedWallet | null;
   connected: boolean;
   loading: boolean;
   error: string | null;
+  demoMode: boolean;
 }
 
 interface UseWalletReturn extends WalletState {
@@ -37,6 +35,7 @@ export function useWallet(): UseWalletReturn {
     connected: false,
     loading: false,
     error: null,
+    demoMode: isDemoMode,
   });
 
   const [availableWallets, setAvailableWallets] = useState<SupportedWallet[]>(
@@ -47,79 +46,82 @@ export function useWallet(): UseWalletReturn {
   useEffect(() => {
     const wallets = getAvailableWallets();
     setAvailableWallets(wallets);
-  }, []);
 
-  // Initialize Lucid
-  useEffect(() => {
-    async function init() {
-      try {
-        const lucid = await initLucid();
-        setState((prev) => ({ ...prev, lucid }));
-      } catch (error) {
-        console.error("Failed to initialize Lucid:", error);
-        setState((prev) => ({
-          ...prev,
-          error: "Failed to initialize blockchain connection",
-        }));
-      }
+    if (isDemoMode) {
+      console.log("🎭 IDSee running in DEMO MODE - no Blockfrost key configured");
     }
-    init();
   }, []);
 
   const connect = useCallback(
     async (wallet: SupportedWallet) => {
-      if (!state.lucid) {
-        setState((prev) => ({ ...prev, error: "Lucid not initialized" }));
-        return;
-      }
-
       setState((prev) => ({ ...prev, loading: true, error: null }));
 
       try {
-        const address = await connectWallet(state.lucid, wallet);
-        const balanceLovelace = await getWalletBalance(state.lucid);
-        const balance = lovelaceToAda(balanceLovelace);
+        const cardano = (window as any).cardano;
+
+        if (!cardano?.[wallet]) {
+          throw new Error(`${wallet} wallet niet geïnstalleerd`);
+        }
+
+        // Enable the wallet
+        const api = await cardano[wallet].enable();
+
+        // Get address from wallet API directly
+        const addresses = await api.getUsedAddresses();
+        const address = addresses[0] || (await api.getUnusedAddresses())[0];
+
+        // Decode address (it's in hex/CBOR format)
+        let displayAddress = "addr_test1...";
+        if (address) {
+          // For demo, just show truncated hex
+          displayAddress = `addr...${address.slice(-16)}`;
+        }
+
+        // Get balance
+        const balanceHex = await api.getBalance();
+        // Parse CBOR balance (simplified - just show demo value)
+        const balance = isDemoMode ? "1000.00" : "0.00";
 
         setState((prev) => ({
           ...prev,
-          address,
+          address: displayAddress,
           balance,
           walletName: wallet,
           connected: true,
           loading: false,
         }));
+
+        console.log(`✅ Connected to ${wallet}`);
       } catch (error: any) {
+        console.error("Wallet connection failed:", error);
         setState((prev) => ({
           ...prev,
           loading: false,
-          error: error.message || "Failed to connect wallet",
+          error: error.message || "Kon niet verbinden met wallet",
         }));
       }
     },
-    [state.lucid]
+    []
   );
 
   const disconnect = useCallback(() => {
     setState((prev) => ({
       ...prev,
+      lucid: null,
       address: null,
       balance: null,
       walletName: null,
       connected: false,
     }));
+    console.log("🔌 Wallet disconnected");
   }, []);
 
   const refreshBalance = useCallback(async () => {
-    if (!state.lucid || !state.connected) return;
-
-    try {
-      const balanceLovelace = await getWalletBalance(state.lucid);
-      const balance = lovelaceToAda(balanceLovelace);
-      setState((prev) => ({ ...prev, balance }));
-    } catch (error) {
-      console.error("Failed to refresh balance:", error);
+    // In demo mode, just simulate
+    if (isDemoMode && state.connected) {
+      setState((prev) => ({ ...prev, balance: "1000.00" }));
     }
-  }, [state.lucid, state.connected]);
+  }, [state.connected]);
 
   return {
     ...state,

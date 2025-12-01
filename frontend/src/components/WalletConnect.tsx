@@ -10,6 +10,7 @@ interface WalletConnectProps {
   walletName: SupportedWallet | null;
   loading: boolean;
   error: string | null;
+  demoMode?: boolean;
   onConnect: (wallet: SupportedWallet) => void;
   onDisconnect: () => void;
 }
@@ -28,6 +29,7 @@ export function WalletConnect({
   walletName,
   loading,
   error,
+  demoMode,
   onConnect,
   onDisconnect,
 }: WalletConnectProps) {
@@ -55,7 +57,10 @@ export function WalletConnect({
 
   return (
     <div style={styles.container}>
-      <h3 style={styles.title}>Verbind Wallet</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={styles.title}>Verbind Wallet</h3>
+        {demoMode && <span style={styles.demoBadge}>DEMO</span>}
+      </div>
 
       {error && <div style={styles.error}>{error}</div>}
 
@@ -158,5 +163,13 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: "4px",
     marginBottom: "0.5rem",
     fontSize: "0.875rem",
+  },
+  demoBadge: {
+    padding: "0.25rem 0.5rem",
+    backgroundColor: "#faf089",
+    color: "#744210",
+    borderRadius: "4px",
+    fontSize: "0.75rem",
+    fontWeight: "bold",
   },
 };

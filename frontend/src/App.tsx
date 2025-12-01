@@ -26,6 +26,7 @@ function App() {
           walletName={wallet.walletName}
           loading={wallet.loading}
           error={wallet.error}
+          demoMode={wallet.demoMode}
           onConnect={wallet.connect}
           onDisconnect={wallet.disconnect}
         />
