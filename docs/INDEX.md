@@ -17,7 +17,7 @@
 ### Frontend (React/TypeScript)
 - [Setup](./frontend/SETUP.md) - Frontend installatie
 - [Components](./frontend/COMPONENTS.md) - React componenten
-- [Wallet](./frontend/WALLET.md) - Wallet integratie met Lucid
+- [Auth](./frontend/AUTH.md) - Authenticatie en wallet integratie
 
 ### Handleidingen
 - [Fokker](./guides/FOKKER.md) - Handleiding voor fokkers
