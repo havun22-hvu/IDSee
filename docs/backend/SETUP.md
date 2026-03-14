@@ -39,7 +39,7 @@ WALLET_SEED="your 24 word seed phrase here"
 MOLLIE_API_KEY="your_mollie_key"
 
 # Server
-PORT=3001
+PORT=8006
 NODE_ENV="development"
 ```
 
@@ -65,7 +65,7 @@ npx prisma db seed
 npm run dev
 ```
 
-Server draait op http://localhost:3001
+Server draait op http://localhost:8006
 
 ---
 

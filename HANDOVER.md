@@ -3,7 +3,7 @@
 ## Wat is er gebouwd
 
 ### Backend (Node.js/Express)
-- Complete REST API op `http://localhost:3001`
+- Complete REST API op `http://localhost:8006`
 - SQLite database met Prisma ORM
 - JWT authenticatie met role-based access
 - Demo mode voor blockchain (echte Cardano later)

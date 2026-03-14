@@ -22,7 +22,7 @@ npm install
 Maak `.env.local`:
 
 ```env
-VITE_API_URL=http://localhost:3001
+VITE_API_URL=http://localhost:8006
 ```
 
 ---
