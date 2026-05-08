@@ -1,5 +1,7 @@
 # End Session Command
 
+> **Sync-en-deploy verplicht:** vóór afsluiten alle wijzigingen committen + pushen, deploy naar staging (waar beschikbaar), en altijd expliciet vragen of ook naar productie gedeployed moet worden. Volledige policy: `HavunCore/docs/kb/reference/session-flow-policy.md`.
+
 > **VERPLICHT** bij elke sessie-afsluiting - laat het project netjes achter!
 
 ## 1. Review Smallwork.md (EERST!)
@@ -230,22 +232,6 @@ Check of de omzet richting de KOR-drempel gaat (€20.000/jaar):
 Als omzet > €16.000: meld aan gebruiker dat BTW-overgangsplan nodig is.
 Zie: `docs/audit/verbeterplan-q2-2026.md` (VP-10)
 
-## 11. Urenregistratie (VERPLICHT - belastingaangifte)
-
-**Jij vult zelf de uren in.** Geef een zeer beknopt overzicht in **lopende tekst** (geen bullet-lijst, max 1-2 regels) om de werkzaamheden te onderbouwen.
-**GEEN commit details of technische beschrijvingen.** Alleen projectnaam + globaal onderwerp (max 3 woorden).
-
-→ Kopieer naar `HavunCore/urenregistratie-2026.csv` (formaat: `Datum;Uren;Project;Onderdeel`). Projectnamen met hoofdletter: JudoToernooi, Infosyst, HavunClub, etc.
-
-```
-[YYYY-MM-DD]: [Project] [onderwerp], [Project] [onderwerp], [Project] [onderwerp].
-```
-
-Voorbeeld:
-```
-2026-03-09: JudoToernooi Stripe Connect & AutoFix, HavunAdmin StripeService fix, HavunCore KB bijwerken.
-```
-
 ## 9b. Schone Lei Check (VERPLICHT — einde van de dag)
 
 > **Filosofie:** elke dag eindigt schoon. Geen losse wijzigingen, geen
@@ -289,6 +275,22 @@ Nooit een dag eindigen met:
 
 Als iets bewust open blijft: leg expliciet vast in `.claude/handover.md`
 met **wat** en **waarom**.
+
+## 11. Urenregistratie (VERPLICHT - belastingaangifte)
+
+**Jij vult zelf de uren in.** Eén zin in **lopende tekst** — projecten achter elkaar gescheiden door komma's. **Geen bullets, geen details, geen technische beschrijvingen, geen commit-info.** Per project: `Projectnaam` + 1 woord onderwerp. Klaar.
+
+→ Kopieer naar `HavunCore/urenregistratie-2026.csv` (formaat: `Datum;Uren;Project;Onderdeel`).
+
+Format:
+```
+[YYYY-MM-DD]: [Project] [onderwerp], [Project] [onderwerp], [Project] [onderwerp].
+```
+
+Voorbeeld:
+```
+2026-05-07: JudoToernooi betalingen, HavunAdmin facturen, HavunCore docs.
+```
 
 ## NIET DOEN BIJ AFSLUITEN
 
