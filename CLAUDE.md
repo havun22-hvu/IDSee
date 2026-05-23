@@ -68,3 +68,12 @@ Bij elke code-wijziging gelden de centrale Havun-normen. Lees bij twijfel de rel
 | Werkwijze + beschermingslagen + DO NOT REMOVE | `HavunCore/docs/kb/runbooks/claude-werkwijze.md` |
 
 > **Bij twijfel:** `cd D:/GitHub/HavunCore && php artisan docs:search "<onderwerp>"`
+
+
+## AI Werkwijze — Gemini + Claude
+
+- **`/arch [opdracht]`** — Gemini blauwdruk genereren (groot contextvenster)
+- **`/mpc ga maar`** — blauwdruk uitvoeren
+- Blauwdruk landt in `.claude/blueprint.md`, `/start` detecteert dit automatisch
+
+Zie `docs/kb/runbooks/gemini-claude-workflow.md` voor de volledige pipeline.
