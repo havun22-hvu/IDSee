@@ -89,7 +89,7 @@ Bewijst dat een professional gecertificeerd is.
 - [ ] Off-chain data opslag (encrypted IPFS)
 
 ### Fase 2: Circuit Ontwikkeling
-- [ ] CertifiedOriginProof circuit in Rust
+- [ ] CertifiedOriginProof circuit in Compact (TypeScript-achtige DSL)
 - [ ] Testen met Midnight testnet
 - [ ] Gas/resource optimalisatie
 
@@ -118,14 +118,15 @@ Voordeel: Bewijs dat een dier in registry staat zonder alle dieren te onthullen.
 
 ### Data Hashing
 
-```rust
-// Midnight circuit (Rust pseudo-code)
-fn hash_animal(animal: Animal) -> Hash {
-    poseidon_hash([
-        animal.chip_id,
-        animal.breeder_hash,
-        animal.registration_date,
-    ])
+```compact
+// Midnight circuit in Compact (TypeScript-achtige DSL, NIET Rust)
+// Poseidon hash is ZK-vriendelijk (ingebouwd in Compact runtime)
+circuit function hash_animal(
+  private chip_id: Field,
+  private breeder_hash: Field,
+  private registration_date: UInt<64>
+): Field {
+  return persistentHash([chip_id, breeder_hash, registration_date]);
 }
 ```
 
