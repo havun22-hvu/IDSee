@@ -1,4 +1,7 @@
-# IDSee Handover - 1 December 2024
+# IDSee Handover
+
+> Oorspronkelijk opgesteld 1 december 2024 · laatst herzien 13 juni 2026
+> Beknopte, altijd-actuele status: `.claude/handover.md` en `docs/INDEX.md`
 
 ## Wat is er gebouwd
 

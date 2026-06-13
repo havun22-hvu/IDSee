@@ -108,27 +108,36 @@ https://docs.cardano.org/cardano-testnets/tools/faucet
 
 ---
 
-## Huidige Status
+## Huidige Status (2026-06-13)
 
-- [x] Backend structuur
-- [x] Frontend structuur
-- [x] Database schema
-- [x] Auth systeem
-- [x] Credits systeem
+- [x] Backend structuur (Node.js/Express + Prisma)
+- [x] Frontend structuur (React/Vite, 9 pagina's)
+- [x] Database schema + seed
+- [x] Auth systeem (JWT + rollen)
+- [x] Credits systeem (bundels, transacties, borg)
 - [x] Demo mode blockchain service
+- [x] Verificatie-/bevestiging-endpoints (backend)
+- [ ] Frontend-pagina's voor verificatie- en bevestigingsflow
+- [ ] Animal-detailpagina (`/animals/:id`)
+- [ ] Mollie betalingen activeren
+- [ ] Email notificaties
+- [ ] Geautomatiseerde tests
 - [ ] Smart contracts deployen
 - [ ] Echte blockchain integratie testen
-- [ ] Mollie betalingen
-- [ ] Email notificaties
+- [ ] Midnight ZK-integratie (zie `midnight/INTEGRATION-PLAN.md`)
 - [ ] Productie deployment
 
 ---
 
-## Volgende Stappen (Fase 1)
+## Volgende Stappen (Fase 1 afronden)
 
 1. ✅ Backend + Frontend basis
-2. 🔲 Features compleet maken
-3. 🔲 UI/UX verbeteren
-4. 🔲 Testen in browser
-5. 🔲 Bugs fixen
-6. 🔲 → Door naar Fase 2
+2. 🔲 Frontend dichttrekken: verificatie-, bevestiging- en detailpagina's
+3. 🔲 Externe koppelingen uit demo halen: Mollie, e-mail
+4. 🔲 Tests toevoegen (kritieke paden)
+5. 🔲 Testen in browser + bugs fixen
+6. 🔲 → Door naar Fase 2 (Cardano Preview testnet)
+
+> **Blockchain-richting:** Cardano levert de immutable registratie-proof; Midnight ZK
+> wordt de privacy-laag voor anonieme professional-verificatie. De twee zijn
+> complementair — zie `midnight/INTEGRATION-PLAN.md` voor de fasering.

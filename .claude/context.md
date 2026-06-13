@@ -5,21 +5,21 @@
 ## Lokale Development
 
 ```bash
-# Backend (Laravel)
+# Backend (Node.js/Express + Prisma)
 cd backend
-php artisan serve --port=8006   # http://localhost:8006
+npm run dev                     # http://localhost:8006
 
-# Frontend
+# Frontend (React + Vite)
 cd frontend
-npm run dev                     # Zie package.json voor poort
+npm run dev                     # http://localhost:5173
 ```
 
 ## Project Structuur
 
 ```
 IDSee/
-├── backend/      # Laravel API
-├── frontend/     # Frontend app
+├── backend/      # Node.js/Express API + Prisma ORM (SQLite)
+├── frontend/     # React + TypeScript + Vite
 ├── contracts/    # API contracts
 └── docs/         # Documentatie
 ```
