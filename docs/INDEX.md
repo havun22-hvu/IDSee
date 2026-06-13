@@ -65,8 +65,8 @@ npm run dev
 | Database (Prisma/SQLite) | ✅ Af | 8 modellen, migration + seed |
 | Auth (JWT + rollen) | ✅ Af | 5 rollen, RBAC, credits-middleware |
 | Backend API | ✅ Grotendeels | ~22 endpoints; enkele TODO-stubs |
-| Frontend webapp | ✅ Af | 9 pagina's, alle rollen |
-| Verificatie/bevestiging (backend) | ✅ Af | Frontend-pagina's nog te bouwen |
+| Frontend webapp | ✅ Af | 12 pagina's, alle rollen |
+| Verificatie/bevestiging | ✅ Af | Backend + frontend (`Verification`, `Confirmations`, `AnimalDetail`) |
 | Blockchain (Cardano) | 🟡 Demo mode | Fake `demo_tx_*`, Lucid nog niet gekoppeld |
 | Aiken contracts | 🟡 Geschreven | 5 `.ak`-bestanden, nog niet gedeployed |
 | Payments (Mollie) | ❌ Niet af | Uitgecommentarieerd; dev-mode geeft credits |

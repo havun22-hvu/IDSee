@@ -1,4 +1,10 @@
-import type { ApiError } from '../types';
+import type {
+  ApiError,
+  AnimalDetail,
+  VerificationRequest,
+  PeerVerification,
+  PendingConfirmation,
+} from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -65,7 +71,7 @@ class ApiClient {
   }
 
   async getAnimal(id: string) {
-    return this.request<any>(`/animals/${id}`);
+    return this.request<AnimalDetail>(`/animals/${id}`);
   }
 
   async registerAnimal(data: {
@@ -115,6 +121,71 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ status }),
     });
+  }
+
+  // Verification flow (professionals)
+  async sendVerificationEmail() {
+    return this.request<{ message: string; devToken?: string }>('/verification/email/send', {
+      method: 'POST',
+    });
+  }
+
+  async verifyEmail(token: string) {
+    return this.request<{ message: string }>('/verification/email/verify', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+    });
+  }
+
+  async submitVerificationRequest(professionalId: string, professionalType: string) {
+    return this.request<{ message: string; request: VerificationRequest }>('/verification/request', {
+      method: 'POST',
+      body: JSON.stringify({ professionalId, professionalType }),
+    });
+  }
+
+  async getVerificationRequests() {
+    return this.request<VerificationRequest[]>('/verification/requests');
+  }
+
+  async peerVerify(requestId: string) {
+    return this.request<{ message: string; bondAmount: number; bondLockedUntil: string }>(
+      `/verification/peer/${requestId}`,
+      { method: 'POST' }
+    );
+  }
+
+  async getMyVerifications() {
+    return this.request<PeerVerification[]>('/verification/my-verifications');
+  }
+
+  async releaseBond(verificationId: string) {
+    return this.request<{ message: string }>(`/verification/release-bond/${verificationId}`, {
+      method: 'POST',
+    });
+  }
+
+  // Confirmations (breeder)
+  async getPendingConfirmations() {
+    return this.request<PendingConfirmation[]>('/confirmations/pending');
+  }
+
+  async confirmRegistration(registrationId: string) {
+    return this.request<{ message: string; txHash?: string }>(
+      `/confirmations/${registrationId}/confirm`,
+      { method: 'POST' }
+    );
+  }
+
+  async rejectRegistration(registrationId: string, reason: string) {
+    return this.request<{ message: string }>(`/confirmations/${registrationId}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    });
+  }
+
+  async getConfirmationHistory() {
+    return this.request<PendingConfirmation[]>('/confirmations/history');
   }
 }
 

@@ -33,9 +33,10 @@ export function Dashboard() {
     <div className="dashboard-page">
       <h1>{getDashboardTitle(user.role)}</h1>
 
-      {isPending && (
+      {isProfessional && isPending && (
         <div className="alert alert-warning">
-          Je account wacht op verificatie. Je kunt nog geen registraties doen.
+          Je account wacht op verificatie. Je kunt nog geen registraties doen.{' '}
+          <Link to="/verification">Verificatie afronden →</Link>
         </div>
       )}
 
@@ -70,6 +71,9 @@ export function Dashboard() {
                 </Link>
                 <Link to="/animals" className="action-link">
                   Mijn dieren bekijken
+                </Link>
+                <Link to="/confirmations" className="action-link">
+                  Registraties bevestigen
                 </Link>
               </>
             )}

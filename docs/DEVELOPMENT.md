@@ -117,8 +117,8 @@ https://docs.cardano.org/cardano-testnets/tools/faucet
 - [x] Credits systeem (bundels, transacties, borg)
 - [x] Demo mode blockchain service
 - [x] Verificatie-/bevestiging-endpoints (backend)
-- [ ] Frontend-pagina's voor verificatie- en bevestigingsflow
-- [ ] Animal-detailpagina (`/animals/:id`)
+- [x] Frontend-pagina's voor verificatie- en bevestigingsflow
+- [x] Animal-detailpagina (`/animals/:id`)
 - [ ] Mollie betalingen activeren
 - [ ] Email notificaties
 - [ ] Geautomatiseerde tests

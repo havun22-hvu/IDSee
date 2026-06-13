@@ -16,16 +16,25 @@ last_updated: 2026-06-13
 **Demo-prototype werkt end-to-end** (webapp + backend + demo-blockchain).
 Zie `docs/INDEX.md` voor de volledige status-tabel.
 
+### Afgerond (13 juni 2026)
+
+- [x] **Frontend verificatie-flow** — `Verification.tsx`: e-mailverificatie,
+      aanvraag indienen, peer-verificatie met borg, borg vrijgeven
+- [x] **Frontend bevestigingen** — `Confirmations.tsx`: fokker bevestigt/wijst af + historie
+- [x] **Animal-detailpagina** — `AnimalDetail.tsx` op route `/animals/:id`
+- [x] Bijvangst: `vite-env.d.ts` toegevoegd (build was kapot op `import.meta.env`);
+      `emailVerified` toegevoegd aan `GET /auth/me`
+
 ### Openstaande items (prioriteit hoog → laag)
 
-1. **Frontend verificatie-flow** — pagina's voor email-/peer-verificatie (backend gereed)
-2. **Frontend bevestigingen** — fokker bevestigt/wijst registratie af (backend gereed)
-3. **Animal-detailpagina** — `/animals/:id` route ontbreekt (link leidt naar 404)
-4. **Mollie-betalingen** — nu uitgecommentarieerd; dev-mode geeft credits direct
-5. **E-mailservice** — token wordt gelogd i.p.v. verstuurd
-6. **Tests** — geen Jest/Vitest aanwezig
-7. **Cardano uit demo mode** — Lucid + Blockfrost koppelen, contracts deployen
-8. **Midnight ZK** — gepland, zie `docs/midnight/INTEGRATION-PLAN.md`
+1. **Mollie-betalingen** — nu uitgecommentarieerd; dev-mode geeft credits direct ⚠️ env/credentials
+2. **E-mailservice** — token wordt gelogd i.p.v. verstuurd ⚠️ SMTP-credentials
+3. **Tests** — geen Jest/Vitest aanwezig ⚠️ nieuwe dependencies
+4. **Cardano uit demo mode** — Lucid + Blockfrost koppelen, contracts deployen ⚠️ env/credentials
+5. **Midnight ZK** — gepland, zie `docs/midnight/INTEGRATION-PLAN.md` (architect-traject `/arch`)
+
+> De 5 resterende items vereisen credentials/env, nieuwe dependencies of een
+> architect-blauwdruk — telkens eerst overleg met Henk.
 
 ### Security (uit `/start` audit)
 - backend: `bcrypt`-keten high-severity (vereist `npm audit fix --force`, breaking)

@@ -29,6 +29,8 @@ export function Header() {
               <Link to="/dashboard" className="nav-link">Overzicht</Link>
               <Link to="/animals" className="nav-link">Mijn Dieren</Link>
               <Link to="/animals/new" className="nav-link">Registreren</Link>
+              <Link to="/confirmations" className="nav-link">Bevestigingen</Link>
+              <Link to="/verification" className="nav-link">Verificatie</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits
@@ -46,6 +48,7 @@ export function Header() {
               <Link to="/dashboard" className="nav-link">Overzicht</Link>
               <Link to="/animals" className="nav-link">Registraties</Link>
               <Link to="/animals/new" className="nav-link">Nieuw Dier</Link>
+              <Link to="/verification" className="nav-link">Verificatie</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits
@@ -63,6 +66,7 @@ export function Header() {
               <Link to="/dashboard" className="nav-link">Overzicht</Link>
               <Link to="/animals" className="nav-link">Chips</Link>
               <Link to="/animals/new" className="nav-link">Chip Registreren</Link>
+              <Link to="/verification" className="nav-link">Verificatie</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits

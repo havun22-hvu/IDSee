@@ -30,10 +30,15 @@
 - [x] Documentatie (VERIFICATION.md)
 - [x] Role-specifieke Header en Dashboard
 
+### Klaar (vervolg — 13 juni 2026)
+- [x] Frontend pagina's voor verificatie flow (`Verification.tsx`)
+- [x] Frontend pagina's voor bevestigingen (fokker — `Confirmations.tsx`)
+- [x] Animal-detailpagina (`AnimalDetail.tsx`, `/animals/:id`)
+
 ### Nog te doen
-- [ ] Frontend pagina's voor verificatie flow
-- [ ] Frontend pagina's voor bevestigingen (fokker)
 - [ ] Notificatie systeem (email/in-app)
+- [ ] Mollie betalingen activeren
+- [ ] Geautomatiseerde tests (Jest/Vitest)
 - [ ] Testen met echte gebruikers
 - [ ] Cardano testnet integratie
 

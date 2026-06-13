@@ -9,9 +9,12 @@ import {
   Verify,
   Dashboard,
   Animals,
+  AnimalDetail,
   RegisterAnimal,
   Credits,
   Admin,
+  Verification,
+  Confirmations,
 } from './pages';
 
 function App() {
@@ -54,10 +57,34 @@ function App() {
               }
             />
             <Route
+              path="/animals/:id"
+              element={
+                <ProtectedRoute roles={['BREEDER', 'VET', 'CHIPPER', 'ADMIN']}>
+                  <AnimalDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/credits"
               element={
                 <ProtectedRoute roles={['BREEDER', 'VET', 'CHIPPER', 'ADMIN']}>
                   <Credits />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/verification"
+              element={
+                <ProtectedRoute roles={['BREEDER', 'VET', 'CHIPPER']}>
+                  <Verification />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/confirmations"
+              element={
+                <ProtectedRoute roles={['BREEDER']}>
+                  <Confirmations />
                 </ProtectedRoute>
               }
             />

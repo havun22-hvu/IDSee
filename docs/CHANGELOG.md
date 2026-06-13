@@ -2,6 +2,23 @@
 
 Alle belangrijke wijzigingen aan IDSee worden hier gedocumenteerd.
 
+## [0.5.0] - 2026-06-13
+
+### Toegevoegd
+- **Verificatie-flow (frontend):** `Verification.tsx` — e-mailverificatie,
+  verificatie-aanvraag indienen, peer-verificatie met credits-borg en borg vrijgeven
+- **Bevestigingen (frontend):** `Confirmations.tsx` — fokker bevestigt of wijst
+  registraties van dierenartsen/chippers af, inclusief historie
+- **Dier-detailpagina:** `AnimalDetail.tsx` op route `/animals/:id`
+- Navigatie en dashboard-acties uitgebreid voor de nieuwe pagina's
+- `emailVerified` toegevoegd aan `GET /auth/me`
+
+### Opgelost
+- Build was kapot door ontbrekende `src/vite-env.d.ts` (`import.meta.env`
+  werd door `tsc` niet herkend) — bestand toegevoegd
+
+---
+
 ## [0.4.0] - 2024-12-01
 
 ### Architectuurwijziging

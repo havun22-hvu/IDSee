@@ -132,6 +132,7 @@ router.get('/me', authMiddleware, async (req: AuthRequest, res: Response) => {
         credits: true,
         verificationStatus: true,
         professionalId: true,
+        emailVerified: true,
         createdAt: true,
       },
     });
