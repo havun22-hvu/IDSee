@@ -72,7 +72,7 @@ npm run dev
 | Payments (Mollie) | ❌ Niet af | Uitgecommentarieerd; dev-mode geeft credits |
 | Email | ❌ Niet af | Token wordt gelogd i.p.v. verstuurd |
 | Midnight ZK | 🔵 Gepland | Zie integratieplan |
-| Tests | ❌ Niet af | Geen Jest/Vitest |
+| Tests | 🟡 Opgezet | Jest (backend, 19) + Vitest (frontend, 7); kritieke paden gedekt |
 
 ---
 

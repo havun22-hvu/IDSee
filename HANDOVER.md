@@ -34,11 +34,11 @@
 - [x] Frontend pagina's voor verificatie flow (`Verification.tsx`)
 - [x] Frontend pagina's voor bevestigingen (fokker — `Confirmations.tsx`)
 - [x] Animal-detailpagina (`AnimalDetail.tsx`, `/animals/:id`)
+- [x] Teststack: Jest (backend) + Vitest (frontend) — 26 tests
 
 ### Nog te doen
 - [ ] Notificatie systeem (email/in-app)
 - [ ] Mollie betalingen activeren
-- [ ] Geautomatiseerde tests (Jest/Vitest)
 - [ ] Testen met echte gebruikers
 - [ ] Cardano testnet integratie
 

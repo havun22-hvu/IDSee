@@ -119,9 +119,10 @@ https://docs.cardano.org/cardano-testnets/tools/faucet
 - [x] Verificatie-/bevestiging-endpoints (backend)
 - [x] Frontend-pagina's voor verificatie- en bevestigingsflow
 - [x] Animal-detailpagina (`/animals/:id`)
+- [x] Geautomatiseerde tests opgezet (Jest backend + Vitest frontend)
 - [ ] Mollie betalingen activeren
 - [ ] Email notificaties
-- [ ] Geautomatiseerde tests
+- [ ] Testdekking uitbreiden (integration tests met test-DB)
 - [ ] Smart contracts deployen
 - [ ] Echte blockchain integratie testen
 - [ ] Midnight ZK-integratie (zie `midnight/INTEGRATION-PLAN.md`)

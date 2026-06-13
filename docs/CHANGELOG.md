@@ -12,6 +12,12 @@ Alle belangrijke wijzigingen aan IDSee worden hier gedocumenteerd.
 - **Dier-detailpagina:** `AnimalDetail.tsx` op route `/animals/:id`
 - Navigatie en dashboard-acties uitgebreid voor de nieuwe pagina's
 - `emailVerified` toegevoegd aan `GET /auth/me`
+- **Teststack opgezet:**
+  - Backend: Jest + ts-jest — 19 tests voor blockchain-hashing (privacy-kritiek)
+    en auth-middleware/JWT (security-kritiek)
+  - Frontend: Vitest + Testing Library — 7 tests voor de API-client (token,
+    401-afhandeling, foutparsing) en de `AnimalDetail`-pagina
+  - `npm test` in beide mappen
 
 ### Opgelost
 - Build was kapot door ontbrekende `src/vite-env.d.ts` (`import.meta.env`

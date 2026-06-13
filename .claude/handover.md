@@ -24,14 +24,16 @@ Zie `docs/INDEX.md` voor de volledige status-tabel.
 - [x] **Animal-detailpagina** — `AnimalDetail.tsx` op route `/animals/:id`
 - [x] Bijvangst: `vite-env.d.ts` toegevoegd (build was kapot op `import.meta.env`);
       `emailVerified` toegevoegd aan `GET /auth/me`
+- [x] **Teststack** — Jest (backend, 19 tests) + Vitest (frontend, 7 tests).
+      `npm test` in beide mappen. Kritieke paden: hashing, JWT/rolchecks, API-client.
 
 ### Openstaande items (prioriteit hoog → laag)
 
 1. **Mollie-betalingen** — nu uitgecommentarieerd; dev-mode geeft credits direct ⚠️ env/credentials
 2. **E-mailservice** — token wordt gelogd i.p.v. verstuurd ⚠️ SMTP-credentials
-3. **Tests** — geen Jest/Vitest aanwezig ⚠️ nieuwe dependencies
-4. **Cardano uit demo mode** — Lucid + Blockfrost koppelen, contracts deployen ⚠️ env/credentials
-5. **Midnight ZK** — gepland, zie `docs/midnight/INTEGRATION-PLAN.md` (architect-traject `/arch`)
+3. **Cardano uit demo mode** — Lucid + Blockfrost koppelen, contracts deployen ⚠️ env/credentials
+4. **Midnight ZK** — gepland, zie `docs/midnight/INTEGRATION-PLAN.md` (architect-traject `/arch`)
+5. **Testdekking uitbreiden** — integration tests met test-DB (supertest + Prisma)
 
 > De 5 resterende items vereisen credentials/env, nieuwe dependencies of een
 > architect-blauwdruk — telkens eerst overleg met Henk.
