@@ -3,4 +3,7 @@ dist/
 .env
 *.log
 .DS_Store
-backend/prisma/dev.db
+
+# Local SQLite dev database (schema lives in prisma/schema.prisma)
+prisma/*.db
+prisma/*.db-journal
