@@ -107,6 +107,42 @@ register.
 > keten niet sluit, niet omdat IDSee "malafide" roept. Dit onderscheid is de juridische
 > bescherming; verlies het niet in de communicatie naar kopers.
 
+### Legaal geïmporteerde pup — de import-schakel
+
+Een legaal geïmporteerde pup heeft **geen NL-moeder met chip** in het systeem; de moeder
+zit in het buitenland. De naïeve regel "geen NL-moeder = rood" zou **elke legale import
+rood kleuren** en juist de eerlijke importeur straffen. Dat mag niet.
+
+Het onderscheid tussen legaal en illegaal is **niet** "wel/geen NL-moeder" (die hebben ze
+geen van beide), maar de **verifieerbaarheid van de buitenlandse herkomst**:
+
+| | Legale import | Illegale import |
+|---|---|---|
+| Buitenlandse herkomst | Traceerbaar: bekende buitenlandse fokker/herkomst-ID, geldig EU-paspoort | Onbekend / omgekat paspoort / geen traceerbare bron |
+| Wie legt het vast | Geverifieerde NL-dierenarts die invoer + papieren fysiek controleert | Niemand, of papier-only |
+
+**Oplossing: een aparte ketenschakel `IMPORT`**, vastgelegd door een **geverifieerde
+NL-dierenarts** (consistent met de moeder-koppeling; de pup komt in de praktijk toch bij
+een arts). De schakel bevat: land van herkomst, buitenlandse fokker-/herkomst-identifier
+(zo traceerbaar mogelijk), EU-paspoortnummer + of het origineel of omgezet is, en de
+bevestiging dat de arts de invoerpapieren zag.
+
+**Score-effect — import is een eigen label, geen kleur op de NL-schaal:**
+
+| Situatie | Uitkomst voor de koper |
+|----------|------------------------|
+| NL-geboren, moeder↔pup-koppeling sluit | 🟢 Groen |
+| Geïmporteerd + import-schakel volledig (traceerbare herkomst + arts-controle) | 🔵 **Geverifieerde import** (eigen label) |
+| Geïmporteerd, herkomst onbekend / paspoort omgezet zonder traceerbare bron | 🟠 Oranje |
+| Geïmporteerd + onderdeel van bevestigd fraudepatroon (volume) | 🔴 Rood |
+
+> **Waarom een eigen label en geen kleur:** het perst import niet in "minder dan groen",
+> maar toont de koper eerlijk: *dit is geen NL-fok, maar de import is wél geverifieerd*.
+> De koper weegt zelf. Een eerlijke importeur die transparant registreert haalt 🔵 — geen
+> straf. De handelaar die importeert zonder traceerbare bron zakt naar 🟠, en bij
+> volume/patroon naar 🔴. Exact het doel: de commerciële illegale handelaar raken, de
+> legale importeur sparen.
+
 ## 4. Fraude-respons: bevestiging + cascade
 
 Het zwakke punt van het oude model ("borg naar platform pool") is vervangen door een
