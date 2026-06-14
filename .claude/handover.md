@@ -2,7 +2,7 @@
 title: IDSee Handover
 type: claude
 scope: idsee
-last_updated: 2026-06-13
+last_updated: 2026-06-14
 ---
 
 # IDSee — Handover
@@ -74,6 +74,39 @@ Tests: backend 47 unit + 10 integration / frontend 19, alles groen.
 - E-mail aanzetten: `.env` → `EMAIL_PROVIDER=smtp` + `SMTP_*` (zie `.env.example`)
 - Echte Prisma-migratie genereren: `! cd backend && npx prisma migrate dev --name fraud_payment`
   (tooling is non-interactief vanuit Claude; nu via `db push`)
+
+### Strategie-verfijning PROPOSITION.md (14 juni 2026, avond)
+
+Inhoudelijke sessie met Henk (architect + praktiserend dierenarts) — `docs/PROPOSITION.md`
+flink uitgebreid. Géén code, puur strategie/ontwerp. Kernbeslissingen vastgelegd:
+
+- **Positionering = beter alternatief** (geen vervangingsclaim wettelijk register).
+- **Score = verifieerbaarheid van de keten, NIET schuld** (juridische kern, §5).
+- **Graduele escalatie**: leren → 🟠 → 🔴 → blokkade. Doel = commerciële volume-handelaar
+  (>10 pups), NIET de eerlijke fokker/kruimeldief. Op patroon+volume, niet één incident.
+- **§3a — De keten die moet sluiten**: kracht zit in moeder-chip ↔ pup-chip, gelegd door
+  een **onafhankelijke geverifieerde arts/chipper** (niet de fokker zelf).
+- **Legale import = eigen label 🔵 "Geverifieerde import"** (geen kleur op NL-schaal),
+  vastgelegd door geverifieerde NL-arts via aparte `IMPORT`-schakel. Onderscheid
+  legaal/illegaal = verifieerbaarheid buitenlandse herkomst, niet wel/geen NL-moeder.
+- **UBN-analyse**: UBN is locatie/dierziekte-systeem, geen herkomst-/anti-fraude. Het
+  versterkt IDSee (officiële identifier om keten aan te hangen + bewijst dat
+  registratie ≠ verifieerbare keten).
+- **§10 — 30%-adoptievraag**: waarde zit in afwezigheid; netwerkeffect aan VRAAGkant
+  (kopers), niet aanbodkant. Faalscenario eerlijk: voorlichtingsstrijd, niet techniek.
+- **§11 — Organisatie**: stichting als schild (4 redenen), géén zelf-bevestiging van
+  fraude door oprichter, **oprichtersvordering €60/u (~500u ≈ €30k), geen plafond**,
+  afbetaling via harde waterval (kosten → reserve → max 30% overschot), €100/mnd
+  AI-onkosten. Cardano-pool = wél kostendekking, GÉÉN anoniem betaalkanaal (witwas).
+
+**DATAMODEL-GEVOLGEN voor implementatie (nog te doen):**
+- `IMPORT`-schakeltype náást moeder↔pup-koppeling als geldige ketensluiting
+- 🔵-label apart van groen/oranje/rood in scorelogica + frontend
+- Onderscheid *feit* (paspoort omgezet) vs. *bevestigd signaal* in datamodel
+
+> ⚠️ Deze sessie raakte alleen `docs/PROPOSITION.md`. De code (riskScore, fraudService,
+> payment) van eerder vandaag reflecteert deze verfijningen nog NIET volledig — bij
+> volgende code-ronde: import-label 🔵 + datamodel-gevolgen verwerken.
 
 **Nog open — later:**
 - ZK-migratie (Midnight) — `PROPOSITION.md` §9 + blueprint §4 (eigen `/arch`-traject)
