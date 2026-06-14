@@ -10,6 +10,7 @@ import creditsRoutes from './routes/credits.js';
 import adminRoutes from './routes/admin.js';
 import verificationRoutes from './routes/verification.js';
 import confirmationsRoutes from './routes/confirmations.js';
+import fraudRoutes from './routes/fraud.js';
 import { initBlockchain } from './services/blockchain.js';
 
 dotenv.config();
@@ -38,6 +39,7 @@ app.use('/credits', creditsRoutes);
 app.use('/admin', adminRoutes);
 app.use('/verification', verificationRoutes);
 app.use('/confirmations', confirmationsRoutes);
+app.use('/fraud', fraudRoutes);
 
 // Error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

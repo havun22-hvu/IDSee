@@ -15,6 +15,7 @@ import {
   Admin,
   Verification,
   Confirmations,
+  FraudReview,
 } from './pages';
 
 function App() {
@@ -85,6 +86,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['BREEDER']}>
                   <Confirmations />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fraud-review"
+              element={
+                <ProtectedRoute roles={['VET']}>
+                  <FraudReview />
                 </ProtectedRoute>
               }
             />

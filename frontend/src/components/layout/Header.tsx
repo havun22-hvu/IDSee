@@ -49,6 +49,7 @@ export function Header() {
               <Link to="/animals" className="nav-link">Registraties</Link>
               <Link to="/animals/new" className="nav-link">Nieuw Dier</Link>
               <Link to="/verification" className="nav-link">Verificatie</Link>
+              <Link to="/fraud-review" className="nav-link">Signalen</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits

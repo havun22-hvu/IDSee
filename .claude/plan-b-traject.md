@@ -57,7 +57,14 @@ opgeslagen (voorkomt stale data). Optioneel later cachen.
 
 ---
 
-## Fase 3 — Fraude-cascade (arts-bevestigd, gradueel)
+## Fase 3 — Fraude-cascade (arts-bevestigd, gradueel) ✅ AFGEROND (14 juni 2026)
+
+> Geïmplementeerd: `fraudPolicy.ts` (pure cascade + worstFraudStatus), `fraudService.ts`,
+> `systemConfigService.ts`, `routes/fraud.ts` (report/pending/confirm/reject, alleen VET),
+> `calculateRiskScore` weegt `fraudStatus` mee, frontend `FraudReview.tsx` + nav/route.
+> Schema: `User.fraudStatus`, `FraudReport`, `SystemConfig` (via `prisma db push`).
+> Tests: 9 backend (drempels/leer-marge/blokkade/ergste-flag) + 3 component. Geen cron (v1).
+> **Open v1.1:** meld-ingang in de UI (nu API-only).
 
 **Datamodel** (`schema.prisma`, strings):
 - `User.fraudStatus String @default("LEREN")` // LEREN, ORANJE, ROOD, BLOKKADE

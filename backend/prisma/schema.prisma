@@ -36,6 +36,10 @@ model User {
   warningCount      Int      @default(0)
   isSuspended       Boolean  @default(false)
 
+  // Fraud cascade (B-track fase 3)
+  fraudStatus       String   @default("LEREN") // LEREN, ORANJE, ROOD, BLOKKADE
+  lastFraudAssessment DateTime?
+
   // Timestamps
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -45,6 +49,9 @@ model User {
   creditTransactions CreditTransaction[]
   verificationsGiven PeerVerification[] @relation("Verifier")
   verificationsReceived PeerVerification[] @relation("Verified")
+  fraudReported     FraudReport[] @relation("Reporter")
+  fraudConfirmed    FraudReport[] @relation("Confirmer")
+  fraudAgainst      FraudReport[] @relation("Subject")
 }
 
 model Animal {
@@ -181,6 +188,42 @@ model PeerVerification {
   // Timestamps
   createdAt       DateTime @default(now())
   releasedAt      DateTime?
+}
+
+// Fraud signals — only a verified vet can confirm; confirmed signals drive
+// the graduated reputation cascade (PROPOSITION.md §4).
+model FraudReport {
+  id              String   @id @default(uuid())
+
+  // Who reported (any authenticated user)
+  reporterId      String
+  reporter        User     @relation("Reporter", fields: [reporterId], references: [id])
+
+  // The professional the signal is about (the "person" of the cascade)
+  subjectUserId   String
+  subject         User     @relation("Subject", fields: [subjectUserId], references: [id])
+
+  // Optional: the specific animal/registration that triggered it
+  animalId        String?
+
+  type            String   // e.g. omgekat_paspoort, ontbrekende_schakel, dubbele_registratie
+  description     String
+
+  // PENDING_VET_REVIEW, CONFIRMED, REJECTED
+  status          String   @default("PENDING_VET_REVIEW")
+  confirmedById   String?  // The verified vet who confirmed/rejected
+  confirmer       User?    @relation("Confirmer", fields: [confirmedById], references: [id])
+  reviewNote      String?
+  confirmationDate DateTime?
+
+  createdAt       DateTime @default(now())
+}
+
+// Configurable parameters (cascade thresholds etc.); service falls back to
+// code defaults when a key is absent.
+model SystemConfig {
+  key   String @id
+  value String
 }
 
 // Verification requests - pending verification requests

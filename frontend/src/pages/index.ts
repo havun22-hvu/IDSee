@@ -10,3 +10,4 @@ export { Credits } from './Credits';
 export { Admin } from './Admin';
 export { Verification } from './Verification';
 export { Confirmations } from './Confirmations';
+export { FraudReview } from './FraudReview';

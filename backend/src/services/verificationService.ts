@@ -1,6 +1,7 @@
 import { prisma } from '../index.js';
 import type { ScoreFactors, VerifyResult } from '../types/index.js';
 import { scoreFromFactors, UserFraudStatus } from './riskScore.js';
+import { worstFraudStatus } from './fraudPolicy.js';
 
 /**
  * Derive the buyer risk score for a chip (by its privacy hash).
@@ -15,7 +16,7 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
     include: {
       registrations: {
         include: {
-          user: { select: { verificationStatus: true } },
+          user: { select: { verificationStatus: true, fraudStatus: true } },
         },
         orderBy: { createdAt: 'desc' },
       },
@@ -31,8 +32,8 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
   };
 
   let registrationDate: Date | undefined;
-  // Fase 3 haak: leid de fraudestatus van de registrant af (nu nog niet aanwezig → LEREN).
-  const ownerFraudStatus: UserFraudStatus = 'LEREN';
+  // Cascade: take the worst fraud flag among the chain's registrants.
+  let ownerFraudStatus: UserFraudStatus = 'LEREN';
 
   if (animal) {
     const confirmed = animal.registrations.find((r) => r.status === 'CONFIRMED');
@@ -40,6 +41,11 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
     factors.disputed = animal.registrations.some((r) => r.status === 'DISPUTED');
     factors.breederVerified = confirmed?.user?.verificationStatus === 'VERIFIED';
     registrationDate = confirmed?.createdAt ?? animal.registrations[0]?.createdAt;
+
+    const flags = animal.registrations
+      .map((r) => r.user?.fraudStatus as UserFraudStatus | undefined)
+      .filter((s): s is UserFraudStatus => !!s);
+    ownerFraudStatus = worstFraudStatus(flags.length ? flags : ['LEREN']);
   }
 
   // chipId teruggeven we niet in plaintext bij niet-gevonden; bij gevonden is het al gehasht opgeslagen.

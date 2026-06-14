@@ -134,9 +134,15 @@ Als fokker afwijst:
 
 ## Fraude-respons: bevestiging + cascade
 
-> Status: **ontworpen, nog niet geïmplementeerd** (B-traject, zie `PROPOSITION.md` §4
-> en de open punten §9). De huidige code kent peer-verificatie en fokker-bevestiging,
-> nog niet de cascade en de risico-score.
+> Status: **geïmplementeerd v1** (B-traject fase 3). Een geverifieerde dierenarts
+> beoordeelt signalen op `/fraud-review`; bevestiging triggert de cascade
+> (`fraudService.assessUserFraudStatus`) die `User.fraudStatus` zet. Omdat de
+> risico-score wordt afgeleid, werkt dit direct door naar alle dieren van die persoon.
+> Drempels staan in `SystemConfig` (defaults: oranje=2, rood=4, blokkade=10, venster=1 jr).
+>
+> **Nog open (v1.1):** de meld-ingang in de UI (hoe een koper/arts een signaal indient
+> over een anonieme registrant) — nu via de API `POST /fraud/report`. Dit raakt de
+> "zachte koper-signalen" uit `PROPOSITION.md` §9.
 
 In plaats van een geldelijke afhandeling werkt fraude via een **reputatie-cascade**:
 

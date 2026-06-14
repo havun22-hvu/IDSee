@@ -105,6 +105,22 @@ export interface PendingConfirmation {
   };
 }
 
+export type UserFraudStatus = 'LEREN' | 'ORANJE' | 'ROOD' | 'BLOKKADE';
+
+export interface FraudReport {
+  id: string;
+  reporterId: string;
+  subjectUserId: string;
+  animalId?: string;
+  type: string;
+  description: string;
+  status: 'PENDING_VET_REVIEW' | 'CONFIRMED' | 'REJECTED';
+  confirmedById?: string;
+  reviewNote?: string;
+  confirmationDate?: string;
+  createdAt: string;
+}
+
 export interface ApiError {
   error: string;
   required?: number;

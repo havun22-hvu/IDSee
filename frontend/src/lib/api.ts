@@ -5,6 +5,7 @@ import type {
   VerificationRequest,
   PeerVerification,
   PendingConfirmation,
+  FraudReport,
 } from '../types';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -187,6 +188,32 @@ class ApiClient {
 
   async getConfirmationHistory() {
     return this.request<PendingConfirmation[]>('/confirmations/history');
+  }
+
+  // Fraud signals
+  async reportFraud(data: { type: string; description: string; animalId?: string; subjectUserId?: string }) {
+    return this.request<{ message: string; report: FraudReport }>('/fraud/report', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getPendingFraudReports() {
+    return this.request<FraudReport[]>('/fraud/pending');
+  }
+
+  async confirmFraud(id: string, note?: string) {
+    return this.request<{ subjectUserId: string; newStatus: string }>(`/fraud/${id}/confirm`, {
+      method: 'POST',
+      body: JSON.stringify({ note }),
+    });
+  }
+
+  async rejectFraud(id: string, note?: string) {
+    return this.request<{ reportId: string }>(`/fraud/${id}/reject`, {
+      method: 'POST',
+      body: JSON.stringify({ note }),
+    });
   }
 }
 
