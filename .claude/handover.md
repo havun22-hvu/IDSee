@@ -58,15 +58,24 @@ Tests: backend 43 / frontend 16, beide builds groen. Schema via `prisma db push`
 - [x] Meld-ingang fraudesignaal in UI (`/report-signal`, melden via chipnummer)
 - [x] `GET /verify/:chipId` achter auth (gratis-lek gedicht)
 - [x] `dev.db` uit git + `.gitignore` gefixt
+- [x] **db/app-refactor**: `src/db.ts` (gedeelde prisma) + `src/app.ts` (createApp) — server-start los
+- [x] **Integration tests** (`jest.integration.config.cjs`): 402-gating + cascade end-to-end
+- [x] **Mollie-provider** (env-gated) + **SMTP-emailservice** (env-gated) — code-compleet, demo default
+- [x] **Security**: productie-deps **0 vulnerabilities** (jws/express/bcrypt@6/nodemailer@9)
 
-**Nog open (v1.1 / overleg):**
-- Echte Mollie activeren: `@mollie/api-client` (dependency) + `MOLLIE_API_KEY` (.env) ⚠️ overleg
-- E-mailservice activeren (SMTP-credentials) ⚠️ overleg
-- Integration tests met test-DB (402-gating, cascade end-to-end)
-- Echte Prisma-migratie voor CI/prod (nu `db push`)
-- Security: frontend `npm audit fix` (3 high) / backend bcrypt (breaking) ⚠️ overleg
-- ZK-migratie (Midnight) — zie `PROPOSITION.md` §9 + blueprint §4
+Tests: backend 47 unit + 4 integration / frontend 18, alles groen.
+
+**Nog open — vereist JOUW actie (geen code meer):**
+- Mollie aanzetten: `.env` → `PAYMENT_PROVIDER=mollie` + `MOLLIE_API_KEY` (key bij Mollie ophalen)
+- E-mail aanzetten: `.env` → `EMAIL_PROVIDER=smtp` + `SMTP_*` (zie `.env.example`)
+- Echte Prisma-migratie genereren: `! cd backend && npx prisma migrate dev --name fraud_payment`
+  (tooling is non-interactief vanuit Claude; nu via `db push`)
+
+**Nog open — later:**
+- ZK-migratie (Midnight) — `PROPOSITION.md` §9 + blueprint §4 (eigen `/arch`-traject)
+- Frontend dev-only audit: 5 advisories in vite/vitest; fix = `vite@8` (3 majors) — uitgesteld
 - "Zachte" koper-signalen (melden zonder account) — §9
+- DPIA + juridische review vóór productie — §9
 
 ## Architectuurprincipes
 
