@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { authMiddleware, adminOnly } from '../middleware/auth.js';
 import { getWalletBalance, isDemoMode } from '../services/blockchain.js';
 import { AuthRequest } from '../middleware/auth.js';

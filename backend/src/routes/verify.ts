@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import crypto from 'crypto';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { authMiddleware } from '../middleware/auth.js';
 import { hashChipId } from '../services/blockchain.js';
 import { calculateRiskScore } from '../services/verificationService.js';

@@ -1,4 +1,4 @@
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import type { ScoreFactors, VerifyResult } from '../types/index.js';
 import { scoreFromFactors, UserFraudStatus } from './riskScore.js';
 import { worstFraudStatus } from './fraudPolicy.js';

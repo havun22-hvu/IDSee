@@ -6,6 +6,8 @@ module.exports = {
   forceExit: true,
   roots: ['<rootDir>/tests'],
   testMatch: ['**/*.test.ts'],
+  // Integration tests need a DB + their own config (jest.integration.config.cjs).
+  testPathIgnorePatterns: ['/node_modules/', '/tests/integration/'],
   // Source uses NodeNext-style .js import extensions; strip them so the
   // CommonJS test build resolves the real .ts files.
   moduleNameMapper: {

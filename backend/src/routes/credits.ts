@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { authMiddleware, AuthRequest } from '../middleware/auth.js';
 import { CREDIT_BUNDLES } from '../types/index.js';
 

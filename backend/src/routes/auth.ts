@@ -1,7 +1,7 @@
 import { Router, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { z } from 'zod';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { authMiddleware, generateToken } from '../middleware/auth.js';
 import { AuthRequest } from '../middleware/auth.js';
 

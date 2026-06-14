@@ -1,10 +1,9 @@
 import { Router, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth.js';
 import { registerOnChain } from '../services/blockchain.js';
 
 const router = Router();
-const prisma = new PrismaClient();
+import { prisma } from '../db.js';
 
 // Get pending confirmations for breeder
 router.get('/pending', authenticateToken, requireRole(['BREEDER']), async (req: AuthRequest, res: Response) => {

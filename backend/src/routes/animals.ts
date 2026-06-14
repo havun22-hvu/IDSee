@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { authMiddleware, requireRole, AuthRequest } from '../middleware/auth.js';
 import { requireCredits, deductCredits } from '../middleware/credits.js';
 import { hashChipId, hashData, registerOnChain } from '../services/blockchain.js';

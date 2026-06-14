@@ -1,10 +1,9 @@
 import { Router, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import crypto from 'crypto';
 import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
-const prisma = new PrismaClient();
+import { prisma } from '../db.js';
 
 // Bond amount for peer verification (in credits)
 const VERIFICATION_BOND = 10;

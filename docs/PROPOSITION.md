@@ -63,6 +63,50 @@ het systeem hem "fraudeur" noemt. Dit onderscheid is juridisch essentieel (§5).
 - Wordt geverifieerd via peer-verificatie (bestaand mechanisme, zie VERIFICATION.md).
 - Een **geverifieerde dierenarts** kan een **fraudesignaal bevestigen** (zie §4).
 
+## 3a. De keten die moet sluiten — het hart van IDSee
+
+De waarde van IDSee zit **niet** in "is deze pup aangemeld?" (dat zou een gewoon register
+zijn — net als het UBN). De waarde zit erin of de **herkomstketen aantoonbaar sluit**, en
+of die sluiting door een **onafhankelijke, geverifieerde professional** is gelegd.
+
+### De drie schakels
+
+| Schakel | Wie | Wat |
+|---------|-----|-----|
+| Moeder + fokker | Fokker (met UBN) | Het nest / de moeder hoort bij deze fokkerslocatie. |
+| **Moeder ↔ pup** | **Dierenarts / chipper (geverifieerd)** | **Checkt de moeder fysiek, leest haar chip, en koppelt de moeder-chip aan de pup-chip.** |
+| Verificatie | Geverifieerde professional | De koppeling draagt de identiteit van wie haar legde. |
+
+### Waarom de moeder↔pup-koppeling de kracht is
+
+De fokker claimt **niet** zelf "dit is de moeder". Een **onafhankelijke, geverifieerde
+professional** ziet de moeder op locatie, leest haar chip en koppelt die aan de pup-chip.
+Een geverifieerde getuige-op-locatie, geen papieren bewering. Daardoor:
+
+- Een handelaar kan **niet zelf** een moeder verzinnen — er moet een geverifieerde
+  arts/chipper zijn die de moeder daadwerkelijk gezien en gechipt heeft.
+- Een **geïmporteerde pup heeft geen NL-moeder met chip** in het systeem → de keten
+  sluit niet → oranje/rood. Een vals paspoort regelen kan; een geverifieerde
+  moeder-koppeling op locatie niet.
+- Het **schaalt tegen volume:** voor élke pup zou een geverifieerde moeder-koppeling
+  gefabriceerd moeten worden. Bij 10+ pups onmogelijk zonder dat een arts meewerkt — en
+  die arts hangt zijn eigen geverifieerde reputatie eraan (en valt onder de cascade, §4).
+
+> Dit raakt exact de **commerciële volume-handelaar** en spaart de eerlijke fokker /
+> kruimeldief (§4). Het is het mechanisme dat het verplichte register en het UBN missen.
+
+### Datamodel-eis
+
+"Keten sluit" = de pup-registratie verwijst naar een **moeder-chip die in het systeem
+bestaat**, **én** die koppeling is gelegd door een **geverifieerde, niet-geflagde**
+professional. Zonder die koppeling zijn het losse records en is IDSee toch weer een gewoon
+register.
+
+> **Communicatie-grens:** de koper checkt of de **keten verifieerbaar sluit** — IDSee
+> wijst **geen** malafide handel áán (§5). Een handelaar scoort vanzelf rood omdat zijn
+> keten niet sluit, niet omdat IDSee "malafide" roept. Dit onderscheid is de juridische
+> bescherming; verlies het niet in de communicatie naar kopers.
+
 ## 4. Fraude-respons: bevestiging + cascade
 
 Het zwakke punt van het oude model ("borg naar platform pool") is vervangen door een
@@ -173,3 +217,121 @@ Eerste artsen via genesis-verificatie (zie VERIFICATION.md §Bootstrapping).
       *x* herhalingen vóór rood, import-plafond (voorlopig >10 pups → blokkade).
 - [ ] Onderscheid *vergissing* vs. *patroon* meetbaar maken (welke signalen tellen mee,
       over welke tijdvenster, met welk gewicht).
+
+---
+
+## 10. Werkzaamheid & adoptierisico (de eerlijke 30%-vraag)
+
+**De kritische noot:** welwillende mensen schrijven zich in en gebruiken de app;
+niet-welwillende mensen niet. Stel dat 30% de app gebruikt — hoe nuttig is hij dan nog?
+De fraudeur, juist de doelgroep, meldt zijn illegaal geïmporteerde pup niet aan.
+
+**Het antwoord — de waarde zit in de afwezigheid, niet in de aanwezigheid.**
+IDSee is geen vrijwillig keurmerk waar "erin staan = goed". Het is een
+**koper-gedreven vraagsysteem**. De koper betaalt €2 en stelt actief de vraag. De
+uitkomst is niet "staat-ie erin → goed", maar:
+
+- 🟢 Volledige keten → koop met vertrouwen.
+- 🔴 / "geen sluitende keten / onbekend" → **waarom staat deze pup er niet in?**
+
+Bij voldoende adoptie aan de **vraagkant** draait de bewijslast om: "niet in IDSee"
+wordt **verdacht** in plaats van neutraal — zoals een tweedehands auto zonder
+onderhoudshistorie. De fraudeur hoeft niet mee te doen; **zijn weigering om mee te doen
+wórdt het signaal.**
+
+**Cruciaal inzicht:** het netwerkeffect zit aan de **vraagkant (kopers)**, niet aan de
+aanbodkant (fokkers). Je hebt geen 100% van de fokkers nodig — je hebt genoeg *kopers*
+nodig die de check als vanzelfsprekend zien. De vraagkant is veel groter en makkelijker
+te activeren dan de aanbodkant.
+
+**Drie voorwaarden — en het faalscenario:**
+
+1. Kopers vragen het massaal (de €2-check moet normaal worden).
+2. "Onbekend" wordt als negatief gelezen (publieksbekendheid: "geen IDSee = wegblijven").
+3. Meedoen wordt een verkoopvoordeel voor de eerlijke fokker (groene keten verkoopt
+   beter → de aanbodkant volgt vanzelf).
+
+> **Faalscenario, eerlijk:** vóór massabekendheid is "onbekend" gewoon "onbekend", niet
+> "verdacht". In die koud-start is IDSee een gewoon (en dus zwak) keurmerk. De
+> moeilijkste opgave is **niet technisch** (de ZKP bouwen) maar een **voorlichtings- en
+> distributiestrijd**: kopers leren altijd naar IDSee te vragen. Slaagt die niet, dan
+> blijft de app bij 30% inderdaad beperkt nuttig.
+
+---
+
+## 11. Organisatie, vergoeding & anonimiteit
+
+### Organisatievorm — stichting als schild
+IDSee draait onder een **stichting** (geen BV, geen winstuitkering). Dat dient vier
+doelen tegelijk, die de oprichter expliciet noemde:
+
+| Reden | Hoe de stichting het oplost |
+|-------|------------------------------|
+| Bescherming tegen handelaren | Klachten/druk richten zich op de rechtspersoon, niet op de oprichter persoonlijk of zijn praktijk. |
+| Belangenconflict vermijden | De oprichter ontwerpt het systeem, maar **bevestigt zelf geen fraude** (zie hieronder). |
+| Scheiding van praktijk | Aparte rechtspersoon, eigen naam/IBAN/KvK, los van de dierenartspraktijk. |
+| Vrijheid om kritisch te zijn | De stichting bekritiseert het falende register, niet "dierenarts X" persoonlijk. |
+
+> **Anonimiteit is nooit gegarandeerd.** Bank, KvK, Belastingdienst en UBO-register
+> kennen de oprichter hoe dan ook; bij een procedure kan de identiteit boven water komen.
+> De stichting verlaagt het risico en geeft afstand — ze maakt niet onzichtbaar. Plan
+> erop dat de naam ooit bekend wordt.
+
+### Structurele scheiding — geen zelf-bevestiging
+Het grootste risico is niet vindbaarheid maar **belangenconflict**. Daarom: de oprichter
+bouwt de regels, maar de **fraude-bevestigende artsen zijn een onafhankelijke,
+geverifieerde pool** (§4). Dit moet structureel in het ontwerp zitten, niet alleen in de
+presentatie — anders valt het systeem om zodra één zaak voor de rechter komt.
+
+### Het principe — verdienen aan het wérk, niet aan het systeem
+Spanning die de oprichter zelf benoemde: een democratisch, zelfbesturend systeem met één
+persoon die de winst opstrijkt, is een contradictie. Oplossing: de stichting keert geen
+winst uit; de oprichter wordt **vergoed voor geleverd werk**, niet beloond als eigenaar.
+Overschot vloeit terug in het systeem (lagere kosten, voorlichting, reserve).
+
+### Vergoeding — oprichtersvordering, geen opdracht, geen startkapitaal
+Er is **geen startkapitaal** en het is **geen betaalde opdracht**. De oprichter bouwt nu
+op eigen tijd, uit overtuiging ("eindelijk een systeem dat wél werkt"). De gewerkte uren
+worden **wél geadministreerd** als een **achtergestelde oprichtersvordering** op de
+stichting, langzaam af te betalen zodra er omzet is.
+
+| Post | Afspraak |
+|------|----------|
+| Uurtarief (bouw + onderhoud) | **€60/uur** (reëel: een uur met meerdere AI-agents levert meer op dan een gewoon dev-uur) |
+| AI-onkosten | ~**€100/maand**, declarabel als onkost |
+| Voorbereidingsuren (schatting) | ~**500 uur** → ~**€30.000** beginvordering |
+| Plafond op uren | **Geen** — alle gewerkte uren tellen |
+| Vorm | Achtergestelde lening / rekening-courant oprichter → stichting |
+
+**Afbetaling via een harde waterval** (zo kan de vordering het systeem nooit verstikken):
+
+1. Eerst: lopende kosten dekken (hosting, blockchain-tx, betaal- en proof-kosten, e-mail).
+2. Dan: een **reserve** opbouwen (buffer voor tegenvallers).
+3. Pas daarna: afbetaling oprichtersvordering, **gemaximeerd op bijv. 30% van het
+   maandoverschot**.
+
+> **Waarborgen bij 'geen urenplafond'** (anders ontstaat alsnog het "oprichter =
+> grootste schuldeiser"-verwijt): (a) urenregistratie **transparant en controleerbaar**
+> door het bestuur (`/wu`), en (b) de **waterval is hard** — afbetaling alleen uit
+> overschot, met maand-plafond. Met deze twee waarborgen is "alle uren tellen"
+> verdedigbaar: de oprichter krijgt **terugbetaald wat hij erin stak**, op een tempo dat
+> het systeem aankan — geen winst, geen verstikking.
+
+### Cardano-pool — wél kostendekking, géén anoniem betaalkanaal
+Een IDSee **stake pool** kan een klein neveneffect zijn (community-binding, beetje ADA om
+eigen tx-kosten te dekken). Maar het is **geen** instrument om klantgeld anoniem te
+ontvangen: kopers betalen fiat (iDEAL/creditcard) — dat komt nooit een pool binnen; een
+nieuwe pool levert nauwelijks op; en euro's "wegsluizen" via crypto om de rechtspersoon
+te omzeilen is juist een **witwas-signaal** dat het juridische risico vergróót. Het geld
+loopt transparant via de stichting. Daar zit de bescherming — niet in een crypto-omweg.
+
+### Inkomstenbronnen (definitief)
+Twee, meer niet:
+1. **Koper:** €2 per chip-check (primair, schaalt met kopers).
+2. **Professional:** credits per pup-/schakel-inschrijving (secundair).
+
+> **Haalbaarheid zonder startkapitaal:** ~100 transacties/maand dekt de vaste hosting;
+> daarboven bouwt de stichting reserve en pas daarna wordt de oprichtersvordering
+> afgelost. Haalbaar — **mits** de kosten-per-transactie (blockchain + ZK-proof) **onder**
+> de marge per €2-check blijven. Dat is het enige echte risico en moet hard doorgerekend
+> (zie open punt: break-even).

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { getPaymentProvider } from '../services/paymentService.js';
 
 const router = Router();

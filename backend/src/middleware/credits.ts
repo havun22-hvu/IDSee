@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth.js';
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 
 export function requireCredits(amount: number) {
   return async (req: AuthRequest, res: Response, next: NextFunction) => {

@@ -1,4 +1,4 @@
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { assessFraudStatus } from './fraudPolicy.js';
 import { getThresholds } from './systemConfigService.js';
 import { hashChipId } from './blockchain.js';

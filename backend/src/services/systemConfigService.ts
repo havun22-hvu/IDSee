@@ -1,4 +1,4 @@
-import { prisma } from '../index.js';
+import { prisma } from '../db.js';
 import { DEFAULT_THRESHOLDS, FraudThresholds } from './fraudPolicy.js';
 
 /**
