@@ -1,6 +1,7 @@
 import type {
   ApiError,
   AnimalDetail,
+  VerifyResult,
   VerificationRequest,
   PeerVerification,
   PendingConfirmation,
@@ -62,7 +63,7 @@ class ApiClient {
 
   // Verification (public)
   async verify(chipId: string) {
-    return this.request<any>(`/verify/${encodeURIComponent(chipId)}`);
+    return this.request<VerifyResult>(`/verify/${encodeURIComponent(chipId)}`);
   }
 
   // Animals

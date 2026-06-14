@@ -4,11 +4,22 @@ export interface JwtPayload {
   role: string;
 }
 
+// Koper-risico-score: drukt verifieerbaarheid van de herkomstketen uit, geen schuld.
+export type RiskScore = 'GROEN' | 'ORANJE' | 'ROOD';
+
+// Transparante, feitelijke onderbouwing van de score (geen schuld-taal).
+export interface ScoreFactors {
+  found: boolean;          // dier bekend in IDSee
+  chainConfirmed: boolean; // er is een bevestigde (CONFIRMED) registratie
+  breederVerified: boolean;// registrerende professional is geverifieerd
+  motherKnown: boolean;    // moederdier bekend
+  disputed: boolean;       // een registratie is betwist (DISPUTED)
+}
+
 export interface VerifyResult {
-  found: boolean;
-  certified: boolean;
-  breederVerified: boolean;
-  motherKnown: boolean;
+  chipId: string;
+  riskScore: RiskScore;
+  factors: ScoreFactors;
   registrationDate?: Date;
 }
 

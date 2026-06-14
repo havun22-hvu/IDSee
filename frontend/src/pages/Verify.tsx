@@ -1,5 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { api } from '../lib/api';
+import { RiskScoreBadge } from '../components/verify/RiskScoreBadge';
 import type { VerifyResult } from '../types';
 
 export function Verify() {
@@ -63,50 +64,12 @@ export function Verify() {
         </form>
       ) : (
         <div className="verify-result">
-          {result.found ? (
-            <>
-              <div className={`result-status ${result.certified ? 'status-success' : 'status-warning'}`}>
-                {result.certified ? '✓ Geverifieerd' : '⚠ Gedeeltelijk geverifieerd'}
-              </div>
+          <RiskScoreBadge score={result.riskScore} factors={result.factors} />
 
-              <div className="result-details">
-                <div className="result-item">
-                  <span className={result.found ? 'check' : 'cross'}>
-                    {result.found ? '✓' : '✗'}
-                  </span>
-                  <span>Geregistreerd in systeem</span>
-                </div>
-
-                <div className="result-item">
-                  <span className={result.breederVerified ? 'check' : 'cross'}>
-                    {result.breederVerified ? '✓' : '✗'}
-                  </span>
-                  <span>Fokker geregistreerd</span>
-                </div>
-
-                <div className="result-item">
-                  <span className={result.motherKnown ? 'check' : 'cross'}>
-                    {result.motherKnown ? '✓' : '✗'}
-                  </span>
-                  <span>Moeder bekend</span>
-                </div>
-
-                {result.registrationDate && (
-                  <div className="result-item">
-                    <span className="info">ℹ</span>
-                    <span>Geregistreerd op {new Date(result.registrationDate).toLocaleDateString('nl-NL')}</span>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="result-status status-error">
-              ✗ Niet gevonden
-              <p className="result-message">
-                Dit chipnummer is niet geregistreerd in ons systeem.
-                Dit kan betekenen dat het dier niet via IDSee is geregistreerd.
-              </p>
-            </div>
+          {result.registrationDate && (
+            <p className="result-meta">
+              Geregistreerd op {new Date(result.registrationDate).toLocaleDateString('nl-NL')}
+            </p>
           )}
 
           <button onClick={handleReset} className="btn-secondary btn-full">

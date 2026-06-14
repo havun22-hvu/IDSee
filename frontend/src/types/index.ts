@@ -17,11 +17,20 @@ export interface AuthResponse {
   token: string;
 }
 
-export interface VerifyResult {
+export type RiskScore = 'GROEN' | 'ORANJE' | 'ROOD';
+
+export interface ScoreFactors {
   found: boolean;
-  certified: boolean;
+  chainConfirmed: boolean;
   breederVerified: boolean;
   motherKnown: boolean;
+  disputed: boolean;
+}
+
+export interface VerifyResult {
+  chipId: string;
+  riskScore: RiskScore;
+  factors: ScoreFactors;
   registrationDate?: string;
 }
 

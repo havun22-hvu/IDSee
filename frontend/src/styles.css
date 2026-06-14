@@ -1000,3 +1000,59 @@ body {
   background: #dbeafe;
   color: #1e40af;
 }
+
+/* Risico-score (koper-verificatie) */
+.risk-score {
+  text-align: center;
+}
+
+.risk-score-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.risk-groen  { background: #d1fae5; color: #065f46; }
+.risk-oranje { background: #fef3c7; color: #92400e; }
+.risk-rood   { background: #fee2e2; color: #991b1b; }
+
+.risk-icon { font-size: 1.5rem; }
+
+.risk-description {
+  color: var(--gray-700, #374151);
+  margin-bottom: 1rem;
+}
+
+.risk-factors {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto 1rem;
+  max-width: 320px;
+  text-align: left;
+}
+
+.risk-factors li {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--gray-100, #f3f4f6);
+}
+
+.factor-ok { color: #065f46; }
+.factor-missing { color: var(--gray-500, #6b7280); }
+
+.risk-disclaimer {
+  font-size: 0.85rem;
+  color: var(--gray-500, #6b7280);
+  margin-top: 0.5rem;
+}
+
+.result-meta {
+  font-size: 0.85rem;
+  color: var(--gray-500, #6b7280);
+  text-align: center;
+  margin: 0.5rem 0 1rem;
+}

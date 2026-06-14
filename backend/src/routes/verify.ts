@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { prisma } from '../index.js';
-import { hashChipId, verifyOnChain, isDemoMode } from '../services/blockchain.js';
-import { VerifyResult } from '../types/index.js';
+import { hashChipId } from '../services/blockchain.js';
+import { calculateRiskScore } from '../services/verificationService.js';
 
 const router = Router();
 
-// GET /verify/:chipId - Public endpoint, no auth required
+// GET /verify/:chipId - Public endpoint, no auth required.
+// Returns a risk score (GROEN/ORANJE/ROOD) expressing verifiability of the
+// origin chain — not guilt (zie PROPOSITION.md §3).
 router.get('/:chipId', async (req, res) => {
   try {
     const { chipId } = req.params;
@@ -14,59 +15,10 @@ router.get('/:chipId', async (req, res) => {
       return res.status(400).json({ error: 'Ongeldig chipnummer' });
     }
 
-    // Hash the chip ID for lookup
     const chipIdHash = hashChipId(chipId);
-
-    // Look up in database
-    const animal = await prisma.animal.findUnique({
-      where: { chipIdHash },
-      include: {
-        registrations: {
-          where: { status: 'CONFIRMED' },
-          include: {
-            user: {
-              select: {
-                role: true,
-                verificationStatus: true,
-              },
-            },
-          },
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-        },
-      },
-    });
-
-    if (!animal) {
-      const result: VerifyResult = {
-        found: false,
-        certified: false,
-        breederVerified: false,
-        motherKnown: false,
-      };
-      return res.json(result);
-    }
-
-    // Check blockchain (optional verification)
-    let blockchainVerified = false;
-    if (!isDemoMode()) {
-      const onChainResult = await verifyOnChain(chipIdHash);
-      blockchainVerified = onChainResult.found;
-    } else {
-      blockchainVerified = true; // Demo mode: assume verified
-    }
-
-    // Check if breeder is verified
-    const registration = animal.registrations[0];
-    const breederVerified = registration?.user?.verificationStatus === 'VERIFIED';
-
-    const result: VerifyResult = {
-      found: true,
-      certified: blockchainVerified && breederVerified,
-      breederVerified,
-      motherKnown: !!animal.motherChipHash,
-      registrationDate: registration?.createdAt,
-    };
+    const result = await calculateRiskScore(chipIdHash);
+    // Echo the buyer's own chip number back (not stored anywhere).
+    result.chipId = chipId;
 
     res.json(result);
   } catch (error) {

@@ -162,15 +162,19 @@ eerlijke fokker die een fout maakt. Drempels zijn parameters, nog te ijken (§9)
 
 ## Koper-uitkomst: risico-score
 
-> Status: **gepland** — de huidige `/verify` geeft losse booleans; de propositie (§3)
-> legt vast dat de koper één **risico-score** 🟢/🟠/🔴 krijgt die **verifieerbaarheid**
-> uitdrukt, geen schuld.
+> Status: **geïmplementeerd** (B-traject fase 1). `GET /verify/:chipId` geeft een
+> `riskScore` (🟢/🟠/🔴) + transparante `factors`. De score drukt **verifieerbaarheid**
+> uit, geen schuld (propositie §3). Score wordt **afgeleid** (`verificationService.ts` →
+> `scoreFromFactors`), nooit opgeslagen, zodat de fraude-cascade direct doorwerkt.
 
-| Score | Betekenis |
-|-------|-----------|
-| 🟢 Groen | Keten volledig geverifieerd, geen ontbrekende schakel |
-| 🟠 Oranje | Keten deels verifieerbaar; schakel onbekend of zwak |
-| 🔴 Rood | Keten sluit niet, of schakel hoort bij een bevestigd fraudesignaal |
+| Score | Betekenis | Wanneer (fase 1) |
+|-------|-----------|------------------|
+| 🟢 Groen | Keten volledig geverifieerd | gevonden + bevestigde registratie + fokker geverifieerd + moeder bekend |
+| 🟠 Oranje | Keten deels verifieerbaar; schakel onbekend of zwak | onbekend dier, nog niet bevestigd, moeder onbekend of fokker niet geverifieerd |
+| 🔴 Rood | Keten sluit niet, of bij een bevestigd fraudesignaal | registratie betwist (DISPUTED), of eigenaar geflagd ROOD/BLOKKADE (fase 3) |
+
+De `factors` (found, chainConfirmed, breederVerified, motherKnown, disputed) worden
+neutraal als feiten getoond — nooit als beschuldiging.
 
 ## Transparantie & anonimiteit
 
