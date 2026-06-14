@@ -148,6 +148,17 @@ class ApiClient {
     });
   }
 
+  async getConfig() {
+    return this.request<{ orange: number; red: number; block: number }>('/admin/config');
+  }
+
+  async updateConfig(t: { orange: number; red: number; block: number }) {
+    return this.request<{ message: string }>('/admin/config', {
+      method: 'PUT',
+      body: JSON.stringify(t),
+    });
+  }
+
   // Verification flow (professionals)
   async sendVerificationEmail() {
     return this.request<{ message: string; devToken?: string }>('/verification/email/send', {

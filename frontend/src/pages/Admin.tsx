@@ -95,6 +95,8 @@ export function Admin() {
         </div>
       </div>
 
+      <ThresholdConfig />
+
       <section className="pending-section">
         <h2>Wachtende verificaties</h2>
 
@@ -141,6 +143,71 @@ export function Admin() {
         )}
       </section>
     </div>
+  );
+}
+
+function ThresholdConfig() {
+  const [values, setValues] = useState<{ orange: number; red: number; block: number } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    api.getConfig().then(setValues).catch(() => setError('Kon drempels niet laden'));
+  }, []);
+
+  async function save() {
+    if (!values) return;
+    setSaving(true);
+    setMessage('');
+    setError('');
+    try {
+      await api.updateConfig(values);
+      setMessage('Drempels opgeslagen.');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!values) return null;
+
+  const fields: { key: 'orange' | 'red' | 'block'; label: string }[] = [
+    { key: 'orange', label: 'Oranje vanaf' },
+    { key: 'red', label: 'Rood vanaf' },
+    { key: 'block', label: 'Blokkade vanaf' },
+  ];
+
+  return (
+    <section className="pending-section">
+      <h2>Fraude-drempels</h2>
+      <p className="page-intro">
+        Aantal door een dierenarts bevestigde signalen (binnen 1 jaar) waarbij de
+        verifieerbaarheid van een persoon escaleert. IJk op echte data.
+      </p>
+
+      {error && <div className="error-message">{error}</div>}
+      {message && <div className="alert alert-success">{message}</div>}
+
+      <div className="threshold-form">
+        {fields.map(({ key, label }) => (
+          <div className="form-group" key={key}>
+            <label htmlFor={`th-${key}`}>{label}</label>
+            <input
+              id={`th-${key}`}
+              type="number"
+              min={1}
+              value={values[key]}
+              onChange={(e) => setValues({ ...values, [key]: Number(e.target.value) })}
+            />
+          </div>
+        ))}
+      </div>
+      <button className="btn-primary" onClick={save} disabled={saving}>
+        {saving ? 'Opslaan...' : 'Drempels opslaan'}
+      </button>
+    </section>
   );
 }
 

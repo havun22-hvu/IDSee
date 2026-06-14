@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '../db.js';
 import { authMiddleware, adminOnly } from '../middleware/auth.js';
 import { getWalletBalance, isDemoMode } from '../services/blockchain.js';
+import { getThresholds, setThresholds } from '../services/systemConfigService.js';
 import { AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -10,6 +11,40 @@ const router = Router();
 // All admin routes require auth + admin role
 router.use(authMiddleware);
 router.use(adminOnly);
+
+const thresholdsSchema = z.object({
+  orange: z.number().int().min(1),
+  red: z.number().int().min(1),
+  block: z.number().int().min(1),
+});
+
+// GET /admin/config - current fraud-cascade thresholds
+router.get('/config', async (_req: AuthRequest, res: Response) => {
+  try {
+    res.json(await getThresholds());
+  } catch (error) {
+    console.error('Get config error:', error);
+    res.status(500).json({ error: 'Kon configuratie niet ophalen' });
+  }
+});
+
+// PUT /admin/config - update thresholds (must be orange < red < block)
+router.put('/config', async (req: AuthRequest, res: Response) => {
+  try {
+    const t = thresholdsSchema.parse(req.body);
+    if (!(t.orange < t.red && t.red < t.block)) {
+      return res.status(400).json({ error: 'Drempels moeten oplopen: oranje < rood < blokkade' });
+    }
+    await setThresholds(t);
+    res.json({ message: 'Drempels bijgewerkt', thresholds: t });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: error.errors[0].message });
+    }
+    console.error('Update config error:', error);
+    res.status(500).json({ error: 'Kon configuratie niet bijwerken' });
+  }
+});
 
 // GET /admin/stats - Dashboard statistics
 router.get('/stats', async (req: AuthRequest, res: Response) => {

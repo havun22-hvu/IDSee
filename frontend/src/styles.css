@@ -1087,3 +1087,15 @@ body {
   font-size: 0.9rem;
   margin: 0.75rem 0;
 }
+
+/* Admin drempel-formulier */
+.threshold-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.threshold-form .form-group {
+  flex: 1;
+  min-width: 120px;
+}

@@ -22,3 +22,20 @@ export async function getThresholds(): Promise<FraudThresholds> {
     block: pick('fraud_block_threshold', DEFAULT_THRESHOLDS.block),
   };
 }
+
+export async function setThresholds(t: FraudThresholds): Promise<void> {
+  const entries: [string, number][] = [
+    ['fraud_orange_threshold', t.orange],
+    ['fraud_red_threshold', t.red],
+    ['fraud_block_threshold', t.block],
+  ];
+  await Promise.all(
+    entries.map(([key, value]) =>
+      prisma.systemConfig.upsert({
+        where: { key },
+        create: { key, value: String(value) },
+        update: { value: String(value) },
+      })
+    )
+  );
+}
