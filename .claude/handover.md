@@ -63,7 +63,11 @@ Tests: backend 43 / frontend 16, beide builds groen. Schema via `prisma db push`
 - [x] **Mollie-provider** (env-gated) + **SMTP-emailservice** (env-gated) — code-compleet, demo default
 - [x] **Security**: productie-deps **0 vulnerabilities** (jws/express/bcrypt@6/nodemailer@9)
 
-Tests: backend 47 unit + 4 integration / frontend 18, alles groen.
+- [x] **Zachte koper-signalen**: koper meldt na betaalde check (`POST /verify/report-soft`),
+      `source=BUYER`, telt pas na arts-bevestiging
+- [x] **Admin drempel-UI**: cascade-drempels instelbaar via `/admin` (GET/PUT `/admin/config`)
+
+Tests: backend 47 unit + 10 integration / frontend 19, alles groen.
 
 **Nog open — vereist JOUW actie (geen code meer):**
 - Mollie aanzetten: `.env` → `PAYMENT_PROVIDER=mollie` + `MOLLIE_API_KEY` (key bij Mollie ophalen)
