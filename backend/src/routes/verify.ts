@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import crypto from 'crypto';
 import { prisma } from '../index.js';
+import { authMiddleware } from '../middleware/auth.js';
 import { hashChipId } from '../services/blockchain.js';
 import { calculateRiskScore } from '../services/verificationService.js';
 import { getPaymentProvider, CHECK_PRICE_CENTS } from '../services/paymentService.js';
@@ -92,10 +93,10 @@ router.get('/result/:sessionId', async (req, res) => {
   }
 });
 
-// GET /verify/:chipId - direct score (internal / legacy). The public buyer flow
-// goes through the paid endpoints above; in production this should be protected
-// or rate-limited so the score is not given away for free.
-router.get('/:chipId', async (req, res) => {
+// GET /verify/:chipId - direct score for authenticated users (internal / legacy).
+// The public buyer flow goes through the paid endpoints above; this one is behind
+// auth so the score is not given away for free.
+router.get('/:chipId', authMiddleware, async (req, res) => {
   try {
     const { chipId } = req.params;
     if (!chipId || chipId.length < 10) {

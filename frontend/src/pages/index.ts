@@ -11,3 +11,4 @@ export { Admin } from './Admin';
 export { Verification } from './Verification';
 export { Confirmations } from './Confirmations';
 export { FraudReview } from './FraudReview';
+export { ReportSignal } from './ReportSignal';

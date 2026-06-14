@@ -54,12 +54,19 @@ Alle docs afgestemd op `docs/PROPOSITION.md` (leidend), en het B-traject gebouwd
 Tests: backend 43 / frontend 16, beide builds groen. Schema via `prisma db push`
 (migrate is non-interactief hier — een echte migratie genereren is een open punt voor CI/prod).
 
+**Afgerond (vervolg 14 juni):**
+- [x] Meld-ingang fraudesignaal in UI (`/report-signal`, melden via chipnummer)
+- [x] `GET /verify/:chipId` achter auth (gratis-lek gedicht)
+- [x] `dev.db` uit git + `.gitignore` gefixt
+
 **Nog open (v1.1 / overleg):**
 - Echte Mollie activeren: `@mollie/api-client` (dependency) + `MOLLIE_API_KEY` (.env) ⚠️ overleg
-- Meld-ingang in UI voor fraudesignalen (nu API-only `POST /fraud/report`)
+- E-mailservice activeren (SMTP-credentials) ⚠️ overleg
 - Integration tests met test-DB (402-gating, cascade end-to-end)
-- `GET /verify/:chipId` afschermen in productie (gratis-lek naast de betaalde flow)
+- Echte Prisma-migratie voor CI/prod (nu `db push`)
+- Security: frontend `npm audit fix` (3 high) / backend bcrypt (breaking) ⚠️ overleg
 - ZK-migratie (Midnight) — zie `PROPOSITION.md` §9 + blueprint §4
+- "Zachte" koper-signalen (melden zonder account) — §9
 
 ## Architectuurprincipes
 

@@ -1,6 +1,7 @@
 import { prisma } from '../index.js';
 import { assessFraudStatus } from './fraudPolicy.js';
 import { getThresholds } from './systemConfigService.js';
+import { hashChipId } from './blockchain.js';
 import type { UserFraudStatus } from './riskScore.js';
 
 // Confirmed signals only count within this window (PROPOSITION.md §9 — parameter).
@@ -18,12 +19,26 @@ export async function reportFraud(params: {
   description: string;
   subjectUserId?: string;
   animalId?: string;
+  chipId?: string;
 }) {
   let subjectUserId = params.subjectUserId;
+  let animalId = params.animalId;
 
-  if (!subjectUserId && params.animalId) {
+  // Resolve the animal from a chip number so the reporter never needs an
+  // internal id (keeps the registrant otherwise anonymous).
+  if (!animalId && params.chipId) {
+    const animal = await prisma.animal.findUnique({
+      where: { chipIdHash: hashChipId(params.chipId) },
+    });
+    if (!animal) {
+      throw new Error('Geen dier gevonden voor dit chipnummer');
+    }
+    animalId = animal.id;
+  }
+
+  if (!subjectUserId && animalId) {
     const reg = await prisma.registration.findFirst({
-      where: { animalId: params.animalId },
+      where: { animalId },
       orderBy: { createdAt: 'desc' },
     });
     subjectUserId = reg?.userId;
@@ -37,7 +52,7 @@ export async function reportFraud(params: {
     data: {
       reporterId: params.reporterId,
       subjectUserId,
-      animalId: params.animalId,
+      animalId,
       type: params.type,
       description: params.description,
     },

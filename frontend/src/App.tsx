@@ -16,6 +16,7 @@ import {
   Verification,
   Confirmations,
   FraudReview,
+  ReportSignal,
 } from './pages';
 
 function App() {
@@ -94,6 +95,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['VET']}>
                   <FraudReview />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/report-signal"
+              element={
+                <ProtectedRoute roles={['BREEDER', 'VET', 'CHIPPER']}>
+                  <ReportSignal />
                 </ProtectedRoute>
               }
             />

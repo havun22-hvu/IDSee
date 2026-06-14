@@ -207,7 +207,7 @@ class ApiClient {
   }
 
   // Fraud signals
-  async reportFraud(data: { type: string; description: string; animalId?: string; subjectUserId?: string }) {
+  async reportFraud(data: { type: string; description: string; chipId?: string; animalId?: string; subjectUserId?: string }) {
     return this.request<{ message: string; report: FraudReport }>('/fraud/report', {
       method: 'POST',
       body: JSON.stringify(data),

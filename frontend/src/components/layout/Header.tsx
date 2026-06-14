@@ -31,6 +31,7 @@ export function Header() {
               <Link to="/animals/new" className="nav-link">Registreren</Link>
               <Link to="/confirmations" className="nav-link">Bevestigingen</Link>
               <Link to="/verification" className="nav-link">Verificatie</Link>
+              <Link to="/report-signal" className="nav-link">Melden</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits
@@ -50,6 +51,7 @@ export function Header() {
               <Link to="/animals/new" className="nav-link">Nieuw Dier</Link>
               <Link to="/verification" className="nav-link">Verificatie</Link>
               <Link to="/fraud-review" className="nav-link">Signalen</Link>
+              <Link to="/report-signal" className="nav-link">Melden</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits
@@ -68,6 +70,7 @@ export function Header() {
               <Link to="/animals" className="nav-link">Chips</Link>
               <Link to="/animals/new" className="nav-link">Chip Registreren</Link>
               <Link to="/verification" className="nav-link">Verificatie</Link>
+              <Link to="/report-signal" className="nav-link">Melden</Link>
               <div className="user-menu">
                 <Link to="/credits" className="credits-badge">
                   {user.credits} credits

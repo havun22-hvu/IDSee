@@ -21,7 +21,7 @@ function requireVerifiedVet(req: AuthRequest, res: Response, next: NextFunction)
 // File a signal — any authenticated user.
 router.post('/report', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
-    const { type, description, subjectUserId, animalId } = req.body;
+    const { type, description, subjectUserId, animalId, chipId } = req.body;
     if (!type || !description) {
       return res.status(400).json({ error: 'Type en beschrijving zijn verplicht' });
     }
@@ -31,6 +31,7 @@ router.post('/report', authenticateToken, async (req: AuthRequest, res: Response
       description,
       subjectUserId,
       animalId,
+      chipId,
     });
     res.status(201).json({ message: 'Melding ingediend', report });
   } catch (error: any) {

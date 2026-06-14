@@ -140,9 +140,9 @@ Als fokker afwijst:
 > risico-score wordt afgeleid, werkt dit direct door naar alle dieren van die persoon.
 > Drempels staan in `SystemConfig` (defaults: oranje=2, rood=4, blokkade=10, venster=1 jr).
 >
-> **Nog open (v1.1):** de meld-ingang in de UI (hoe een koper/arts een signaal indient
-> over een anonieme registrant) — nu via de API `POST /fraud/report`. Dit raakt de
-> "zachte koper-signalen" uit `PROPOSITION.md` §9.
+> **Meld-ingang:** professionals melden een signaal op `/report-signal` (via chipnummer;
+> de backend leidt de betrokken registrant af, zodat de melder geen interne id nodig
+> heeft). "Zachte" koper-signalen (zonder account) blijven een open punt — `PROPOSITION.md` §9.
 
 In plaats van een geldelijke afhandeling werkt fraude via een **reputatie-cascade**:
 
