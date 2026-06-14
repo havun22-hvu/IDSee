@@ -101,7 +101,14 @@ confirm; periodieke herbeoordeling is een latere optimalisatie.
 
 ---
 
-## Fase 2 — €2-betaling (demo-provider nu, Mollie later)
+## Fase 2 — €2-betaling (demo-provider nu, Mollie later) ✅ AFGEROND (14 juni 2026)
+
+> Geïmplementeerd: `paymentService.ts` (provider-abstractie, DemoProvider default,
+> Mollie env-gated), `CheckTransaction` model, `verify.ts` (initiate-check/check-status/
+> result met 402-gating), `routes/payment.ts` (webhook), frontend `Verify.tsx`
+> (initiate → poll → score). Tests: 4 backend (demo-provider) + 3 component (betaal-flow).
+> **Open:** echte Mollie (dependency `@mollie/api-client` + `MOLLIE_API_KEY`) — overleg.
+> Integration tests met test-DB (402-gating end-to-end) → v1.1.
 
 **Datamodel** (`schema.prisma`, strings):
 - nieuw `CheckTransaction`: id, sessionId, chipId, amount(centen=200), currency,

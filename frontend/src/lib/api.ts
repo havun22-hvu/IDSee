@@ -67,6 +67,22 @@ class ApiClient {
     return this.request<VerifyResult>(`/verify/${encodeURIComponent(chipId)}`);
   }
 
+  // Paid check flow (€2)
+  async initiateCheck(chipId: string) {
+    return this.request<{ sessionId: string; checkoutUrl: string | null }>('/verify/initiate-check', {
+      method: 'POST',
+      body: JSON.stringify({ chipId }),
+    });
+  }
+
+  async getCheckStatus(sessionId: string) {
+    return this.request<{ status: 'PENDING' | 'PAID' | 'FAILED' }>(`/verify/check-status/${sessionId}`);
+  }
+
+  async getCheckResult(sessionId: string) {
+    return this.request<VerifyResult>(`/verify/result/${sessionId}`);
+  }
+
   // Animals
   async getAnimals() {
     return this.request<any[]>('/animals');

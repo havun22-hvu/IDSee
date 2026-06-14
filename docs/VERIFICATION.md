@@ -182,6 +182,20 @@ eerlijke fokker die een fout maakt. Drempels zijn parameters, nog te ijken (§9)
 De `factors` (found, chainConfirmed, breederVerified, motherKnown, disputed) worden
 neutraal als feiten getoond — nooit als beschuldiging.
 
+### Betaalde check (€2)
+
+> Status: **geïmplementeerd v1** met demo-provider. De koper betaalt €2 vóór de score
+> (PROPOSITION.md §6). Flow: `POST /verify/initiate-check` → betalen → frontend pollt
+> `GET /verify/check-status/:sessionId` → na `PAID` geeft `GET /verify/result/:sessionId`
+> de score (402 zolang niet betaald).
+>
+> Een **demo-payment-provider** (`paymentService.ts`) draait zonder credentials —
+> analoog aan de blockchain-demo-mode. Echte Mollie wordt later geactiveerd achter
+> `PAYMENT_PROVIDER=mollie` + `MOLLIE_API_KEY` (vereist dependency + sleutel).
+>
+> De directe `GET /verify/:chipId` bestaat nog voor interne/legacy-doeleinden en moet
+> in productie afgeschermd of rate-limited worden.
+
 ## Transparantie & anonimiteit
 
 - Verificaties en registraties zijn **op blockchain vastgelegd** als hashes/proofs

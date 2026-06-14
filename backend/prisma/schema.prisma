@@ -190,6 +190,23 @@ model PeerVerification {
   releasedAt      DateTime?
 }
 
+// Buyer pay-per-check transaction (PROPOSITION.md §6). The score is only
+// released after payment. Chip stored as hash for privacy (AVG §5).
+model CheckTransaction {
+  id                String   @id @default(uuid())
+  sessionId         String   @unique
+  chipIdHash        String   // hashed chip for score lookup (no plaintext)
+  amount            Int      // cents, e.g. 200 for €2
+  currency          String   @default("EUR")
+  status            String   @default("PENDING") // PENDING, PAID, FAILED
+  provider          String   @default("demo")
+  providerPaymentId String?
+  checkoutUrl       String?  // present for real redirect-based providers
+  scoreShown        Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  paidAt            DateTime?
+}
+
 // Fraud signals — only a verified vet can confirm; confirmed signals drive
 // the graduated reputation cascade (PROPOSITION.md §4).
 model FraudReport {

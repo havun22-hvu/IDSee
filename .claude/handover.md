@@ -42,17 +42,24 @@ Zie `docs/INDEX.md` voor de volledige status-tabel.
 - backend: `bcrypt`-keten high-severity (vereist `npm audit fix --force`, breaking)
 - frontend: `react-router-dom` 3× high (veilig op te lossen via `npm audit fix`)
 
-### Docs getoetst aan PROPOSITION.md (14 juni 2026)
+### B-traject geïmplementeerd (14 juni 2026)
 
-Alle docs zijn afgestemd op `docs/PROPOSITION.md` (leidend). Doorgevoerd: €2 risico-score
-i.p.v. gratis booleans, borg-pool verwijderd → arts-bevestigde cascade, gen-1 wallet-
-instructies weg, positionering "beter alternatief / geen vervangingsclaim".
+Alle docs afgestemd op `docs/PROPOSITION.md` (leidend), en het B-traject gebouwd in
+3 fasen (plan: `.claude/plan-b-traject.md`):
 
-**Nog open — B-traject (code, vereist `/arch`-blauwdruk):**
-- Risico-score 🟢/🟠/🔴 in `/verify` (nu nog booleans in `VerifyResult`/`verify.ts`)
-- Fraude-cascade + graduele flag + arts-bevestiging (datamodel + ZK-statements)
-- €2 koper-betaling (Mollie) — hangt aan het payments-item
-- Zie `PROPOSITION.md` §9 voor de open ontwerppunten (drempels, ZK, DPIA)
+- **Fase 1 — risico-score** 🟢/🟠/🔴 in `/verify` (`riskScore.ts` + `verificationService.ts`)
+- **Fase 3 — fraude-cascade** arts-bevestigd, gradueel (`fraudService.ts`, `FraudReview.tsx`)
+- **Fase 2 — €2-betaling** met demo-provider (`paymentService.ts`, `CheckTransaction`)
+
+Tests: backend 43 / frontend 16, beide builds groen. Schema via `prisma db push`
+(migrate is non-interactief hier — een echte migratie genereren is een open punt voor CI/prod).
+
+**Nog open (v1.1 / overleg):**
+- Echte Mollie activeren: `@mollie/api-client` (dependency) + `MOLLIE_API_KEY` (.env) ⚠️ overleg
+- Meld-ingang in UI voor fraudesignalen (nu API-only `POST /fraud/report`)
+- Integration tests met test-DB (402-gating, cascade end-to-end)
+- `GET /verify/:chipId` afschermen in productie (gratis-lek naast de betaalde flow)
+- ZK-migratie (Midnight) — zie `PROPOSITION.md` §9 + blueprint §4
 
 ## Architectuurprincipes
 
