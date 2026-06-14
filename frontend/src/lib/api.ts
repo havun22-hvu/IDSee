@@ -83,6 +83,13 @@ class ApiClient {
     return this.request<VerifyResult>(`/verify/result/${sessionId}`);
   }
 
+  async reportSoftSignal(sessionId: string, description: string) {
+    return this.request<{ message: string }>('/verify/report-soft', {
+      method: 'POST',
+      body: JSON.stringify({ sessionId, description }),
+    });
+  }
+
   // Animals
   async getAnimals() {
     return this.request<any[]>('/animals');

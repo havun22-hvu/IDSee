@@ -5,6 +5,61 @@ import type { VerifyResult } from '../types';
 
 type Phase = 'idle' | 'starting' | 'paying';
 
+// A buyer can flag an irregularity after a paid check (soft signal). A verified
+// vet still has to confirm it before it affects anyone's score.
+function SoftReport({ sessionId }: { sessionId: string }) {
+  const [open, setOpen] = useState(false);
+  const [description, setDescription] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+
+  if (done) {
+    return <p className="soft-report-done">Bedankt. Een dierenarts beoordeelt je melding.</p>;
+  }
+
+  if (!open) {
+    return (
+      <button type="button" className="link-subtle soft-report-toggle" onClick={() => setOpen(true)}>
+        Klopt er iets niet? Meld het
+      </button>
+    );
+  }
+
+  async function submit() {
+    if (!description.trim()) {
+      setError('Geef kort aan wat er niet klopt');
+      return;
+    }
+    setSubmitting(true);
+    setError('');
+    try {
+      await api.reportSoftSignal(sessionId, description.trim());
+      setDone(true);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="soft-report">
+      {error && <div className="error-message">{error}</div>}
+      <textarea
+        aria-label="Beschrijving melding"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        rows={3}
+        placeholder="Beschrijf kort wat er niet lijkt te kloppen"
+      />
+      <button type="button" className="btn-small btn-danger" onClick={submit} disabled={submitting}>
+        {submitting ? 'Indienen...' : 'Melding indienen'}
+      </button>
+    </div>
+  );
+}
+
 export function Verify() {
   const [chipId, setChipId] = useState('');
   const [error, setError] = useState('');
@@ -132,6 +187,8 @@ export function Verify() {
               Geregistreerd op {new Date(result.registrationDate).toLocaleDateString('nl-NL')}
             </p>
           )}
+
+          {sessionId && <SoftReport sessionId={sessionId} />}
 
           <button onClick={handleReset} className="btn-secondary btn-full">
             Nieuwe verificatie

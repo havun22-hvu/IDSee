@@ -109,7 +109,8 @@ export type UserFraudStatus = 'LEREN' | 'ORANJE' | 'ROOD' | 'BLOKKADE';
 
 export interface FraudReport {
   id: string;
-  reporterId: string;
+  reporterId?: string;
+  source: 'PROFESSIONAL' | 'BUYER';
   subjectUserId: string;
   animalId?: string;
   type: string;

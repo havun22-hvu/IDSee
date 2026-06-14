@@ -90,6 +90,32 @@ describe('paid check flow (gating)', () => {
   });
 });
 
+describe('soft buyer signal', () => {
+  it('requires a PAID session', async () => {
+    const res = await request(app)
+      .post('/verify/report-soft')
+      .send({ sessionId: 'does-not-exist', description: 'iets klopt niet' });
+    expect(res.status).toBe(403);
+  });
+
+  it('creates a BUYER-sourced report after a paid check', async () => {
+    const init = await request(app).post('/verify/initiate-check').send({ chipId: CHIP });
+    const { sessionId } = init.body;
+    await request(app).get(`/verify/check-status/${sessionId}`); // settle (demo PAID)
+
+    const res = await request(app)
+      .post('/verify/report-soft')
+      .send({ sessionId, description: 'moeder lijkt niet te kloppen' });
+    expect(res.status).toBe(201);
+
+    const report = await prisma.fraudReport.findFirst({
+      where: { subjectUserId: subjectId, source: 'BUYER' },
+    });
+    expect(report).toBeTruthy();
+    expect(report?.reporterId).toBeNull();
+  });
+});
+
 describe('fraud cascade (end-to-end)', () => {
   it('a sound chain scores GROEN before any signal', async () => {
     const res = await request(app)

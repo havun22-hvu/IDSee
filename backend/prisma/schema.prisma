@@ -212,9 +212,10 @@ model CheckTransaction {
 model FraudReport {
   id              String   @id @default(uuid())
 
-  // Who reported (any authenticated user)
-  reporterId      String
-  reporter        User     @relation("Reporter", fields: [reporterId], references: [id])
+  // Who reported. Null for anonymous buyer signals (source = BUYER).
+  reporterId      String?
+  reporter        User?    @relation("Reporter", fields: [reporterId], references: [id])
+  source          String   @default("PROFESSIONAL") // PROFESSIONAL, BUYER
 
   // The professional the signal is about (the "person" of the cascade)
   subjectUserId   String

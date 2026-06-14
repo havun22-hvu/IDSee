@@ -80,6 +80,9 @@ export function FraudReview() {
               <div className="confirmation-info">
                 <div className="animal-info">
                   <span className="animal-species">{r.type}</span>
+                  <span className={`status-badge ${r.source === 'BUYER' ? 'status-warning' : 'status-active'}`}>
+                    {r.source === 'BUYER' ? 'Koper-signaal' : 'Professional'}
+                  </span>
                 </div>
                 <p>{r.description}</p>
                 <dl className="info-list">

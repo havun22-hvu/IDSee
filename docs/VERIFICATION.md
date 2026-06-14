@@ -141,8 +141,17 @@ Als fokker afwijst:
 > Drempels staan in `SystemConfig` (defaults: oranje=2, rood=4, blokkade=10, venster=1 jr).
 >
 > **Meld-ingang:** professionals melden een signaal op `/report-signal` (via chipnummer;
-> de backend leidt de betrokken registrant af, zodat de melder geen interne id nodig
-> heeft). "Zachte" koper-signalen (zonder account) blijven een open punt — `PROPOSITION.md` §9.
+> de backend leidt de betrokken registrant af, zodat de melder geen interne id nodig heeft).
+>
+> **Zachte koper-signalen:** een koper kan na een **betaalde** check een onregelmatigheid
+> melden vanaf de resultaatpagina (`POST /verify/report-soft`, gekoppeld aan de PAID-sessie
+> tegen spam, geen account nodig). Dit wordt een `FraudReport` met `source = BUYER` en
+> `reporterId = null`. Het telt **niet** automatisch mee: net als elk signaal moet een
+> geverifieerde dierenarts het eerst bevestigen vóór de cascade reageert (§4). De arts ziet
+> "Koper-signaal" vs "Professional" in de review.
+>
+> **Nog open (§9):** een puur-zachte aggregatie op dier-niveau (meerdere onbevestigde
+> koper-signalen → tijdelijke waarschuwing zonder arts) is nog niet geïmplementeerd.
 
 In plaats van een geldelijke afhandeling werkt fraude via een **reputatie-cascade**:
 

@@ -5,6 +5,7 @@ import { authMiddleware } from '../middleware/auth.js';
 import { hashChipId } from '../services/blockchain.js';
 import { calculateRiskScore } from '../services/verificationService.js';
 import { getPaymentProvider, CHECK_PRICE_CENTS } from '../services/paymentService.js';
+import { reportFraud } from '../services/fraudService.js';
 
 const router = Router();
 
@@ -90,6 +91,41 @@ router.get('/result/:sessionId', async (req, res) => {
   } catch (error) {
     console.error('Verify result error:', error);
     res.status(500).json({ error: 'Kon resultaat niet ophalen' });
+  }
+});
+
+// POST /verify/report-soft - a buyer flags an irregularity after a paid check,
+// without an account. Tied to a PAID session (anti-spam). It becomes a "soft"
+// signal (source BUYER) that a verified vet still has to confirm before it
+// counts toward the cascade (PROPOSITION.md §4/§9).
+router.post('/report-soft', async (req, res) => {
+  try {
+    const { sessionId, description } = req.body;
+    if (!sessionId || !description) {
+      return res.status(400).json({ error: 'Sessie en beschrijving zijn verplicht' });
+    }
+
+    const tx = await prisma.checkTransaction.findUnique({ where: { sessionId } });
+    if (!tx || tx.status !== 'PAID') {
+      return res.status(403).json({ error: 'Melden kan alleen na een betaalde check' });
+    }
+
+    const animal = await prisma.animal.findUnique({ where: { chipIdHash: tx.chipIdHash } });
+    if (!animal) {
+      return res.status(404).json({ error: 'Geen geregistreerd dier voor dit chipnummer' });
+    }
+
+    await reportFraud({
+      source: 'BUYER',
+      type: 'koper_melding',
+      description,
+      animalId: animal.id,
+    });
+
+    res.status(201).json({ message: 'Bedankt. Een dierenarts beoordeelt je melding.' });
+  } catch (error: any) {
+    // e.g. animal has no registrant to attribute the signal to
+    res.status(400).json({ error: error.message || 'Kon melding niet indienen' });
   }
 });
 

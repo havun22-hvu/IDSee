@@ -14,7 +14,8 @@ const REVIEW_WINDOW_DAYS = 365;
  * needing to know an otherwise-anonymous user id).
  */
 export async function reportFraud(params: {
-  reporterId: string;
+  reporterId?: string; // null/undefined for anonymous buyer signals
+  source?: string; // PROFESSIONAL (default) | BUYER
   type: string;
   description: string;
   subjectUserId?: string;
@@ -50,7 +51,8 @@ export async function reportFraud(params: {
 
   return prisma.fraudReport.create({
     data: {
-      reporterId: params.reporterId,
+      reporterId: params.reporterId ?? null,
+      source: params.source ?? 'PROFESSIONAL',
       subjectUserId,
       animalId,
       type: params.type,
