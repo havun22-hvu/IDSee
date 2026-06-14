@@ -2,7 +2,7 @@
 title: IDSee Handover
 type: claude
 scope: idsee
-last_updated: 2026-06-14
+last_updated: 2026-06-15
 ---
 
 # IDSee — Handover
@@ -27,20 +27,10 @@ Zie `docs/INDEX.md` voor de volledige status-tabel.
 - [x] **Teststack** — Jest (backend, 19 tests) + Vitest (frontend, 7 tests).
       `npm test` in beide mappen. Kritieke paden: hashing, JWT/rolchecks, API-client.
 
-### Openstaande items (prioriteit hoog → laag)
-
-1. **Mollie-betalingen** — nu uitgecommentarieerd; dev-mode geeft credits direct ⚠️ env/credentials
-2. **E-mailservice** — token wordt gelogd i.p.v. verstuurd ⚠️ SMTP-credentials
-3. **Cardano uit demo mode** — Lucid + Blockfrost koppelen, contracts deployen ⚠️ env/credentials
-4. **Midnight ZK** — gepland, zie `docs/midnight/INTEGRATION-PLAN.md` (architect-traject `/arch`)
-5. **Testdekking uitbreiden** — integration tests met test-DB (supertest + Prisma)
-
-> De 5 resterende items vereisen credentials/env, nieuwe dependencies of een
-> architect-blauwdruk — telkens eerst overleg met Henk.
-
-### Security (uit `/start` audit)
-- backend: `bcrypt`-keten high-severity (vereist `npm audit fix --force`, breaking)
-- frontend: `react-router-dom` 3× high (veilig op te lossen via `npm audit fix`)
+> ⚠️ De bovenstaande "Afgerond 13 juni"-lijst en de oorspronkelijke openstaande/
+> security-items zijn **ingehaald** door het werk van 14 juni (zie hieronder):
+> Mollie + e-mail (env-gated), integration-tests en security (0 vulns) zijn gedaan.
+> Nog wél open: Cardano uit demo mode + Midnight ZK. Actuele stand: "Nog open" verderop.
 
 ### B-traject geïmplementeerd (14 juni 2026)
 
