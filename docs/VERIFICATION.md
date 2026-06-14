@@ -57,10 +57,12 @@ Bestaande Professional                 Nieuwe Professional
 - Verificeerder zet credits in als borg (bijv. 10 credits)
 - Borg blijft 30 dagen vastgezet
 - Na 30 dagen zonder problemen: borg vrijgegeven
-- Bij fraude door nieuwe professional:
-  - Borg verbeurd (naar platform pool)
-  - Verificeerder krijgt waarschuwing
-  - Na 3 waarschuwingen: account geschorst
+- De borg dient als **commitment** dat verificaties serieus zijn — niet als
+  straf-/inkomstenmechanisme
+
+> **Belangrijk (zie `PROPOSITION.md` §4):** het oude model "borg verbeurd → naar
+> platform pool" is **verlaten**. Fraude wordt niet via een geldstroom afgehandeld
+> maar via een **reputatie-cascade met menselijke bevestiging** (zie hieronder).
 
 ## Dubbele Bevestiging voor Registraties
 
@@ -130,12 +132,52 @@ Als fokker afwijst:
 | DISPUTED | Fokker heeft afgewezen |
 | CANCELLED | Geannuleerd door registreerder |
 
-## Transparantie
+## Fraude-respons: bevestiging + cascade
 
-Alle verificaties en registraties zijn:
-- Publiek inzichtelijk (geanonimiseerd voor privacy)
-- Op blockchain vastgelegd
-- Traceerbaar via reputatieketen
+> Status: **ontworpen, nog niet geïmplementeerd** (B-traject, zie `PROPOSITION.md` §4
+> en de open punten §9). De huidige code kent peer-verificatie en fokker-bevestiging,
+> nog niet de cascade en de risico-score.
+
+In plaats van een geldelijke afhandeling werkt fraude via een **reputatie-cascade**:
+
+1. Een signaal ontstaat (koper-melding, ontbrekende schakel, of arts-observatie zoals
+   een omgekat buitenlands paspoort).
+2. **Alleen een geverifieerde dierenarts bevestigt** dat het een fraudesignaal is —
+   dit voorkomt dat een concurrent iemand kapotmaakt met valse claims.
+3. Na bevestiging cascadeert de flag naar **alle aanmeldingen van die persoon**.
+4. Naar de koper toe vertaalt dit zich als **verlaagde verifieerbaarheid** (oranje/rood),
+   **nooit** als publieke beschuldiging van een identificeerbaar persoon (via ZKP anoniem).
+
+### Graduele escalatie (leervermogen vóór sanctie)
+
+| Fase | Trigger | Effect |
+|------|---------|--------|
+| Leren | Eerste onregelmatigheden | 🟢 blijft; professional krijgt feedback |
+| Waarschuwing | Na *x* herhalingen | 🟠 oranje, patroon zichtbaar |
+| Sanctie | Voortdurende herhaling | 🔴 rood |
+| Blokkade | Schaal commerciële handelaar (bijv. >10 illegale imports) | Aanmelden onmogelijk |
+
+Doel = de **commerciële illegale handelaar** raken op **patroon en volume**, niet de
+eerlijke fokker die een fout maakt. Drempels zijn parameters, nog te ijken (§9).
+
+## Koper-uitkomst: risico-score
+
+> Status: **gepland** — de huidige `/verify` geeft losse booleans; de propositie (§3)
+> legt vast dat de koper één **risico-score** 🟢/🟠/🔴 krijgt die **verifieerbaarheid**
+> uitdrukt, geen schuld.
+
+| Score | Betekenis |
+|-------|-----------|
+| 🟢 Groen | Keten volledig geverifieerd, geen ontbrekende schakel |
+| 🟠 Oranje | Keten deels verifieerbaar; schakel onbekend of zwak |
+| 🔴 Rood | Keten sluit niet, of schakel hoort bij een bevestigd fraudesignaal |
+
+## Transparantie & anonimiteit
+
+- Verificaties en registraties zijn **op blockchain vastgelegd** als hashes/proofs
+- Identiteiten van fokker/arts/chipper blijven **anoniem via ZKP** — er is géén
+  publiek "wie-verifieerde-wie"-register en geen publiek oordeel over een persoon
+- Het systeem bewijst *dát* een schakel geverifieerd is, niet *wie* het is
 
 ## Bootstrapping: Eerste Gebruikers
 

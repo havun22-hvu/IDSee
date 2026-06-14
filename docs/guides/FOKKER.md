@@ -15,16 +15,17 @@ IDSee is een systeem waarmee je als erkende fokker de afkomst van je pups kunt b
    - FCI erkend stamboek
    - KvK-registratie als fokker
 
-2. **Cardano Wallet** (Nami, Eternl, of Lace)
+2. **Account op IDSee** (e-mail + wachtwoord) — geen wallet of blockchain-kennis nodig;
+   de blockchain werkt onzichtbaar op de achtergrond
 
-3. **Inspectie** door een IDSee BreederInspector
+3. **Verificatie** via peer-verificatie of een IDSee-keuring
 
 ### Stappenplan
 
 ```
-1. Maak een Cardano wallet aan
-2. Vraag keuring aan via IDSee app
-3. Inspector bezoekt je en verifieert:
+1. Maak een IDSee-account aan (e-mail + KvK-nummer)
+2. Vraag keuring/verificatie aan via de IDSee app
+3. Verificatie controleert:
    - Fokkerij locatie
    - Erkenningsdocumenten
    - Moederdieren

@@ -42,6 +42,18 @@ Zie `docs/INDEX.md` voor de volledige status-tabel.
 - backend: `bcrypt`-keten high-severity (vereist `npm audit fix --force`, breaking)
 - frontend: `react-router-dom` 3× high (veilig op te lossen via `npm audit fix`)
 
+### Docs getoetst aan PROPOSITION.md (14 juni 2026)
+
+Alle docs zijn afgestemd op `docs/PROPOSITION.md` (leidend). Doorgevoerd: €2 risico-score
+i.p.v. gratis booleans, borg-pool verwijderd → arts-bevestigde cascade, gen-1 wallet-
+instructies weg, positionering "beter alternatief / geen vervangingsclaim".
+
+**Nog open — B-traject (code, vereist `/arch`-blauwdruk):**
+- Risico-score 🟢/🟠/🔴 in `/verify` (nu nog booleans in `VerifyResult`/`verify.ts`)
+- Fraude-cascade + graduele flag + arts-bevestiging (datamodel + ZK-statements)
+- €2 koper-betaling (Mollie) — hangt aan het payments-item
+- Zie `PROPOSITION.md` §9 voor de open ontwerppunten (drempels, ZK, DPIA)
+
 ## Architectuurprincipes
 
 - Gemini = architect (groot contextvenster, blauwdrukken via `/arch`)

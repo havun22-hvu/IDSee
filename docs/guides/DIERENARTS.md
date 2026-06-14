@@ -6,6 +6,10 @@ Als dierenarts of erkende chipper ben je de vertrouwde schakel die:
 - Chips plaatst bij pups
 - Dieren registreert in het systeem
 - Gezondheidsgegevens vastlegt
+- Als **geverifieerde dierenarts**: een **fraudesignaal kunt bevestigen** (zie onder)
+
+> Je werkt met een gewoon IDSee-account (e-mail + wachtwoord). Geen wallet, geen
+> blockchain-kennis nodig — de blockchain werkt onzichtbaar op de achtergrond.
 
 ---
 
@@ -23,18 +27,18 @@ Als dierenarts of erkende chipper ben je de vertrouwde schakel die:
 
 ### Verificatie
 
-Je registratie wordt geverifieerd door IDSee administrators via:
-1. BIG-register controle (automatisch)
-2. NVWA database (automatisch)
-3. Eenmalige wallet-koppeling
+Je registratie wordt geverifieerd via:
+1. BIG-register / NVWA controle
+2. **Peer-verificatie** door een al geverifieerde professional (credits-borg), of
+   een IDSee-keuring bij de eerste gebruikers (genesis, zie VERIFICATION.md)
 
 ---
 
 ## Chip Registratie Workflow
 
-### Stap 1: Open IDSee App
+### Stap 1: Log in op IDSee
 ```
-IDSee App > Inloggen met wallet > "Nieuwe Registratie"
+IDSee App > Inloggen (e-mail + wachtwoord) > "Nieuwe Registratie"
 ```
 
 ### Stap 2: Scan Chip
@@ -45,7 +49,7 @@ Formaat: 528-XXXX-XXXX-XXXX
 
 ### Stap 3: Selecteer Fokker
 ```
-Zoek fokker op naam of kennel
+Zoek fokker op UBN/kennel
 Verifieer dat fokker actief is (groene status)
 ```
 
@@ -59,11 +63,11 @@ Verifieer dat fokker actief is (groene status)
 - Eventuele opmerkingen
 ```
 
-### Stap 5: Onderteken & Verzend
+### Stap 5: Bevestig & Verzend
 ```
-Bevestig met wallet
-Transactie wordt verwerkt (~1 minuut)
-Ontvang bevestiging
+Bevestig de registratie (kost 1 credit)
+De fokker bevestigt de registratie daarna (dubbele bevestiging)
+Pas na bevestiging wordt de keten op de blockchain vastgelegd
 ```
 
 ---
@@ -88,7 +92,7 @@ Ontvang bevestiging
    - Treatment
    - Surgery
 4. Upload document (wordt versleuteld)
-5. Onderteken met wallet
+5. Bevestig (kost 1 credit)
 ```
 
 ### Privacy
@@ -99,36 +103,39 @@ Ontvang bevestiging
 
 ---
 
-## Technische Details
+## Fraudesignaal bevestigen (geverifieerde dierenarts)
 
-### Transactie Structuur
+Een geverifieerde dierenarts is de menselijke controle in de fraude-respons
+(`PROPOSITION.md` §4):
 
-```
-Inputs:
-  - AnimalRegistry UTxO
-  - Je Professional credential
+- Een signaal ontstaat (koper-melding, ontbrekende schakel, of jouw observatie zoals
+  een omgekat buitenlands paspoort).
+- **Alleen jouw bevestiging** zet een hard fraudesignaal — dit voorkomt dat een
+  concurrent iemand kapotmaakt met valse claims.
+- Na bevestiging verlaagt de **verifieerbaarheid** (score) van de betrokken keten,
+  gradueel en anoniem via ZKP. Het is nooit een publieke beschuldiging van een persoon.
 
-Outputs:
-  - Updated AnimalRegistry
-  - Fee (betaald door fokker of jij)
-```
+> Status: ontworpen, nog niet geïmplementeerd (B-traject).
 
-### Foutafhandeling
+---
+
+## Foutafhandeling
 
 | Fout | Oorzaak | Oplossing |
 |------|---------|-----------|
-| "Professional not found" | Wallet niet geregistreerd | Contact admin |
+| "Professional not found" | Account niet geverifieerd | Vraag verificatie aan |
 | "Professional suspended" | Registratie geschorst | Hernieuw BIG/NVWA |
 | "Breeder not active" | Fokker niet erkend | Fokker moet eerst registreren |
 | "Chip already exists" | Dubbele registratie | Controleer chipnummer |
+| "Insufficient credits" | Te weinig credits | Koop een credit-bundel |
 
 ---
 
 ## Kosten & Verdienmodel
 
-### Transactiekosten
-- ~2-3 ADA per registratie
-- Betaald door fokker OF verrekend in consult
+### Registratiekosten
+- 1 credit per registratie of gezondheidsrecord (zie CREDITS.md)
+- Blockchain-/proof-kosten lopen via het platform — onzichtbaar voor jou
 
 ### Toekomstig
 - Mogelijk: verificatie-vergoeding per check
@@ -141,7 +148,7 @@ Outputs:
 1. **Altijd chip scannen** - nooit handmatig invoeren indien mogelijk
 2. **Verifieer moeder** - controleer dat moeder geregistreerd is
 3. **Directe registratie** - registreer direct na chippen
-4. **Backup wallet seed** - verlies geen toegang tot je credentials
+4. **Houd je BIG/NVWA-registratie actief** - anders vervalt je verificatie
 
 ---
 

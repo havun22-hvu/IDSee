@@ -10,6 +10,9 @@ Bij de aankoop van een pup wil je zekerheid over:
 
 IDSee geeft je deze zekerheid **zonder** dat je privégegevens van de fokker te zien krijgt.
 
+> IDSee is een **beter alternatief** voor het wettelijk verplichte chipregister: het legt
+> de hele herkomstketen verifieerbaar vast. Het vervangt geen wettelijke plicht.
+
 ---
 
 ## Pup Verifiëren
@@ -23,19 +26,23 @@ IDSee geeft je deze zekerheid **zonder** dat je privégegevens van de fokker te 
 ```
 1. Ga naar idsee.app/verify
 2. Voer chipnummer in: 528-XXXX-XXXX-XXXX
-3. Klik "Verifiëren"
-4. Bekijk resultaat
+3. Betaal €2 voor de check
+4. Bekijk de risico-score
 ```
 
-### Resultaat Uitleg
+### Resultaat: één risico-score
 
-| Status | Betekenis |
-|--------|-----------|
-| ✅ Erkende Fokker | Fokker is gekeurd en geregistreerd |
-| ✅ Moeder Bekend | Moeder is gechipt en geregistreerd |
-| ✅ Professionele Registratie | Dierenarts heeft chip geplaatst |
-| ⚠️ Niet Gevonden | Pup niet in systeem |
-| ❌ Ongeldige Fokker | Fokker geschorst of onbekend |
+Je krijgt één uitkomst: een **risico-score**. Die drukt uit **hoe goed de herkomst
+verifieerbaar is** — het is nadrukkelijk **geen** oordeel over schuld van een persoon.
+
+| Score | Betekenis |
+|-------|-----------|
+| 🟢 Groen | Keten volledig geverifieerd: moeder geregistreerd, arts/chipper geverifieerd, geen ontbrekende schakel |
+| 🟠 Oranje | Keten deels verifieerbaar; een of meer schakels onbekend of zwak (bijv. import) |
+| 🔴 Rood | Keten sluit niet: ontbrekende/niet-verifieerbare herkomst, of een schakel bij een bevestigd fraudesignaal |
+
+> Een fraudeur scoort vanzelf oranje/rood **omdat zijn keten niet sluit** — niet omdat
+> het systeem hem een fraudeur noemt.
 
 ---
 
@@ -79,18 +86,12 @@ Let op deze waarschuwingssignalen:
 
 ## Na Aankoop
 
-### Eigendom Registreren (optioneel)
+### Eigendom Registreren (toekomstig, optioneel)
 
-```
-1. Download IDSee app
-2. Maak Cardano wallet
-3. Vraag fokker om overdracht
-4. Accepteer in app
-5. Pup staat nu op jouw naam
-```
+> Geplande feature, nog niet beschikbaar. Net als de rest van IDSee werkt dit **zonder
+> wallet** — de blockchain blijft volledig onzichtbaar. Je hebt géén Cardano-wallet nodig.
 
-### Voordelen van Registratie
-
+Beoogde voordelen:
 - Bewijs van eigendom
 - Dierenarts kan records toevoegen
 - Verzekering kan gezondheid verifiëren
@@ -116,7 +117,7 @@ IDSee kan ook door verzekeringen gebruikt worden:
 ## Veelgestelde Vragen
 
 **V: Kost verificatie geld?**
-A: Nee, verificatie is gratis.
+A: Ja, €2 per check — een kleine zekerheid bij een aankoop van vaak €1.000 of meer.
 
 **V: Kan ik zien wie de fokker is?**
 A: Nee, alleen DAT de fokker erkend is.

@@ -2,7 +2,9 @@
 
 ## Overzicht
 
-Credits zijn de interne valuta van IDSee. Professionals kopen credits om registraties te doen. Kopers verifiëren gratis.
+Credits zijn de interne valuta van IDSee voor **professionals**. Zij kopen credits om
+registraties te doen. **Kopers** gebruiken geen credits — die betalen **€2 per check**
+(directe betaling, zie `PROPOSITION.md` §6).
 
 ---
 
@@ -16,7 +18,7 @@ Credits zijn de interne valuta van IDSee. Professionals kopen credits om registr
 | Nest registreren (max 12 pups) | 3 | Fokker |
 | Gezondheidsrecord toevoegen | 1 | Dierenarts |
 | Chip koppelen | 1 | Chipper |
-| **Verificatie** | **Gratis** | Koper |
+| **Verificatie (check)** | **€2 (geen credits)** | Koper |
 
 ### Bundels
 

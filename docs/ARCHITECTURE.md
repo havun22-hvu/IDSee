@@ -11,7 +11,7 @@ IDSee is een privacy-preserving verificatiesysteem voor dierherkomst. De blockch
 │                        GEBRUIKERS                                │
 ├─────────────┬─────────────┬─────────────┬─────────────┬─────────┤
 │   Koper     │   Fokker    │ Dierenarts  │   Chipper   │  Admin  │
-│  (gratis)   │  (credits)  │  (credits)  │  (credits)  │         │
+│  (betaalt)  │  (credits)  │  (credits)  │  (credits)  │         │
 └──────┬──────┴──────┬──────┴──────┬──────┴──────┬──────┴────┬────┘
        │             │             │             │           │
        ▼             ▼             ▼             ▼           ▼
@@ -47,7 +47,7 @@ IDSee is een privacy-preserving verificatiesysteem voor dierherkomst. De blockch
 
 | Rol | Toegang | Betaling |
 |-----|---------|----------|
-| **Koper** | Alleen verificatie (lezen) | Gratis |
+| **Koper** | Verificatie → risico-score (lezen) | €2 per check |
 | **Fokker** | Registreren nesten, pups | Credits |
 | **Dierenarts** | Gezondheidsrecords, chips | Credits |
 | **Chipper** | Chip registraties | Credits |
@@ -72,9 +72,9 @@ IDSee is een privacy-preserving verificatiesysteem voor dierherkomst. De blockch
 ```
 1. Koper opent webapp (geen login nodig)
 2. Voert chipnummer in
-3. Backend zoekt hash op blockchain
-4. Retourneert verificatie status
-5. Gratis, geen credits nodig
+3. Betaalt €2 voor de check
+4. Backend leidt de risico-score af (🟢/🟠/🔴) uit de herkomstketen
+5. Retourneert de score — verifieerbaarheid, geen schuldoordeel
 ```
 
 ## Database Schema
@@ -137,7 +137,7 @@ credit_transactions
 | Nest registreren | 3 credits |
 | Gezondheidsrecord | 1 credit |
 | Chip koppelen | 1 credit |
-| Verificatie (koper) | Gratis |
+| Verificatie (koper) | €2 per check (geen credits, directe betaling) |
 
 ### Aankoop
 - iDEAL, creditcard via Mollie/Stripe

@@ -12,9 +12,14 @@ Puppy mills and illegal breeders sell dogs without proper documentation. Buyers 
 ## Solution
 
 IDSee provides a simple webapp where:
-- **Buyers** verify a puppy's origin by entering a chip number (free, no account needed)
+- **Buyers** verify a puppy's origin by entering a chip number (no account) and get a
+  **risk score** (🟢/🟠/🔴) — €2 per check
 - **Professionals** (breeders, vets, chippers) register animals using credits
 - **Blockchain** provides immutable proof (invisible to users)
+
+IDSee positions itself as a **better alternative** to the mandatory chip register — it
+does **not** replace any legal obligation. See [`docs/PROPOSITION.md`](docs/PROPOSITION.md),
+the leading document: on conflict the proposition wins.
 
 ## Tech Stack
 
@@ -77,7 +82,7 @@ Open http://localhost:5173
 
 | Role | Access | Payment |
 |------|--------|---------|
-| Buyer | Verify animals | Free |
+| Buyer | Verify animals (risk score) | €2 per check |
 | Breeder | Register nests, puppies | Credits |
 | Vet | Health records, chips | Credits |
 | Chipper | Chip registrations | Credits |

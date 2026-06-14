@@ -39,9 +39,14 @@ Volledig: `HavunCore/docs/kb/runbooks/claude-werkwijze.md`.
 
 ## Project basics
 
-- **Buyers:** verifiëren puppy via chipnummer — gratis, geen account
+> **Leidend document:** `docs/PROPOSITION.md` — bij conflict wint de propositie.
+
+- **Buyers:** verifiëren puppy via chipnummer (geen account) → **risico-score**
+  🟢/🟠/🔴; **€2 per check** (primaire inkomstenstroom)
 - **Professionals:** breeders/vets/chippers registreren dieren via credits-systeem
-- **Blockchain:** Cardano voor immutable proof (demo mode, Lucid later)
+- **Fraude-respons:** arts-bevestigde reputatie-cascade, gradueel (leren→oranje→rood→blokkade)
+- **Positionering:** *beter alternatief* voor het wettelijke register — **geen** vervangingsclaim
+- **Blockchain:** Cardano voor immutable proof (demo mode, Lucid later); Midnight ZKP voor anonieme score
 - **Payments:** Mollie (iDEAL + creditcard)
 
 ## Lokaal starten

@@ -5,6 +5,7 @@
 ## Inhoudsopgave
 
 ### Project Overzicht
+- ⭐ [PROPOSITION](./PROPOSITION.md) - **Leidend document** (waarom/hoe/verdienmodel); bij conflict wint dit
 - [README](../README.md) - Project introductie en quick start
 - [ARCHITECTURE](./ARCHITECTURE.md) - Technische architectuur
 - [DEVELOPMENT](./DEVELOPMENT.md) - Ontwikkelfases en roadmap

@@ -2,6 +2,27 @@
 
 Alle belangrijke wijzigingen aan IDSee worden hier gedocumenteerd.
 
+## [0.5.1] - 2026-06-14
+
+### Gewijzigd — docs afgestemd op `PROPOSITION.md` (leidend document)
+- Koper-verificatie: van "gratis booleans" naar **€2 risico-score** (🟢/🟠/🔴) in
+  README, ARCHITECTURE, CREDITS, KOPER, CLAUDE.md
+- VERIFICATION: borg-"naar platform pool" **verwijderd** (door propositie verlaten);
+  fraude-respons herschreven naar arts-bevestigde **reputatie-cascade** + graduele flag;
+  transparantie bijgesteld naar **anoniem via ZKP** (geen publiek wie-verifieerde-wie)
+- Koper-output gepositioneerd als **verifieerbaarheid, geen schuld** (schuld-taal
+  "Ongeldige Fokker" verwijderd uit KOPER)
+- Gen-1 wallet-instructies verwijderd uit FOKKER/DIERENARTS (gebruikers hebben geen
+  wallet; blockchain blijft onzichtbaar)
+- Dierenarts-rol uitgebreid: **fraudesignaal bevestigen**
+- Positionering toegevoegd: *beter alternatief*, **geen** vervangingsclaim register
+- PROPOSITION als leidend document opgenomen in INDEX
+
+> Score- en cascade-implementatie (code) is een apart traject (B); docs markeren wat
+> nog gepland is.
+
+---
+
 ## [0.5.0] - 2026-06-13
 
 ### Toegevoegd
