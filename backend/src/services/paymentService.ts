@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { createMollieClient, MollieClient } from '@mollie/api-client';
 
 /**
  * Payment provider abstraction. Mirrors the blockchain demo-mode pattern: a
@@ -38,16 +39,50 @@ class DemoProvider implements PaymentProvider {
   }
 }
 
+// Real Mollie payments (iDEAL/creditcard). Activated via env; needs MOLLIE_API_KEY.
+class MollieProvider implements PaymentProvider {
+  readonly name = 'mollie';
+  private client: MollieClient;
+
+  constructor(apiKey: string) {
+    this.client = createMollieClient({ apiKey });
+  }
+
+  async createPayment(amountCents: number, description: string, redirectUrl: string): Promise<CreatedPayment> {
+    const payment = await this.client.payments.create({
+      amount: { currency: 'EUR', value: (amountCents / 100).toFixed(2) },
+      description,
+      redirectUrl,
+      ...(process.env.BACKEND_URL && {
+        webhookUrl: `${process.env.BACKEND_URL}/payment/webhook`,
+      }),
+    });
+    return {
+      providerPaymentId: payment.id,
+      checkoutUrl: payment.getCheckoutUrl() ?? null,
+    };
+  }
+
+  async getStatus(providerPaymentId: string): Promise<PaymentStatus> {
+    const payment = await this.client.payments.get(providerPaymentId);
+    if (payment.status === 'paid') return 'PAID';
+    if (['failed', 'canceled', 'expired'].includes(payment.status)) return 'FAILED';
+    return 'PENDING';
+  }
+}
+
 let provider: PaymentProvider | null = null;
 
 export function getPaymentProvider(): PaymentProvider {
   if (provider) return provider;
 
   if (process.env.PAYMENT_PROVIDER === 'mollie') {
-    // Real Mollie needs @mollie/api-client + MOLLIE_API_KEY. Fail loudly until wired.
-    throw new Error(
-      'Mollie provider niet geactiveerd: installeer @mollie/api-client en zet MOLLIE_API_KEY'
-    );
+    const apiKey = process.env.MOLLIE_API_KEY;
+    if (!apiKey) {
+      throw new Error('PAYMENT_PROVIDER=mollie maar MOLLIE_API_KEY ontbreekt');
+    }
+    provider = new MollieProvider(apiKey);
+    return provider;
   }
 
   provider = new DemoProvider();

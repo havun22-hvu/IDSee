@@ -1,9 +1,10 @@
 import { Router, Request, Response } from 'express';
 import crypto from 'crypto';
 import { authenticateToken, requireRole, AuthRequest } from '../middleware/auth.js';
+import { prisma } from '../db.js';
+import { sendVerificationEmail } from '../services/emailService.js';
 
 const router = Router();
-import { prisma } from '../db.js';
 
 // Bond amount for peer verification (in credits)
 const VERIFICATION_BOND = 10;
@@ -37,9 +38,8 @@ router.post('/email/send', authenticateToken, async (req: AuthRequest, res: Resp
       },
     });
 
-    // TODO: Send actual email via email service
-    // For now, log the token (development only)
-    console.log(`Email verification token for ${user.email}: ${token}`);
+    // Demo provider logs to console; smtp sends real mail.
+    await sendVerificationEmail(user.email, token);
 
     res.json({
       message: 'Verificatie email verzonden',
