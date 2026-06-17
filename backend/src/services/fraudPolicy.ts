@@ -9,28 +9,27 @@ import type { UserFraudStatus } from './riskScore.js';
  */
 
 export interface FraudThresholds {
-  orange: number;
   red: number;
   block: number;
 }
 
-// Voorlopige defaults (PROPOSITION.md §9) — overschrijfbaar via SystemConfig.
+// Voorlopige defaults (PROPOSITION.md §4/§9) — overschrijfbaar via SystemConfig.
+// 1–2 open discrepanties = leren; 3 = structureel = rood. Geen oranje-persoon-stap.
 export const DEFAULT_THRESHOLDS: FraudThresholds = {
-  orange: 2,
-  red: 4,
+  red: 3,
   block: 10,
 };
 
 export function assessFraudStatus(
-  confirmedCount: number,
+  openCount: number,
   thresholds: FraudThresholds = DEFAULT_THRESHOLDS,
   current: UserFraudStatus = 'LEREN'
 ): UserFraudStatus {
   // BLOKKADE is permanent — alleen handmatig op te heffen (buiten scope v1).
   if (current === 'BLOKKADE') return 'BLOKKADE';
-  if (confirmedCount >= thresholds.block) return 'BLOKKADE';
-  if (confirmedCount >= thresholds.red) return 'ROOD';
-  if (confirmedCount >= thresholds.orange) return 'ORANJE';
+  if (openCount >= thresholds.block) return 'BLOKKADE';
+  if (openCount >= thresholds.red) return 'ROOD';
+  // Geen oranje-stap: onder de rood-drempel blijft de professional LEREN (§4).
   return 'LEREN';
 }
 

@@ -13,7 +13,6 @@ afterAll(async () => {
     where: {
       key: {
         in: [
-          'fraud_orange_threshold',
           'fraud_red_threshold',
           'fraud_block_threshold',
           'card_yellow_threshold',
@@ -36,27 +35,27 @@ describe('admin fraud thresholds', () => {
       .get('/admin/config')
       .set('Authorization', `Bearer ${adminToken}`);
     expect(res.status).toBe(200);
-    expect(res.body).toEqual({ orange: 2, red: 4, block: 10, cards: { yellow: 3, red: 6 } });
+    expect(res.body).toEqual({ red: 3, block: 10, cards: { yellow: 3, red: 6 } });
   });
 
   it('updates thresholds when they ascend', async () => {
     const res = await request(app)
       .put('/admin/config')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ orange: 3, red: 5, block: 12 });
+      .send({ red: 4, block: 12 });
     expect(res.status).toBe(200);
 
     const check = await request(app)
       .get('/admin/config')
       .set('Authorization', `Bearer ${adminToken}`);
-    expect(check.body).toMatchObject({ orange: 3, red: 5, block: 12 });
+    expect(check.body).toMatchObject({ red: 4, block: 12 });
   });
 
   it('rejects non-ascending thresholds', async () => {
     const res = await request(app)
       .put('/admin/config')
       .set('Authorization', `Bearer ${adminToken}`)
-      .send({ orange: 5, red: 3, block: 10 });
+      .send({ red: 10, block: 5 });
     expect(res.status).toBe(400);
   });
 });

@@ -122,6 +122,37 @@ export async function rejectFraud(reportId: string, vetId: string, note?: string
 }
 
 /**
+ * Resolve a confirmed discrepancy (PROPOSITION.md §4). Only an arts/chipper may
+ * resolve — never the owner/importer. A resolved discrepancy stops counting
+ * toward the cascade, so the subject (and any co-subject) is re-assessed.
+ */
+export async function resolveFraud(reportId: string, professionalId: string, note?: string) {
+  const report = await prisma.fraudReport.findUnique({ where: { id: reportId } });
+  if (!report || report.status !== 'CONFIRMED') {
+    throw new Error('Melding niet gevonden of niet bevestigd');
+  }
+  if (report.resolvedAt) {
+    throw new Error('Deze discrepantie is al hersteld');
+  }
+
+  await prisma.fraudReport.update({
+    where: { id: reportId },
+    data: {
+      resolvedAt: new Date(),
+      resolvedById: professionalId,
+      reviewNote: note ?? report.reviewNote,
+    },
+  });
+
+  // Re-assess everyone the discrepancy was attributed to.
+  const subjectStatus = await assessUserFraudStatus(report.subjectUserId);
+  if (report.coSubjectProfessionalId) {
+    await assessUserFraudStatus(report.coSubjectProfessionalId);
+  }
+  return { reportId, subjectUserId: report.subjectUserId, newStatus: subjectStatus };
+}
+
+/**
  * Recompute a user's fraud status from their confirmed signals in the window.
  * Returns the new status.
  */
@@ -133,6 +164,7 @@ export async function assessUserFraudStatus(userId: string): Promise<UserFraudSt
       subjectUserId: userId,
       status: 'CONFIRMED',
       category: 'SIGNAAL', // FEIT-confirmations are neutral and never cascade (§9)
+      resolvedAt: null,    // only OPEN (not-yet-corrected) discrepancies count (§4)
       confirmationDate: { gte: since },
     },
   });

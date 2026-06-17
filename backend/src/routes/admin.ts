@@ -18,7 +18,6 @@ router.use(authMiddleware);
 router.use(adminOnly);
 
 const thresholdsSchema = z.object({
-  orange: z.number().int().min(1),
   red: z.number().int().min(1),
   block: z.number().int().min(1),
 });
@@ -39,12 +38,12 @@ router.get('/config', async (_req: AuthRequest, res: Response) => {
   }
 });
 
-// PUT /admin/config - update thresholds (must be orange < red < block)
+// PUT /admin/config - update thresholds (must be red < block)
 router.put('/config', async (req: AuthRequest, res: Response) => {
   try {
     const t = thresholdsSchema.parse(req.body);
-    if (!(t.orange < t.red && t.red < t.block)) {
-      return res.status(400).json({ error: 'Drempels moeten oplopen: oranje < rood < blokkade' });
+    if (!(t.red < t.block)) {
+      return res.status(400).json({ error: 'Drempels moeten oplopen: rood < blokkade' });
     }
     await setThresholds(t);
     res.json({ message: 'Drempels bijgewerkt', thresholds: t });

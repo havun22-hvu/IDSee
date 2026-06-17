@@ -150,14 +150,13 @@ class ApiClient {
 
   async getConfig() {
     return this.request<{
-      orange: number;
       red: number;
       block: number;
       cards: { yellow: number; red: number };
     }>('/admin/config');
   }
 
-  async updateConfig(t: { orange: number; red: number; block: number }) {
+  async updateConfig(t: { red: number; block: number }) {
     return this.request<{ message: string }>('/admin/config', {
       method: 'PUT',
       body: JSON.stringify(t),
@@ -261,6 +260,14 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ note }),
     });
+  }
+
+  // Resolve a confirmed discrepancy — verified arts/chipper only (§4).
+  async resolveFraud(id: string, note?: string) {
+    return this.request<{ reportId: string; subjectUserId: string; newStatus: string }>(
+      `/fraud/${id}/resolve`,
+      { method: 'POST', body: JSON.stringify({ note }) }
+    );
   }
 
   // Record an IMPORT chain link for an animal (verified vet, §3a).

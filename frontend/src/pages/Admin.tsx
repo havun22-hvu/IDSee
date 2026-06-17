@@ -147,7 +147,7 @@ export function Admin() {
 }
 
 function ThresholdConfig() {
-  const [values, setValues] = useState<{ orange: number; red: number; block: number } | null>(null);
+  const [values, setValues] = useState<{ red: number; block: number } | null>(null);
   const [cards, setCards] = useState<{ yellow: number; red: number } | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -157,7 +157,7 @@ function ThresholdConfig() {
     api
       .getConfig()
       .then((c) => {
-        setValues({ orange: c.orange, red: c.red, block: c.block });
+        setValues({ red: c.red, block: c.block });
         setCards(c.cards);
       })
       .catch(() => setError('Kon drempels niet laden'));
@@ -195,9 +195,8 @@ function ThresholdConfig() {
 
   if (!values || !cards) return null;
 
-  const fields: { key: 'orange' | 'red' | 'block'; label: string }[] = [
-    { key: 'orange', label: 'Oranje vanaf' },
-    { key: 'red', label: 'Rood vanaf' },
+  const fields: { key: 'red' | 'block'; label: string }[] = [
+    { key: 'red', label: 'Rood vanaf (open discrepanties)' },
     { key: 'block', label: 'Blokkade vanaf' },
   ];
 

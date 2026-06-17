@@ -6,20 +6,20 @@ import {
   worstCardStatus,
 } from '../src/services/fraudPolicy.js';
 
-describe('assessFraudStatus (defaults: orange=2, red=4, block=10)', () => {
-  it('stays LEREN below the orange threshold (learning margin)', () => {
+describe('assessFraudStatus (defaults: red=3, block=10 — geen oranje-stap)', () => {
+  it('stays LEREN below the red threshold (1-2 open = learning margin)', () => {
     expect(assessFraudStatus(0)).toBe('LEREN');
     expect(assessFraudStatus(1)).toBe('LEREN');
+    expect(assessFraudStatus(2)).toBe('LEREN');
   });
 
-  it('escalates to ORANJE at the orange threshold', () => {
-    expect(assessFraudStatus(2)).toBe('ORANJE');
-    expect(assessFraudStatus(3)).toBe('ORANJE');
-  });
-
-  it('escalates to ROOD at the red threshold', () => {
-    expect(assessFraudStatus(4)).toBe('ROOD');
+  it('escalates straight to ROOD at the red threshold (3 = structureel)', () => {
+    expect(assessFraudStatus(3)).toBe('ROOD');
     expect(assessFraudStatus(9)).toBe('ROOD');
+  });
+
+  it('never returns ORANJE (no person-level orange step)', () => {
+    for (let n = 0; n <= 9; n++) expect(assessFraudStatus(n)).not.toBe('ORANJE');
   });
 
   it('escalates to BLOKKADE at the block threshold', () => {
@@ -28,13 +28,13 @@ describe('assessFraudStatus (defaults: orange=2, red=4, block=10)', () => {
   });
 
   it('keeps BLOKKADE permanent regardless of count', () => {
-    // Even if confirmed signals drop out of the window, a block does not lift automatically.
+    // Even if open discrepancies drop out, a block does not lift automatically.
     expect(assessFraudStatus(0, DEFAULT_THRESHOLDS, 'BLOKKADE')).toBe('BLOKKADE');
   });
 
   it('respects custom thresholds', () => {
-    const strict = { orange: 1, red: 2, block: 5 };
-    expect(assessFraudStatus(1, strict)).toBe('ORANJE');
+    const strict = { red: 2, block: 5 };
+    expect(assessFraudStatus(1, strict)).toBe('LEREN');
     expect(assessFraudStatus(2, strict)).toBe('ROOD');
     expect(assessFraudStatus(5, strict)).toBe('BLOKKADE');
   });

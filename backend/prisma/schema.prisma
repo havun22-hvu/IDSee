@@ -227,6 +227,17 @@ model FraudReport {
   reviewNote      String?
   confirmationDate DateTime?
 
+  // Co-subject: the professional who stamped the betwiste schakel as "akkoord"
+  // (PROPOSITION.md §4). Populated when the chain link was vet-checked; the
+  // melder is never a subject. Dual-flag logic lands with the UBN-holder link.
+  coSubjectProfessionalId String?
+
+  // Open/herstel (PROPOSITION.md §4): a confirmed discrepancy is OPEN until an
+  // arts/chipper resolves it (data corrected, chain closed). Only OPEN, confirmed
+  // SIGNALS count toward the cascade — a resolved one no longer does.
+  resolvedAt      DateTime?
+  resolvedById    String?  // the arts/chipper who corrected it (never the owner)
+
   createdAt       DateTime @default(now())
 }
 

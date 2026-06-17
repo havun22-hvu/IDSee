@@ -5,6 +5,7 @@ import {
   getPendingReports,
   confirmFraud,
   rejectFraud,
+  resolveFraud,
   addProfessionalNote,
 } from '../services/fraudService.js';
 
@@ -15,6 +16,17 @@ function requireVerifiedVet(req: AuthRequest, res: Response, next: NextFunction)
   const u = req.user;
   if (!u || u.role !== 'VET' || u.verificationStatus !== 'VERIFIED') {
     return res.status(403).json({ error: 'Alleen een geverifieerde dierenarts mag dit beoordelen' });
+  }
+  next();
+}
+
+// Resolving a discrepancy is a professional act: only a verified arts/chipper —
+// never the owner/importer (PROPOSITION.md §4).
+function requireVerifiedProfessional(req: AuthRequest, res: Response, next: NextFunction) {
+  const u = req.user;
+  const ok = u && (u.role === 'VET' || u.role === 'CHIPPER') && u.verificationStatus === 'VERIFIED';
+  if (!ok) {
+    return res.status(403).json({ error: 'Alleen een geverifieerde arts/chipper mag een discrepantie herstellen' });
   }
   next();
 }
@@ -76,6 +88,15 @@ router.post('/:id/reject', authenticateToken, requireVerifiedVet, async (req: Au
     res.json(await rejectFraud(req.params.id, req.user!.id, req.body.note));
   } catch (error: any) {
     res.status(400).json({ error: error.message || 'Afwijzen mislukt' });
+  }
+});
+
+// Resolve a confirmed discrepancy — verified arts/chipper only (PROPOSITION.md §4).
+router.post('/:id/resolve', authenticateToken, requireVerifiedProfessional, async (req: AuthRequest, res: Response) => {
+  try {
+    res.json(await resolveFraud(req.params.id, req.user!.id, req.body.note));
+  } catch (error: any) {
+    res.status(400).json({ error: error.message || 'Herstellen mislukt' });
   }
 });
 

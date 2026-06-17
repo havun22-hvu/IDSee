@@ -134,37 +134,75 @@ describe('fraud cascade (end-to-end)', () => {
     expect(res.status).toBe(403);
   });
 
-  it('two vet-confirmed signals flip the subject to ORANJE and cascade to the score', async () => {
-    // File two signals about the subject.
-    for (let i = 0; i < 2; i++) {
+  it('three open vet-confirmed signals flip the subject to ROOD (structureel) and cascade', async () => {
+    // Capture the created report ids directly (pending may hold prior soft signals).
+    const ids: string[] = [];
+    for (let i = 0; i < 3; i++) {
       const r = await request(app)
         .post('/fraud/report')
         .set('Authorization', `Bearer ${token(reporterId, 'BUYER')}`)
         .send({ subjectUserId: subjectId, type: 'ontbrekende_schakel', description: `signal ${i}` });
       expect(r.status).toBe(201);
+      ids.push(r.body.report.id);
     }
 
-    // Vet confirms both.
-    const pending = await request(app)
-      .get('/fraud/pending')
-      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
-    expect(pending.body.length).toBeGreaterThanOrEqual(2);
-
-    for (const report of pending.body) {
+    // Confirm the first two → still LEREN (learning margin).
+    for (const id of ids.slice(0, 2)) {
       await request(app)
-        .post(`/fraud/${report.id}/confirm`)
+        .post(`/fraud/${id}/confirm`)
         .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
     }
+    let subject = await prisma.user.findUnique({ where: { id: subjectId } });
+    expect(subject?.fraudStatus).toBe('LEREN');
 
-    // Subject is now flagged (orange threshold = 2).
-    const subject = await prisma.user.findUnique({ where: { id: subjectId } });
-    expect(subject?.fraudStatus).toBe('ORANJE');
+    // Confirm the third → structureel → ROOD.
+    const third = { id: ids[2] };
+    await request(app)
+      .post(`/fraud/${third.id}/confirm`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    subject = await prisma.user.findUnique({ where: { id: subjectId } });
+    expect(subject?.fraudStatus).toBe('ROOD');
 
-    // The cascade shows in the derived score for the subject's animal.
-    const res = await request(app)
+    // Cascade shows in the derived score.
+    let res = await request(app)
       .get(`/verify/${CHIP}`)
       .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
-    expect(res.body.riskScore).toBe('ORANJE');
+    expect(res.body.riskScore).toBe('ROOD');
+
+    // Resolving one (arts/chipper) drops the open count below 3 → back to LEREN.
+    await request(app)
+      .post(`/fraud/${third.id}/resolve`)
+      .set('Authorization', `Bearer ${token(subjectId, 'CHIPPER')}`)
+      .send({ note: 'gegevens gecorrigeerd' });
+    subject = await prisma.user.findUnique({ where: { id: subjectId } });
+    expect(subject?.fraudStatus).toBe('LEREN');
+
+    res = await request(app)
+      .get(`/verify/${CHIP}`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    expect(res.body.riskScore).toBe('GROEN');
+  });
+
+  it('the owner/importer may not resolve a discrepancy', async () => {
+    const r = await request(app)
+      .post('/fraud/report')
+      .set('Authorization', `Bearer ${token(reporterId, 'BUYER')}`)
+      .send({ subjectUserId: subjectId, type: 'ontbrekende_schakel', description: 'nog een' });
+    const confirmed = await request(app)
+      .post(`/fraud/${r.body.report.id}/confirm`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    expect(confirmed.status).toBe(200);
+
+    // A buyer (owner role) is refused.
+    const res = await request(app)
+      .post(`/fraud/${r.body.report.id}/resolve`)
+      .set('Authorization', `Bearer ${token(reporterId, 'BUYER')}`);
+    expect(res.status).toBe(403);
+
+    // Clean up so this signal does not bleed into other tests.
+    await request(app)
+      .post(`/fraud/${r.body.report.id}/resolve`)
+      .set('Authorization', `Bearer ${token(subjectId, 'CHIPPER')}`);
   });
 });
 
