@@ -7,6 +7,8 @@ const sound: ScoreFactors = {
   chainConfirmed: true,
   breederVerified: true,
   motherKnown: true,
+  ubnPresent: true,
+  breederConfirmed: true,
   disputed: false,
   imported: false,
   importVerified: false,
@@ -29,8 +31,16 @@ describe('scoreFromFactors', () => {
     expect(scoreFromFactors({ ...sound, breederVerified: false })).toBe('ORANJE');
   });
 
-  it('ORANJE when the mother is unknown', () => {
-    expect(scoreFromFactors({ ...sound, motherKnown: false })).toBe('ORANJE');
+  it('ROOD when the mother is unknown on an NL claim (chain does not close)', () => {
+    expect(scoreFromFactors({ ...sound, motherKnown: false })).toBe('ROOD');
+  });
+
+  it('ORANJE when the UBN holder is missing', () => {
+    expect(scoreFromFactors({ ...sound, ubnPresent: false })).toBe('ORANJE');
+  });
+
+  it('ORANJE when the UBN holder has not confirmed yet', () => {
+    expect(scoreFromFactors({ ...sound, breederConfirmed: false })).toBe('ORANJE');
   });
 
   it('ROOD when a registration is disputed', () => {
@@ -93,9 +103,9 @@ describe('scoreFromFactors', () => {
     });
 
     it('does not punish a missing NL-moeder on an imported pup', () => {
-      // The same factors without the import flag would be ORANJE (no mother).
-      expect(scoreFromFactors({ ...sound, motherKnown: false })).toBe('ORANJE');
-      // With a verified import link it is BLAUW, not ORANJE.
+      // The same factors without the import flag would be ROOD (NL-claim, no mother).
+      expect(scoreFromFactors({ ...sound, motherKnown: false })).toBe('ROOD');
+      // With a verified import link it is BLAUW — the importer is not punished.
       expect(scoreFromFactors(imported)).toBe('BLAUW');
     });
 

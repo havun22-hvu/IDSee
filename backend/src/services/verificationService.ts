@@ -34,6 +34,8 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
     chainConfirmed: false,
     breederVerified: false,
     motherKnown: !!animal?.motherChipHash,
+    ubnPresent: false,
+    breederConfirmed: false,
     disputed: false,
     imported: !!ir,
     // Import volledig & traceerbaar: arts zag papieren, land + traceerbare
@@ -58,6 +60,8 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
     factors.chainConfirmed = !!confirmed;
     factors.disputed = animal.registrations.some((r) => r.status === 'DISPUTED');
     factors.breederVerified = confirmed?.user?.verificationStatus === 'VERIFIED';
+    factors.ubnPresent = !!confirmed?.breederUbn;        // UBN-houder van de moeder vastgelegd
+    factors.breederConfirmed = !!confirmed?.breederConfirmed; // UBN-houder bevestigde nest/moeder
     registrationDate = confirmed?.createdAt ?? animal.registrations[0]?.createdAt;
 
     // The import recorder counts as a chain participant too — their fraud/card

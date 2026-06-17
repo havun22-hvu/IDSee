@@ -57,6 +57,8 @@ beforeAll(async () => {
       dataHash: 'd',
       status: 'CONFIRMED',
       confirmedAt: new Date(),
+      breederUbn: 'NL-UBN-0001',
+      breederConfirmed: true,
     },
   });
 });
@@ -242,6 +244,8 @@ describe('professional notes / card system (§4)', () => {
         dataHash: 'd',
         status: 'CONFIRMED',
         confirmedAt: new Date(),
+        breederUbn: 'NL-UBN-0002',
+        breederConfirmed: true,
       },
     });
   });

@@ -24,7 +24,7 @@ export function scoreFromFactors(
   if (ownerFraudStatus === 'ROOD' || ownerFraudStatus === 'BLOKKADE') return 'ROOD';
   if (f.found && f.disputed) return 'ROOD';
 
-  if (!f.found) return 'ORANJE';
+  if (!f.found) return 'ORANJE'; // dier onbekend in IDSee — afwezigheid ≠ fout
 
   // Geïmporteerd dier: gescoord op de IMPORT-schakel, NIET op een (buitenlandse)
   // NL-moeder. Een naïeve "geen NL-moeder = oranje/rood" zou de eerlijke importeur
@@ -36,14 +36,19 @@ export function scoreFromFactors(
     return f.importVerified ? 'BLAUW' : 'ORANJE';
   }
 
-  // NL-keten: onbekend of zwakke schakel → ORANJE (verifieerbaarheid onvolledig)
+  // NL-claim zonder bekende moeder: de keten sluit aantoonbaar niet → ROOD (§3/§4).
+  if (!f.motherKnown) return 'ROOD';
+
+  // NL-keten met moeder, maar een zwakke/ontbrekende schakel → ORANJE
   if (!f.chainConfirmed) return 'ORANJE';
-  if (!f.breederVerified || !f.motherKnown) return 'ORANJE';
+  if (!f.breederVerified) return 'ORANJE';
+  if (!f.ubnPresent) return 'ORANJE';        // geen UBN-houder vastgelegd
+  if (!f.breederConfirmed) return 'ORANJE';  // UBN-houder bevestigde nog niet
   if (ownerFraudStatus === 'ORANJE') return 'ORANJE';
   // Gele/rode kaart op de bevestigende professional: bevestiging weegt te licht
   // om de keten naar GROEN te dragen (§4).
   if (ownerCardStatus === 'GEEL' || ownerCardStatus === 'ROOD') return 'ORANJE';
 
-  // Volledige, sluitende NL-keten → GROEN
+  // Volledige, sluitende NL-keten (moeder + UBN + houder-bevestiging + geverifieerde arts) → GROEN
   return 'GROEN';
 }

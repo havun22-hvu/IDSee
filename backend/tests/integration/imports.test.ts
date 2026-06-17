@@ -46,11 +46,13 @@ const token = (id: string, role: string) =>
   generateToken({ userId: id, email: `${id}@x`, role });
 
 describe('import link / 🔵 (§3a)', () => {
-  it('an imported pup without an import link scores ORANJE (missing NL-mother)', async () => {
+  it('an import pup without an import link reads as a broken NL chain → ROOD', async () => {
+    // No import record yet + no NL-mother = NL-claim that does not close → ROOD.
+    // Recording the import link below reveals it is a verified import → BLAUW.
     const res = await request(app)
       .get(`/verify/${CHIP}`)
       .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
-    expect(res.body.riskScore).toBe('ORANJE');
+    expect(res.body.riskScore).toBe('ROOD');
   });
 
   it('refuses an import link from a non-vet', async () => {

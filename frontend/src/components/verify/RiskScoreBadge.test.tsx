@@ -8,6 +8,8 @@ const soundFactors: ScoreFactors = {
   chainConfirmed: true,
   breederVerified: true,
   motherKnown: true,
+  ubnPresent: true,
+  breederConfirmed: true,
   disputed: false,
   imported: false,
   importVerified: false,

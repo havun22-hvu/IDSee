@@ -34,7 +34,11 @@ const BASE_LABELS: FactorLabel[] = [
   { key: 'chainConfirmed', label: 'Registratie bevestigd' },
   { key: 'breederVerified', label: 'Professional geverifieerd' },
 ];
-const NL_LABELS: FactorLabel[] = [{ key: 'motherKnown', label: 'Moeder bekend' }];
+const NL_LABELS: FactorLabel[] = [
+  { key: 'motherKnown', label: 'Moeder bekend' },
+  { key: 'ubnPresent', label: 'UBN-houder vastgelegd' },
+  { key: 'breederConfirmed', label: 'Door fokker bevestigd' },
+];
 const IMPORT_LABELS: FactorLabel[] = [{ key: 'importVerified', label: 'Import gecontroleerd & traceerbaar' }];
 const TAIL_LABELS: FactorLabel[] = [{ key: 'disputed', label: 'Registratie betwist', invert: true }];
 

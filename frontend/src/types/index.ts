@@ -25,6 +25,8 @@ export interface ScoreFactors {
   chainConfirmed: boolean;
   breederVerified: boolean;
   motherKnown: boolean;
+  ubnPresent: boolean;
+  breederConfirmed: boolean;
   disputed: boolean;
   imported: boolean;
   importVerified: boolean;

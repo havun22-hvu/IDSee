@@ -13,7 +13,9 @@ export interface ScoreFactors {
   found: boolean;          // dier bekend in IDSee
   chainConfirmed: boolean; // er is een bevestigde (CONFIRMED) registratie
   breederVerified: boolean;// registrerende professional is geverifieerd
-  motherKnown: boolean;    // moederdier bekend
+  motherKnown: boolean;    // moederdier (chip) bekend
+  ubnPresent: boolean;     // UBN-houder van de moeder vastgelegd (§4)
+  breederConfirmed: boolean;// UBN-houder bevestigde nest/moeder (dubbele bevestiging)
   disputed: boolean;       // een registratie is betwist (DISPUTED)
   imported: boolean;       // dier heeft een IMPORT-schakel (§3a)
   importVerified: boolean; // import-schakel volledig: traceerbare herkomst + arts-controle
