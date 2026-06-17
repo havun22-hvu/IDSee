@@ -114,7 +114,35 @@ datamodel-gevolgen. Vier punten in volgorde geïmplementeerd (elk eigen commit):
 
 Tests: backend **64 unit + 19 integration**, frontend **21** — alles groen.
 
+### Herkomstmodel-herziening (17 juni 2026, MPC fase 1→3)
+
+Inhoudelijk overleg (zie `docs/PROPOSITION.md` §3/§3a/§4/§4a, herzien) → plan
+(`.claude/plan-herkomstmodel.md`) → code in 5 stappen (elk eigen commit):
+
+- **Stap 0:** `HealthRecord` model geschrapt (geen gezondheidsdata, §3b).
+- **Stap 1:** score-grenzen herzien — **NL-claim zonder moeder → 🔴 ROOD** (was oranje);
+  GROEN vereist nu moeder + UBN + houder-bevestiging + geverifieerde arts. Factoren
+  `ubnPresent`/`breederConfirmed` toegevoegd.
+- **Stap 2:** cascade = **open/niet-herstelde** discrepanties; `resolveFraud` (alleen
+  arts/chipper, nooit eigenaar); drempels herstructureerd naar `{red:3, block:10}`,
+  **geen oranje-persoon-stap**. `FraudReport.resolvedAt/resolvedById/coSubjectProfessionalId`.
+- **Stap 3:** `Registration.motherResidency` (EIGEN_LOCATIE/BIJ_DERDE = feit), `User.idseeConsent`;
+  **dual-flag toerekening** — bij vet-gecontroleerde import-schakel deelt de arts (scenario 2),
+  cascade-teller telt subject OF co-subject. UBN + verblijf in `RegisterAnimal`.
+- **Stap 4:** **volume per UBN** als objectief feit (pups + moeders, 12 mnd), alleen bij
+  `idseeConsent`; getoond onder de score (geen oordeel, §4a).
+
+Positionering aangescherpt: **positief NL-herkomstbewijs**, geen handelaar-jacht — de
+fraudeur *haalt geen groen* i.p.v. *wordt rood gemaakt*. Score nu 🟢/🔵/🟠/🔴.
+
+Tests na deze ronde: backend **66 unit + 23 integration**, frontend **21** — groen.
+
 **Nog open — later:**
+- **Dual-flag eigenaar vs. registrant zuiver scheiden** — nu valt de UBN-houder vaak samen
+  met de registrant; volledige scheiding vereist account-koppeling van de fokker.
+- **Import-uitzondering Spanje/Griekenland** (asiel/stichting) — §9, Henk denkt na.
+- **Toestemming-intrekking vs. check-op-koopmoment verankeren** — §9.
+- Multi-account/multi-UBN clustering (fase 2); echte ZKP (nu demo).
 - ZK-migratie (Midnight) — `PROPOSITION.md` §9 + blueprint §4 (eigen `/arch`-traject)
 - Frontend dev-only audit: 5 advisories in vite/vitest; fix = `vite@8` (3 majors) — uitgesteld
 - **Code afslanken naar minimale dataset (§3b)** — HealthRecord/Animal dragen meer dan

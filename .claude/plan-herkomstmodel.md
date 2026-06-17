@@ -1,5 +1,9 @@
 # Plan — Herkomst-/score-/cascademodel (herziening 17 juni 2026)
 
+> ✅ **UITGEVOERD 17 juni 2026** — stappen 0–4 allemaal gecommit, tests groen
+> (backend 66 unit + 23 integration, frontend 21). Open vervolgpunten staan in
+> `.claude/handover.md` en `docs/PROPOSITION.md` §9.
+
 > Sturend: `docs/PROPOSITION.md` §3, §3a, §4, §4a (herzien 17 juni). Dit plan zet die
 > docs om in code. Fase 3 (MPC) start pas na expliciet "ga maar".
 
@@ -37,10 +41,14 @@ aanvulling. Fundament blijft (chip-HMAC, ImportRecord+`vetCheckedDocuments`, fei
   (orange == red == 3, of herstructureer naar {learn, red, block}); block hoger houden.
 - `fraudService.ts`:
   - `assessUserFraudStatus`: tel `CONFIRMED && category=SIGNAAL && resolvedAt=null`.
-  - `confirmFraud`: toerekening — bij een `vetCheckedDocuments`-schakel ook de arts als
-    co-subject; herbereken status van eigenaar **én** arts.
   - **nieuw** `resolveFraud(id, professionalId)` — alleen arts/chipper; zet `resolvedAt`;
     herbereken cascade (teller daalt).
+  - **Drempels herstructureren naar {red, block}** (geen oranje-persoon-stap):
+    `assessFraudStatus` zonder ORANJE-tak; DEFAULT {red:3, block:10}. Ripple:
+    systemConfigService, admin route + schema, frontend api + Admin.tsx, tests.
+  - **Toerekening dual-flag (arts + UBN-houder) → verschoven naar stap 3** (vereist de
+    UBN-houder-koppeling die stap 3 vult). `coSubjectProfessionalId`-veld wordt nu wel
+    aangemaakt.
 - `routes/fraud.ts`: `POST /fraud/:id/resolve` (geverifieerde arts/chipper).
 - **Tests:** 2 open = leren (niet oranje); 3 open = rood; resolve verlaagt terug; melder
   krijgt geen flag, vetChecked-arts wel.
