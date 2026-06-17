@@ -44,19 +44,29 @@ Waar het verplichte register een momentopname op papier is, is IDSee een
 
 ### Koper (de massa — betaalt per check)
 1. Voert chipnummer in. Geen account nodig.
-2. Krijgt één uitkomst: een **risico-score** (groen / oranje / rood).
+2. Krijgt één uitkomst: een **risico-score** (🟢 groen / 🔵 import / 🟠 oranje / 🔴 rood).
 3. Betaalt **€2** per check (zie §6).
 
 De score drukt **verifieerbaarheid van de herkomstketen** uit — **niet schuld**:
 
 | Score | Betekenis |
 |-------|-----------|
-| 🟢 Groen | Keten volledig ZK-geverifieerd: moeder geregistreerd, arts/chipper geverifieerd en niet-geflagd, geen ontbrekende schakel. |
-| 🟠 Oranje | Keten deels verifieerbaar; één of meer schakels onbekend of zwak (bijv. import, paspoort omgezet zonder traceerbare bron). |
-| 🔴 Rood | Keten sluit niet: ontbrekende of niet-verifieerbare herkomst, of een schakel die hoort bij een bevestigd fraudesignaal. |
+| 🟢 Groen | **NL-keten sluit, per nest/pup:** moeder-chip gekoppeld, UBN-houder (vrijwillig deelnemer + toestemming) bevestigt nest/moeder, en de koppeling is gelegd door een geverifieerde, niet-geflagde arts/chipper. |
+| 🔵 Geverifieerde import | Geen NL-fok, maar de buitenlandse herkomst is traceerbaar én door een geverifieerde NL-arts gecontroleerd (§3a). **Eigen label, geen afwaardering** — de koper weegt zelf. |
+| 🟠 Oranje | Verifieerbaarheid onvolledig: dier niet in IDSee (onbekend ≠ fout), of import zonder traceerbare bron. Géén schuldoordeel. |
+| 🔴 Rood | Keten sluit aantoonbaar niet: **NL-claim zonder bekende moeder**, of een schakel die hoort bij een **structureel** (3× niet-hersteld) bevestigd patroon (§4). |
+
+**Groen geldt per nest/pup, niet per teef.** Elke pup vereist een verse moeder-koppeling
+die de arts bij dít nest legde; een moeder-chip wordt niet hergebruikt over nesten.
 
 Een fraudeur scoort vanzelf rood/oranje **omdat zijn keten niet sluit**, niet omdat
-het systeem hem "fraudeur" noemt. Dit onderscheid is juridisch essentieel (§5).
+het systeem hem "fraudeur" noemt. Hij hoeft niet rood *gemaakt* te worden — hij **haalt
+simpelweg geen groen**. Dit onderscheid is juridisch essentieel (§5).
+
+> **Positionering (aangescherpt 17 juni 2026):** import is wettelijk toegestaan en de
+> NVWA handhaaft zwak — IDSee jaagt daarom **geen handelaren**, maar levert **positief
+> bewijs** dat een pup een gewone NL-fok / gelegenheidsnestje is. De waarde zit in het
+> groene bewijs (en de afwezigheid ervan, §10), niet in een rood persoonsoordeel.
 
 ### Professional (fokker / dierenarts / chipper — betaalt met credits)
 - Registreert dieren en schakels in de keten tegen credits.
@@ -181,62 +191,99 @@ dit voedt het kaartensysteem in §4.
 > (§4), niet op de chain zelf. Een corrupte arts kan fout bevestigen; het notitie-/
 > kaartensysteem en de cascade vangen dat op. Wees hierover eerlijk in de communicatie.
 
-## 4. Fraude-respons: bevestiging + cascade
+## 4. Fraude-respons: discrepantie, herstel, cascade
 
-Het zwakke punt van het oude model ("borg naar platform pool") is vervangen door een
-**reputatie-cascade met menselijke bevestiging**:
+> **Herzien 17 juni 2026.** Het model draait niet om "fraude bewijzen" maar om
+> **niet-herstelde discrepanties** over de tijd. Het systeem hoeft vooraf niet te weten
+> of iets een vergissing of zwendel is — **het gedrag erna bepaalt het**: een vergissing
+> wordt rechtgezet, zwendel niet.
 
-1. Een signaal ontstaat (koper-melding, ontbrekende schakel, of arts-observatie zoals
-   een omgekat buitenlands paspoort).
-2. **Alleen een geverifieerde dierenarts bevestigt** dat het een fraudesignaal is.
-   Dit voorkomt dat een concurrent iemand kapotmaakt met valse claims.
-3. Na bevestiging cascadeert de flag intern naar **alle aanmeldingen van die persoon**:
-   toekomstige én bestaande dieren krijgen een waarschuwing in hun keten.
-4. Naar de koper toe vertaalt die cascade zich als **verlaagde verifieerbaarheid**
-   (oranje/rood), **nooit** als publieke beschuldiging van een identificeerbaar persoon.
+### Toegang: alleen volledig geverifieerde professionals
 
-> De cascade werkt via ZKP: het systeem bewijst "deze schakel hoort bij een bevestigd
-> fraudesignaal" zonder de identiteit van fokker of arts prijs te geven.
+Een arts/chipper met een niet-afgeronde verificatie **kan niets aanmelden, melden of
+bevestigen**. Daardoor heeft elke schakel per definitie een geverifieerde getuige; er is
+geen "arts niet geverifieerd"-tussengeval in de score.
 
-### Graduele escalatie — leervermogen vóór sanctie
+### Vergissing vs. zwendel = wel/niet herstellen
 
-De flag is **niet binair**. Het doel is de **commerciële illegale handelaar** (de
-volume-importeur) buitenspel te zetten — **niet** de eerlijke fokker die een fout maakt,
-en **niet** de kruimeldief. Een vergissing in het registreren is menselijk en mogelijk.
-Daarom escaleert het systeem stapsgewijs en geeft het eerst een **kans om zich te
-bekwamen**:
+1. Een **discrepantie** ontstaat (koper-melding, ontbrekende schakel, of arts-observatie
+   zoals een chip/boekje dat niet klopt) en krijgt status **OPEN** na verificatie door een
+   geverifieerde arts of admin. Een kale koper-klacht telt niet vóór die verificatie.
+2. **Herstellen kan alleen de arts/chipper** — nooit de eigenaar/importeur zelf. Herstel =
+   de gegevens verbeteren en de keten alsnog door een geverifieerde professional laten
+   sluiten. Een gesloten discrepantie krijgt status **HERSTELD** en **telt niet meer**.
+3. Een zwendelaar **kan niet herstellen** (geen echte, arts-geverifieerde moeder) → de
+   discrepantie blijft OPEN en stapelt op.
 
-| Fase | Trigger | Effect op score van betrokken dieren |
-|------|---------|--------------------------------------|
-| **Leren** | Eerste paar onregelmatigheden | Blijft 🟢/neutraal. De professional krijgt feedback: "registratie onvolledig — zo doe je het goed". |
-| **Waarschuwing** | Na *x* herhaalde onregelmatigheden | 🟠 Oranje. Patroon zichtbaar, nog geen sanctie. |
-| **Sanctie** | Bij voortdurende herhaling | 🔴 Rood. |
-| **Blokkade** | Schaal van een commerciële handelaar (bijv. >10 illegaal geïmporteerde pups) | Verdere aanmeldingen onmogelijk. |
+> Daarom telt de cascade **open, niet-herstelde** discrepanties — niet "aantal meldingen".
+> De eerlijke fout verdwijnt na herstel; de structurele houdt stand.
 
-Sleutelprincipe: escalatie is gebaseerd op **patroon en volume over de tijd**, niet op
-één incident. Dit is precies waarom IDSee de handelaar raakt en de eerlijke fokker
-spaart — en het versterkt de juridische lijn (§5): het systeem reageert op een
-*meetbaar patroon van niet-sluitende ketens*, niet op een persoonlijk schuldoordeel.
+### Toerekening — melder vrij, veroorzaker draagt
 
-> Drempels (*x*, het import-plafond, de leer-marge) zijn **parameters**, geen vaste
-> getallen. Ze worden geijkt op echte data; voorlopige waarden staan in §9.
+Een discrepantie wordt toegerekend aan:
 
-### Notitie- en kaartensysteem op de professional
+- **(a) de eigenaar / UBN-houder** — altijd; het is zijn dier en herkomst;
+- **(b) de professional die de betwiste schakel als "gecontroleerd & akkoord" vastlegde**
+  (de `vetCheckedDocuments`-vlag op de import/koppeling). Tekende hij twijfel aan of meldde
+  hij juist de fout, dan is hij **melder** → géén toerekening.
 
-Naast de escalatie op dier-niveau loopt een spoor op de **professional zelf**, gevoed door
-de externe controle achteraf (§3b: koper/community-melding + admin-controle). Dit is
-**onderdeel van dezelfde cascade**, geen apart systeem — een notitie is een "zacht" signaal
-dat pas telt na verificatie.
+De **melder/ontdekker krijgt nooit een flag** — anders meldt niemand meer. Voorbeeld:
+een arts die een importpup met een fout boekje *signaleert* blijft vrij (alleen de
+importeur krijgt het); een arts die de pup zélf als kloppend aanmeldde en bij wie het
+boekje achteraf fout blijkt, **deelt** in de discrepantie (samen met de eigenaar).
+
+### Escalatie — leren, dan structureel
 
 | Niveau | Trigger | Effect |
 |--------|---------|--------|
-| **Notitie** | Een geverifieerde discrepantie: chipnummer/UBN klopt niet met de bevestiging van de professional | Geregistreerd op de professional; nog geen sanctie. |
-| **Gele kaart** | ± 3 notities | Professional gemarkeerd; zijn nieuwe bevestigingen wegen lichter mee in de score. |
-| **Rode kaart** | Meer notities | Bevestigingen tellen niet meer; cascade naar zijn aanmeldingen (§4). |
+| **Leren** | 1–2 open discrepanties | Geen sanctie. Feedback + externe controle (NVWA / Raad van Beheer) en ondersteuning waar nodig. Score van andere dieren ongemoeid. |
+| **Structureel → 🔴 Rood** | **3 open** discrepanties | Cascade naar alle aanmeldingen van de betrokkene(n). **Arts/chipper én UBN-houder gaan samen voor de bijl.** |
 
-> Notities ontstaan **alleen na verificatie** van de melding (admin of bevestigende arts) —
-> niet op een kale koper-klacht. Dit voorkomt dat een concurrent iemand met valse meldingen
-> kapotmaakt. De kaarten-drempels (3, meer) zijn **parameters** (§9).
+Er is bewust **geen aparte oranje-persoon-stap**: oranje is een keten-/pup-score, niet een
+trap op de persoon. Tijdens een open discrepantie toont de betrokken pup sowieso al zijn
+echte (niet-groene) keten-score.
+
+> **Drempel = 3 is een parameter** (§9), te ijken op data — en per **schakeltype**: veel
+> NL-nestjes (drukke plattelandsarts) is normaal, veel *importpups* is zelf een signaal om
+> in de gaten te houden. Geldt voor **vrijwillige deelnemers met toestemming** (zie hieronder).
+
+### Subject = vrijwillige deelnemer (juridische grond)
+
+De UBN-houder **doet vrijwillig mee, verbindt zich aan IDSee en geeft toestemming** — dat
+is de AVG-grondslag om hem als cascade-subject te mogen flaggen. Wie niet meedoet wordt
+**niet geflagd**; die is gewoon "onbekend/afwezig" en haalt geen groen. Alleen een
+zwendelaar heeft moeite met meedoen — zijn weigering wórdt het signaal (§10), zonder dat
+we hem beschuldigen.
+
+> De cascade werkt via ZKP: het systeem bewijst "deze schakel hoort bij een structureel
+> patroon" zonder de identiteit van fokker of arts publiek prijs te geven (§5).
+
+## 4a. Volume als objectief feit — de binnenlandse producent
+
+Een **binnenlandse** puppy-producent kan aan álle keten-eisen voldoen (echte teven, UBN,
+arts-koppeling, geen import) en tóch niet netjes fokken. Onze keten-verificatie geeft die
+terecht **groen op herkomst** — want de herkomst klopt. Dierenwelzijn/fokkwaliteit is een
+**andere as** (NVWA / LID-terrein) waar IDSee bewust van afblijft.
+
+Wat we **wel** kunnen, zonder een oordeel te vellen: het **volume en de frequentie per UBN**
+tonen als **objectief feit**:
+
+> *"Onder dit UBN geregistreerd: X pups · Y nesten · Z teven (afgelopen 12 mnd)."*
+
+Een gelegenheidsnestje (1–2 nesten) ziet er meetbaar anders uit dan een producent
+(tientallen). De **koper trekt zelf de conclusie** (§10). Dit feit:
+
+- **kleurt de score niet rood** — dat zou een welzijnsoordeel impliceren (buiten onze
+  competentie, juridisch risico);
+- staat **naast** de score als transparant gegeven;
+- **IDSee toetst niet aan een eigen norm** — geen "binnen/buiten de norm"-label. Puur het
+  getal. Wie wat acceptabel vindt, bepaalt de koper (en extern: Raad van Beheer / wet),
+  niet IDSee of de oprichter (§11).
+- AVG: alleen voor **deelnemende** fokkers met toestemming; niet-deelnemers staan er niet in.
+
+> **Eerlijke grens (§10):** een producent die op papier binnen alles blijft maar de honden
+> slecht behandelt, ontsnapt — IDSee ziet de keten, niet de stal. Geen welzijnsinspectie;
+> dat pretenderen we niet.
 
 ## 5. Wettelijke houdbaarheid
 
@@ -289,12 +336,16 @@ Eerste artsen via genesis-verificatie (zie VERIFICATION.md §Bootstrapping).
 |---|-----------|
 | 1 | Positionering = **beter alternatief**, juridisch zorgvuldig (geen vervangingsclaim). |
 | 2 | Fraude-cascade vereist **bevestiging door geverifieerde dierenarts**. |
-| 3 | Koper-output = **risico-score** (groen/oranje/rood). |
+| 3 | Koper-output = **risico-score** (🟢 groen / 🔵 geverifieerde import / 🟠 oranje / 🔴 rood). |
 | 4 | Score = **verifieerbaarheid**, niet schuld. |
 | 5 | Score wordt via **Midnight ZKP** afgeleid; fokker/arts blijven anoniem. |
 | 6 | Koper betaalt **€2 per check** (primaire inkomstenstroom). |
-| 7 | Flag is **gradueel** (leren → oranje → rood → blokkade), niet binair. |
+| 7 | Cascade = **open/niet-herstelde discrepanties** (herzien 17 juni); herstel **alleen door arts/chipper**; **3 open = structureel = rood**; geen aparte oranje-persoon-stap. |
 | 8 | Doel = **commerciële illegale handelaar** buitenspel; eerlijke fokker/kruimeldief gespaard. |
+| 9 | Positionering = **positief NL-herkomstbewijs**, geen handelaar-jacht; de fraudeur *haalt geen groen* i.p.v. *wordt rood gemaakt* (17 juni). |
+| 10 | Cascade-subject = **arts/chipper + UBN-houder**, beide **vrijwillige deelnemers met toestemming** (AVG-grond); niet-deelnemers worden niet geflagd. |
+| 11 | **Volume per UBN** als objectief feit getoond (geen welzijnsoordeel, geen norm-toetsing); koper concludeert zelf. |
+| 12 | Moeder-check **per nest/pup**, niet per teef; herstel = arts legt keten alsnog, eigenaar kan niet zelf corrigeren. |
 
 ## 9. Open punten
 
@@ -306,13 +357,20 @@ Eerste artsen via genesis-verificatie (zie VERIFICATION.md §Bootstrapping).
       cascadeert niet) of als signaal. Alleen SIGNAAL telt in de cascade (17 juni 2026).
 - [ ] DPIA + juridische review vóór productie.
 - [ ] Drempels/levels voor "zachte" koper-signalen op dier-niveau.
-- [ ] **Escalatie-parameters ijken:** leer-marge (aantal "vergissingen" vóór oranje),
-      *x* herhalingen vóór rood, import-plafond (voorlopig >10 pups → blokkade).
-- [ ] Onderscheid *vergissing* vs. *patroon* meetbaar maken (welke signalen tellen mee,
-      over welke tijdvenster, met welk gewicht).
-- [ ] **Code afslanken naar minimale dataset (§3b):** huidige 11 Prisma-modellen met
-      volledige dier-/gezondheidsdata zijn zwaarder dan nodig — kern = identifiers +
-      koppeling + bevestiging + proof. Apart implementatietraject.
+- [ ] **Escalatie-parameters ijken:** leer-marge (1–2 open), structureel-drempel (3 open),
+      per **schakeltype** (NL-nest normaal vs. import-volume verdacht). Op data ijken.
+- [x] Onderscheid *vergissing* vs. *patroon* meetbaar maken → **wel/niet herstellen**:
+      een vergissing wordt door de arts rechtgezet (telt niet meer), zwendel blijft OPEN
+      en stapelt naar 3 = structureel (§4, herzien 17 juni).
+- [ ] **Import-uitzondering Spanje/Griekenland** (asiel/stichtings-import): valt voorlopig
+      onder de IMPORT-schakel → 🔵 mits geregistreerde organisatie + traceerbare herkomst.
+      Aparte uitzonderingsstatus nog te bepalen (Henk denkt na).
+- [ ] **Toestemming-intrekking vs. immutable check:** trekt een fokker zijn toestemming in
+      ná verkoop, dan mag het groen van al-verkochte pups niet met terugwerkende kracht
+      wegvallen → de **bevestiging-op-koopmoment** verankeren, los van latere intrekking (§5).
+- [ ] **Code afslanken naar minimale dataset (§3b):** kern = identifiers + koppeling +
+      bevestiging + proof. **`HealthRecord` schrappen** (geen gezondheidsdata — besloten
+      17 juni). Rest van de afslank apart implementatietraject.
 - [x] **Notitie-/kaartensysteem (§4)** bouwen: melding → verificatie → notitie → geel → rood,
       gekoppeld aan de bestaande fraude-cascade. Kaarten-drempels als parameters.
       → `ProfessionalNote` + `User.cardStatus` (GEEN/GEEL/ROOD); notitie alleen door
