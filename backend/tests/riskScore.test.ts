@@ -8,6 +8,8 @@ const sound: ScoreFactors = {
   breederVerified: true,
   motherKnown: true,
   disputed: false,
+  imported: false,
+  importVerified: false,
 };
 
 describe('scoreFromFactors', () => {
@@ -74,6 +76,43 @@ describe('scoreFromFactors', () => {
     it('a card never overrides a harder ROOD signal', () => {
       // disputed chain stays ROOD regardless of card.
       expect(scoreFromFactors({ ...sound, disputed: true }, 'LEREN', 'GEEL')).toBe('ROOD');
+    });
+  });
+
+  describe('import link / 🔵 label (§3a)', () => {
+    // An imported pup: no NL-moeder, scored on its import link instead.
+    const imported: ScoreFactors = {
+      ...sound,
+      motherKnown: false,
+      imported: true,
+      importVerified: true,
+    };
+
+    it('BLAUW when the import link is complete and traceable', () => {
+      expect(scoreFromFactors(imported)).toBe('BLAUW');
+    });
+
+    it('does not punish a missing NL-moeder on an imported pup', () => {
+      // The same factors without the import flag would be ORANJE (no mother).
+      expect(scoreFromFactors({ ...sound, motherKnown: false })).toBe('ORANJE');
+      // With a verified import link it is BLAUW, not ORANJE.
+      expect(scoreFromFactors(imported)).toBe('BLAUW');
+    });
+
+    it('ORANJE when imported but origin is not verifiable (omgekat zonder bron)', () => {
+      expect(scoreFromFactors({ ...imported, importVerified: false })).toBe('ORANJE');
+    });
+
+    it('ROOD when the importer is in a confirmed fraud pattern (volume)', () => {
+      expect(scoreFromFactors(imported, 'ROOD')).toBe('ROOD');
+    });
+
+    it('ORANJE when the importer is ORANJE-flagged', () => {
+      expect(scoreFromFactors(imported, 'ORANJE')).toBe('ORANJE');
+    });
+
+    it('ORANJE when the recording vet has a card', () => {
+      expect(scoreFromFactors(imported, 'LEREN', 'GEEL')).toBe('ORANJE');
     });
   });
 });

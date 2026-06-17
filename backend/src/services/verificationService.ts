@@ -20,15 +20,31 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
         },
         orderBy: { createdAt: 'desc' },
       },
+      importRecord: {
+        include: {
+          recordedBy: { select: { verificationStatus: true, fraudStatus: true, cardStatus: true } },
+        },
+      },
     },
   });
 
+  const ir = animal?.importRecord;
   const factors: ScoreFactors = {
     found: !!animal,
     chainConfirmed: false,
     breederVerified: false,
     motherKnown: !!animal?.motherChipHash,
     disputed: false,
+    imported: !!ir,
+    // Import volledig & traceerbaar: arts zag papieren, land + traceerbare
+    // herkomst-id bekend, bevestigd, en de arts is geverifieerd (§3a).
+    importVerified:
+      !!ir &&
+      ir.status === 'CONFIRMED' &&
+      ir.vetCheckedDocuments &&
+      !!ir.countryOfOrigin &&
+      !!ir.foreignOriginId &&
+      ir.recordedBy?.verificationStatus === 'VERIFIED',
   };
 
   let registrationDate: Date | undefined;
@@ -44,14 +60,18 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
     factors.breederVerified = confirmed?.user?.verificationStatus === 'VERIFIED';
     registrationDate = confirmed?.createdAt ?? animal.registrations[0]?.createdAt;
 
-    const flags = animal.registrations
-      .map((r) => r.user?.fraudStatus as UserFraudStatus | undefined)
-      .filter((s): s is UserFraudStatus => !!s);
+    // The import recorder counts as a chain participant too — their fraud/card
+    // status cascades like any registrant's (§3a/§4).
+    const flags = [
+      ...animal.registrations.map((r) => r.user?.fraudStatus),
+      ir?.recordedBy?.fraudStatus,
+    ].filter((s): s is UserFraudStatus => !!s);
     ownerFraudStatus = worstFraudStatus(flags.length ? flags : ['LEREN']);
 
-    const cards = animal.registrations
-      .map((r) => r.user?.cardStatus as CardStatus | undefined)
-      .filter((s): s is CardStatus => !!s);
+    const cards = [
+      ...animal.registrations.map((r) => r.user?.cardStatus),
+      ir?.recordedBy?.cardStatus,
+    ].filter((s): s is CardStatus => !!s);
     ownerCardStatus = worstCardStatus(cards.length ? cards : ['GEEN']);
   }
 

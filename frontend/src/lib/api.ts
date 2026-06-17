@@ -262,6 +262,21 @@ class ApiClient {
     });
   }
 
+  // Record an IMPORT chain link for an animal (verified vet, §3a).
+  async recordImport(data: {
+    chipId: string;
+    countryOfOrigin: string;
+    foreignOriginId?: string;
+    euPassportNumber?: string;
+    passportConverted?: boolean;
+    vetCheckedDocuments?: boolean;
+  }) {
+    return this.request<{ message: string; recordId: string }>('/imports', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
   // Record a verified discrepancy note on a professional (§4).
   async addProfessionalNote(data: {
     type: string;

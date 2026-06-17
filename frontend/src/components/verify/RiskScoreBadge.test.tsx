@@ -9,7 +9,23 @@ const soundFactors: ScoreFactors = {
   breederVerified: true,
   motherKnown: true,
   disputed: false,
+  imported: false,
+  importVerified: false,
 };
+
+describe('RiskScoreBadge import label (§3a)', () => {
+  it('renders the 🔵 import label and the import factor instead of the mother', () => {
+    render(
+      <RiskScoreBadge
+        score="BLAUW"
+        factors={{ ...soundFactors, motherKnown: false, imported: true, importVerified: true }}
+      />
+    );
+    expect(screen.getByText('Geverifieerde import')).toBeInTheDocument();
+    expect(screen.getByText('Import gecontroleerd & traceerbaar')).toBeInTheDocument();
+    expect(screen.queryByText('Moeder bekend')).not.toBeInTheDocument();
+  });
+});
 
 describe('RiskScoreBadge', () => {
   it('renders the green label and a verifiability disclaimer (not guilt)', () => {

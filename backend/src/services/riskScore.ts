@@ -19,12 +19,24 @@ export function scoreFromFactors(
   ownerFraudStatus: UserFraudStatus = 'LEREN',
   ownerCardStatus: CardStatus = 'GEEN'
 ): RiskScore {
-  // Harde negatieve signalen → ROOD (keten sluit aantoonbaar niet)
+  // Harde negatieve signalen → ROOD (keten sluit aantoonbaar niet). Geldt ook
+  // voor import: een importeur in een bevestigd fraudepatroon (volume) → ROOD (§3a).
   if (ownerFraudStatus === 'ROOD' || ownerFraudStatus === 'BLOKKADE') return 'ROOD';
   if (f.found && f.disputed) return 'ROOD';
 
-  // Onbekend of zwakke schakel → ORANJE (verifieerbaarheid onvolledig)
   if (!f.found) return 'ORANJE';
+
+  // Geïmporteerd dier: gescoord op de IMPORT-schakel, NIET op een (buitenlandse)
+  // NL-moeder. Een naïeve "geen NL-moeder = oranje/rood" zou de eerlijke importeur
+  // straffen — dat mag niet (§3a). Een volledige, traceerbare import → 🔵 BLAUW.
+  if (f.imported) {
+    if (ownerFraudStatus === 'ORANJE') return 'ORANJE';
+    if (ownerCardStatus === 'GEEL' || ownerCardStatus === 'ROOD') return 'ORANJE';
+    // Herkomst onbekend / paspoort omgezet zonder traceerbare bron → ORANJE.
+    return f.importVerified ? 'BLAUW' : 'ORANJE';
+  }
+
+  // NL-keten: onbekend of zwakke schakel → ORANJE (verifieerbaarheid onvolledig)
   if (!f.chainConfirmed) return 'ORANJE';
   if (!f.breederVerified || !f.motherKnown) return 'ORANJE';
   if (ownerFraudStatus === 'ORANJE') return 'ORANJE';
@@ -32,6 +44,6 @@ export function scoreFromFactors(
   // om de keten naar GROEN te dragen (§4).
   if (ownerCardStatus === 'GEEL' || ownerCardStatus === 'ROOD') return 'ORANJE';
 
-  // Volledige, sluitende keten → GROEN
+  // Volledige, sluitende NL-keten → GROEN
   return 'GROEN';
 }

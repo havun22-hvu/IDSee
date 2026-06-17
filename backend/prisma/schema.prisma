@@ -58,6 +58,7 @@ model User {
   fraudAgainst      FraudReport[] @relation("Subject")
   notesReceived     ProfessionalNote[] @relation("NoteSubject")
   notesCreated      ProfessionalNote[] @relation("NoteAuthor")
+  importsRecorded   ImportRecord[] @relation("ImportRecorder")
 }
 
 model Animal {
@@ -77,6 +78,7 @@ model Animal {
   // Relations
   registrations   Registration[]
   healthRecords   HealthRecord[]
+  importRecord    ImportRecord?
 }
 
 model Registration {
@@ -241,6 +243,32 @@ model FraudReport {
   confirmationDate DateTime?
 
   createdAt       DateTime @default(now())
+}
+
+// The IMPORT chain link (PROPOSITION.md §3a). A legally imported pup has no
+// NL-moeder; the chain is closed instead by a verified NL-vet who physically
+// checks the import papers and records the traceable foreign origin. A complete,
+// traceable import yields the buyer a 🔵 "Geverifieerde import" label — its own
+// label, NOT a downgrade on the NL green/orange/red scale.
+model ImportRecord {
+  id                  String   @id @default(uuid())
+
+  animalId            String   @unique
+  animal              Animal   @relation(fields: [animalId], references: [id])
+
+  // The verified NL-vet who recorded the import
+  recordedById        String
+  recordedBy          User     @relation("ImportRecorder", fields: [recordedById], references: [id])
+
+  countryOfOrigin     String   // land van herkomst
+  foreignOriginId     String?  // buitenlandse fokker-/herkomst-identifier (traceerbaarheid)
+  euPassportNumber    String?
+  passportConverted   Boolean  @default(false) // is het EU-paspoort omgezet?
+  vetCheckedDocuments Boolean  @default(false) // arts zag de invoerpapieren fysiek
+
+  status              String   @default("CONFIRMED") // PENDING, CONFIRMED
+
+  createdAt           DateTime @default(now())
 }
 
 // A verified discrepancy recorded against a professional (PROPOSITION.md §4).

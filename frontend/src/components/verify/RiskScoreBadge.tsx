@@ -6,6 +6,12 @@ const SCORE_META: Record<RiskScore, { label: string; icon: string; description: 
     icon: '🟢',
     description: 'De herkomstketen is volledig verifieerbaar.',
   },
+  BLAUW: {
+    label: 'Geverifieerde import',
+    icon: '🔵',
+    description:
+      'Geen NL-fok, maar de buitenlandse herkomst is traceerbaar en door een geverifieerde dierenarts gecontroleerd.',
+  },
   ORANJE: {
     label: 'Oranje',
     icon: '🟠',
@@ -19,16 +25,26 @@ const SCORE_META: Record<RiskScore, { label: string; icon: string; description: 
 };
 
 // Factors worden neutraal als feiten getoond — nooit als beschuldiging.
-const FACTOR_LABELS: { key: keyof ScoreFactors; label: string; invert?: boolean }[] = [
+type FactorLabel = { key: keyof ScoreFactors; label: string; invert?: boolean };
+
+// NL-keten: toon de moeder-koppeling. Import (§3a): toon de import-schakel i.p.v.
+// "moeder bekend", anders zou een eerlijke importeur een misleidend "–" zien.
+const BASE_LABELS: FactorLabel[] = [
   { key: 'found', label: 'Geregistreerd in IDSee' },
   { key: 'chainConfirmed', label: 'Registratie bevestigd' },
-  { key: 'breederVerified', label: 'Fokker geverifieerd' },
-  { key: 'motherKnown', label: 'Moeder bekend' },
-  { key: 'disputed', label: 'Registratie betwist', invert: true },
+  { key: 'breederVerified', label: 'Professional geverifieerd' },
 ];
+const NL_LABELS: FactorLabel[] = [{ key: 'motherKnown', label: 'Moeder bekend' }];
+const IMPORT_LABELS: FactorLabel[] = [{ key: 'importVerified', label: 'Import gecontroleerd & traceerbaar' }];
+const TAIL_LABELS: FactorLabel[] = [{ key: 'disputed', label: 'Registratie betwist', invert: true }];
 
 export function RiskScoreBadge({ score, factors }: { score: RiskScore; factors: ScoreFactors }) {
   const meta = SCORE_META[score];
+  const FACTOR_LABELS: FactorLabel[] = [
+    ...BASE_LABELS,
+    ...(factors.imported ? IMPORT_LABELS : NL_LABELS),
+    ...TAIL_LABELS,
+  ];
 
   return (
     <div className="risk-score">

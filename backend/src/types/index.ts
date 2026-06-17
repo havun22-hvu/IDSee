@@ -5,7 +5,8 @@ export interface JwtPayload {
 }
 
 // Koper-risico-score: drukt verifieerbaarheid van de herkomstketen uit, geen schuld.
-export type RiskScore = 'GROEN' | 'ORANJE' | 'ROOD';
+// BLAUW = 🔵 "Geverifieerde import" — een eigen label, geen kleur op de NL-schaal (§3a).
+export type RiskScore = 'GROEN' | 'BLAUW' | 'ORANJE' | 'ROOD';
 
 // Transparante, feitelijke onderbouwing van de score (geen schuld-taal).
 export interface ScoreFactors {
@@ -14,6 +15,8 @@ export interface ScoreFactors {
   breederVerified: boolean;// registrerende professional is geverifieerd
   motherKnown: boolean;    // moederdier bekend
   disputed: boolean;       // een registratie is betwist (DISPUTED)
+  imported: boolean;       // dier heeft een IMPORT-schakel (§3a)
+  importVerified: boolean; // import-schakel volledig: traceerbare herkomst + arts-controle
 }
 
 export interface VerifyResult {

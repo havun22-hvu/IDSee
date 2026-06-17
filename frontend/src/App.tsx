@@ -17,6 +17,7 @@ import {
   Confirmations,
   FraudReview,
   ReportSignal,
+  RegisterImport,
 } from './pages';
 
 function App() {
@@ -103,6 +104,14 @@ function App() {
               element={
                 <ProtectedRoute roles={['BREEDER', 'VET', 'CHIPPER']}>
                   <ReportSignal />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/imports/new"
+              element={
+                <ProtectedRoute roles={['VET']}>
+                  <RegisterImport />
                 </ProtectedRoute>
               }
             />

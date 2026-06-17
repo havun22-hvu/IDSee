@@ -17,7 +17,8 @@ export interface AuthResponse {
   token: string;
 }
 
-export type RiskScore = 'GROEN' | 'ORANJE' | 'ROOD';
+// BLAUW = 🔵 "Geverifieerde import" — eigen label, geen kleur op de NL-schaal (§3a).
+export type RiskScore = 'GROEN' | 'BLAUW' | 'ORANJE' | 'ROOD';
 
 export interface ScoreFactors {
   found: boolean;
@@ -25,6 +26,8 @@ export interface ScoreFactors {
   breederVerified: boolean;
   motherKnown: boolean;
   disputed: boolean;
+  imported: boolean;
+  importVerified: boolean;
 }
 
 export interface VerifyResult {

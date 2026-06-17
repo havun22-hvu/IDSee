@@ -12,3 +12,4 @@ export { Verification } from './Verification';
 export { Confirmations } from './Confirmations';
 export { FraudReview } from './FraudReview';
 export { ReportSignal } from './ReportSignal';
+export { RegisterImport } from './RegisterImport';

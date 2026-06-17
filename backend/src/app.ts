@@ -10,6 +10,7 @@ import verificationRoutes from './routes/verification.js';
 import confirmationsRoutes from './routes/confirmations.js';
 import fraudRoutes from './routes/fraud.js';
 import paymentRoutes from './routes/payment.js';
+import importsRoutes from './routes/imports.js';
 
 // Builds the Express app without starting it — importable by tests (supertest).
 export function createApp() {
@@ -36,6 +37,7 @@ export function createApp() {
   app.use('/confirmations', confirmationsRoutes);
   app.use('/fraud', fraudRoutes);
   app.use('/payment', paymentRoutes);
+  app.use('/imports', importsRoutes);
 
   app.use(
     (err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

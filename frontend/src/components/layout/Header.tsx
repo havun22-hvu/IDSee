@@ -49,6 +49,7 @@ export function Header() {
               <Link to="/dashboard" className="nav-link">Overzicht</Link>
               <Link to="/animals" className="nav-link">Registraties</Link>
               <Link to="/animals/new" className="nav-link">Nieuw Dier</Link>
+              <Link to="/imports/new" className="nav-link">Import</Link>
               <Link to="/verification" className="nav-link">Verificatie</Link>
               <Link to="/fraud-review" className="nav-link">Signalen</Link>
               <Link to="/report-signal" className="nav-link">Melden</Link>
