@@ -40,6 +40,13 @@ describe('hashChipId', () => {
     const chip = '528210000123456';
     expect(hashChipId(chip)).not.toContain(chip);
   });
+
+  it('is peppered (HMAC), not a plain sha256 of the chip — not brute-forceable', () => {
+    // AVG §5: a plain hash of an enumerable 15-digit number is reversible.
+    // The digest must differ from an unsalted sha256 of the normalised chip.
+    const chip = '528210000123456';
+    expect(hashChipId(chip)).not.toBe(hashData(chip));
+  });
 });
 
 describe('verifyOnChain (demo mode)', () => {

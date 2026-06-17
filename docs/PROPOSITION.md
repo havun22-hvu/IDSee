@@ -143,6 +143,44 @@ bevestiging dat de arts de invoerpapieren zag.
 > volume/patroon naar 🔴. Exact het doel: de commerciële illegale handelaar raken, de
 > legale importeur sparen.
 
+## 3b. Dataminimalisatie — wat IDSee wél en niet opslaat
+
+**Uitgangspunt (architect):** IDSee kan en wil **niet decennialang een grote database met
+dierdata onderhouden**. Dat hoeft ook niet — de echte gegevens leven al elders (chip in de
+chipdatabank, fokkerlocatie via UBN/RVO, arts in het beroepsregister).
+
+### De arts/chipper is de bron van waarheid
+IDSee bevraagt die brondatabases **niet** via een API. De waarde komt van de **getuigenis
+van een geverifieerde professional**: de arts/chipper checkt fysiek dat **moeder én pup in
+Nederland zijn en hier geboren**, leest de chips, en **bevestigt** de koppeling
+moeder-chip ↔ pup-chip. Het bewijs is de bevestiging-op-locatie, niet een
+database-koppeling.
+
+### Wat IDSee dan opslaat — minimaal
+| Wel opslaan | Niet opslaan |
+|-------------|--------------|
+| Identifiers: chip pup, chip moeder, UBN fokker, registratienr. arts/chipper | Namen, adressen, volledige persoonsdossiers |
+| De koppeling tussen die identifiers | Gezondheidsdossiers als bulk-data |
+| De bevestiging ("geverifieerde arts X: moeder+pup, NL-geboren, datum Y") | Gerepliceerde brondata uit RVO/chipdatabank |
+| Hash/proof als anker | — |
+
+Via **ZKP** kan IDSee bewijzen *"de keten sluit en is bevestigd door een geverifieerde
+arts"* zónder de identifiers zelf prijs te geven. Dit verzoent de wens "geen grote
+database onderhouden" met de AVG-keuze (§5: persoonsgegevens niet on-chain).
+
+### Externe controleerbaarheid achteraf
+Chipnummers zijn op internet te controleren en via UBN is zichtbaar waar dieren zijn. Die
+controle is **niet geautomatiseerd** (geen scrapen — fragiel en mogelijk niet toegestaan),
+maar gebeurt via **koper/community-melding + handmatige admin-controle**. Een discrepantie
+tussen de bevestiging en de werkelijkheid levert een **notitie** op de professional op —
+dit voedt het kaartensysteem in §4.
+
+> **Eerlijke kanttekening (vertrouwensmodel):** de blockchain bewijst niet "de pup is écht
+> NL-geboren" — hij bewijst "een geverifieerde arts heeft dit onveranderlijk bevestigd op
+> datum X". Het vertrouwen leunt op de **arts + de cascade + de externe controle achteraf**
+> (§4), niet op de chain zelf. Een corrupte arts kan fout bevestigen; het notitie-/
+> kaartensysteem en de cascade vangen dat op. Wees hierover eerlijk in de communicatie.
+
 ## 4. Fraude-respons: bevestiging + cascade
 
 Het zwakke punt van het oude model ("borg naar platform pool") is vervangen door een
@@ -183,11 +221,28 @@ spaart — en het versterkt de juridische lijn (§5): het systeem reageert op ee
 > Drempels (*x*, het import-plafond, de leer-marge) zijn **parameters**, geen vaste
 > getallen. Ze worden geijkt op echte data; voorlopige waarden staan in §9.
 
+### Notitie- en kaartensysteem op de professional
+
+Naast de escalatie op dier-niveau loopt een spoor op de **professional zelf**, gevoed door
+de externe controle achteraf (§3b: koper/community-melding + admin-controle). Dit is
+**onderdeel van dezelfde cascade**, geen apart systeem — een notitie is een "zacht" signaal
+dat pas telt na verificatie.
+
+| Niveau | Trigger | Effect |
+|--------|---------|--------|
+| **Notitie** | Een geverifieerde discrepantie: chipnummer/UBN klopt niet met de bevestiging van de professional | Geregistreerd op de professional; nog geen sanctie. |
+| **Gele kaart** | ± 3 notities | Professional gemarkeerd; zijn nieuwe bevestigingen wegen lichter mee in de score. |
+| **Rode kaart** | Meer notities | Bevestigingen tellen niet meer; cascade naar zijn aanmeldingen (§4). |
+
+> Notities ontstaan **alleen na verificatie** van de melding (admin of bevestigende arts) —
+> niet op een kale koper-klacht. Dit voorkomt dat een concurrent iemand met valse meldingen
+> kapotmaakt. De kaarten-drempels (3, meer) zijn **parameters** (§9).
+
 ## 5. Wettelijke houdbaarheid
 
 | Risico | Behandeling |
 |--------|-------------|
-| **AVG — chipnummer als persoonsgegeven** | Chip- en persoons-ID's alleen als hash on-chain; persoonsgegevens encrypted off-chain in database. |
+| **AVG — chipnummer als persoonsgegeven** | Dataminimalisatie (§3b): IDSee bewaart alleen identifiers + koppeling + bevestiging + proof, géén gerepliceerde persoonsdossiers. Chip- en persoons-ID's alleen als hash on-chain. |
 | **AVG — recht op vergetelheid vs. immutable blockchain** | Persoonsgegevens staan **niet** on-chain. On-chain staan alleen hashes/proofs; verwijderen van de off-chain sleutel maakt de hash betekenisloos ("crypto-shredding"). |
 | **Smaad / onrechtmatige daad jegens fokker/arts** | Score drukt **verifieerbaarheid** uit, geen schuld. Geen publiek oordeel over een identificeerbaar persoon. Identiteiten blijven anoniem via ZKP. |
 | **Concurrentie-misbruik (valse fraudeclaims)** | Harde cascade vereist bevestiging door een geverifieerde dierenarts (§4). Koper-signalen alleen zijn "zacht", op dier-niveau. |
@@ -253,6 +308,13 @@ Eerste artsen via genesis-verificatie (zie VERIFICATION.md §Bootstrapping).
       *x* herhalingen vóór rood, import-plafond (voorlopig >10 pups → blokkade).
 - [ ] Onderscheid *vergissing* vs. *patroon* meetbaar maken (welke signalen tellen mee,
       over welke tijdvenster, met welk gewicht).
+- [ ] **Code afslanken naar minimale dataset (§3b):** huidige 11 Prisma-modellen met
+      volledige dier-/gezondheidsdata zijn zwaarder dan nodig — kern = identifiers +
+      koppeling + bevestiging + proof. Apart implementatietraject.
+- [ ] **Notitie-/kaartensysteem (§4)** bouwen: melding → verificatie → notitie → geel → rood,
+      gekoppeld aan de bestaande fraude-cascade. Kaarten-drempels als parameters.
+- [ ] Vertrouwensmodel documenteren naar gebruikers: chain bewijst "arts bevestigde",
+      niet "pup is écht NL" — eerlijk communiceren (§3b kanttekening).
 
 ---
 
