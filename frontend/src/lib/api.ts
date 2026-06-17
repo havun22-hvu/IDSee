@@ -105,6 +105,8 @@ class ApiClient {
     breed?: string;
     birthDate?: string;
     motherChipId?: string;
+    breederUbn?: string;
+    motherResidency?: 'EIGEN_LOCATIE' | 'BIJ_DERDE';
   }) {
     return this.request<{ id: string; status: string }>('/animals', {
       method: 'POST',

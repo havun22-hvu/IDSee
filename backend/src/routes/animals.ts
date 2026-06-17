@@ -18,6 +18,10 @@ const registerAnimalSchema = z.object({
   breed: z.string().optional(),
   birthDate: z.string().datetime().optional(),
   motherChipId: z.string().optional(),
+  // UBN-houder van de moeder + verblijf (§4). Zonder UBN/houder-bevestiging haalt
+  // de keten geen groen (de score dwingt het af); import loopt via /imports.
+  breederUbn: z.string().optional(),
+  motherResidency: z.enum(['EIGEN_LOCATIE', 'BIJ_DERDE']).optional(),
 });
 
 // POST /animals - Register a new animal
@@ -76,6 +80,8 @@ router.post(
             animalId: animal.id,
             dataHash,
             status: 'PENDING',
+            breederUbn: data.breederUbn,
+            motherResidency: data.motherResidency,
           },
         });
 

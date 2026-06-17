@@ -12,6 +12,8 @@ export function RegisterAnimal() {
   const [breed, setBreed] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [motherChipId, setMotherChipId] = useState('');
+  const [breederUbn, setBreederUbn] = useState('');
+  const [motherResidency, setMotherResidency] = useState<'EIGEN_LOCATIE' | 'BIJ_DERDE'>('EIGEN_LOCATIE');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -27,6 +29,8 @@ export function RegisterAnimal() {
         breed: breed || undefined,
         birthDate: birthDate ? new Date(birthDate).toISOString() : undefined,
         motherChipId: motherChipId || undefined,
+        breederUbn: breederUbn || undefined,
+        motherResidency,
       });
 
       // Refresh user to update credits
@@ -119,6 +123,37 @@ export function RegisterAnimal() {
           <small className="form-hint">
             Als de moeder ook geregistreerd is, wordt er een link gemaakt.
           </small>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label htmlFor="breederUbn">UBN-houder van de moeder</label>
+            <input
+              type="text"
+              id="breederUbn"
+              value={breederUbn}
+              onChange={(e) => setBreederUbn(e.target.value)}
+              placeholder="bijv. 1234567"
+            />
+            <small className="form-hint">
+              Verplicht voor een groene NL-keten. Zonder UBN + bevestiging blijft de score oranje.
+            </small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="motherResidency">Verblijf van de moeder</label>
+            <select
+              id="motherResidency"
+              value={motherResidency}
+              onChange={(e) => setMotherResidency(e.target.value as 'EIGEN_LOCATIE' | 'BIJ_DERDE')}
+            >
+              <option value="EIGEN_LOCATIE">Bij de UBN-houder</option>
+              <option value="BIJ_DERDE">Bij een verzorger / derde</option>
+            </select>
+            <small className="form-hint">
+              "Bij een derde" is een feit, geen probleem — de UBN-houder bevestigt het.
+            </small>
+          </div>
         </div>
 
         <div className="form-actions">

@@ -36,6 +36,10 @@ model User {
   warningCount      Int      @default(0)
   isSuspended       Boolean  @default(false)
 
+  // Vrijwillige deelname + toestemming (PROPOSITION.md §4) — AVG-grondslag om een
+  // UBN-houder als cascade-subject te flaggen en zijn volume als feit te tonen (§4a).
+  idseeConsent      Boolean  @default(false)
+
   // Fraud cascade (B-track fase 3)
   fraudStatus       String   @default("LEREN") // LEREN, ORANJE, ROOD, BLOKKADE
   lastFraudAssessment DateTime?
@@ -95,6 +99,10 @@ model Registration {
   breederConfirmed Boolean @default(false)
   breederConfirmedAt DateTime?
   breederRejectedReason String?
+
+  // Verblijf van de moeder (PROPOSITION.md §4) — feit, geen straf. De teef kan
+  // bij een verzorger verblijven terwijl de UBN-houder elders woont.
+  motherResidency String? // EIGEN_LOCATIE | BIJ_DERDE
 
   // Blockchain
   dataHash        String   // Hash of registration data

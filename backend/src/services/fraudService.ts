@@ -85,6 +85,16 @@ export async function confirmFraud(
     throw new Error('Melding niet gevonden of al beoordeeld');
   }
 
+  // Toerekening (§4): bij een vet-gecontroleerde import-schakel deelt de arts die
+  // "akkoord" stempelde in de discrepantie (scenario 2). De melder is nooit subject.
+  let coSubjectProfessionalId: string | null = null;
+  if (category === 'SIGNAAL' && report.animalId) {
+    const ir = await prisma.importRecord.findUnique({ where: { animalId: report.animalId } });
+    if (ir?.vetCheckedDocuments && ir.recordedById !== report.subjectUserId) {
+      coSubjectProfessionalId = ir.recordedById;
+    }
+  }
+
   await prisma.fraudReport.update({
     where: { id: reportId },
     data: {
@@ -93,14 +103,18 @@ export async function confirmFraud(
       confirmedById: vetId,
       reviewNote: note,
       confirmationDate: new Date(),
+      coSubjectProfessionalId,
     },
   });
 
-  // Cascade: re-assess the subject. Only confirmed SIGNALS count — a FEIT leaves
-  // the status unchanged. The risk score is derived per request, so updating the
-  // user's fraudStatus automatically flows to all their animals.
+  // Cascade: re-assess the subject (and the co-subject professional, if any). Only
+  // confirmed, OPEN SIGNALS count — a FEIT leaves the status unchanged. The risk
+  // score is derived per request, so a status change flows to all their animals.
   const newStatus = await assessUserFraudStatus(report.subjectUserId);
-  return { reportId, subjectUserId: report.subjectUserId, category, newStatus };
+  if (coSubjectProfessionalId) {
+    await assessUserFraudStatus(coSubjectProfessionalId);
+  }
+  return { reportId, subjectUserId: report.subjectUserId, coSubjectProfessionalId, category, newStatus };
 }
 
 export async function rejectFraud(reportId: string, vetId: string, note?: string) {
@@ -161,7 +175,9 @@ export async function assessUserFraudStatus(userId: string): Promise<UserFraudSt
 
   const count = await prisma.fraudReport.count({
     where: {
-      subjectUserId: userId,
+      // The user counts as subject (eigenaar/UBN-houder) OR co-subject (arts die
+      // akkoord stempelde) — beide gaan samen voor de bijl (§4).
+      OR: [{ subjectUserId: userId }, { coSubjectProfessionalId: userId }],
       status: 'CONFIRMED',
       category: 'SIGNAAL', // FEIT-confirmations are neutral and never cascade (§9)
       resolvedAt: null,    // only OPEN (not-yet-corrected) discrepancies count (§4)
