@@ -68,7 +68,18 @@ export async function getPendingReports() {
   });
 }
 
-export async function confirmFraud(reportId: string, vetId: string, note?: string) {
+/**
+ * Confirm a report. A SIGNAAL (default) escalates the fraud cascade; a FEIT is
+ * recorded as a neutral verified observation that NEVER counts as an accusation
+ * (PROPOSITION.md §9) — e.g. a legal passport conversion. Confirming a FEIT
+ * therefore does not change the subject's fraud status.
+ */
+export async function confirmFraud(
+  reportId: string,
+  vetId: string,
+  note?: string,
+  category: 'SIGNAAL' | 'FEIT' = 'SIGNAAL'
+) {
   const report = await prisma.fraudReport.findUnique({ where: { id: reportId } });
   if (!report || report.status !== 'PENDING_VET_REVIEW') {
     throw new Error('Melding niet gevonden of al beoordeeld');
@@ -78,16 +89,18 @@ export async function confirmFraud(reportId: string, vetId: string, note?: strin
     where: { id: reportId },
     data: {
       status: 'CONFIRMED',
+      category,
       confirmedById: vetId,
       reviewNote: note,
       confirmationDate: new Date(),
     },
   });
 
-  // Cascade: re-assess the subject. The risk score is derived per request, so
-  // updating the user's fraudStatus automatically flows to all their animals.
+  // Cascade: re-assess the subject. Only confirmed SIGNALS count — a FEIT leaves
+  // the status unchanged. The risk score is derived per request, so updating the
+  // user's fraudStatus automatically flows to all their animals.
   const newStatus = await assessUserFraudStatus(report.subjectUserId);
-  return { reportId, subjectUserId: report.subjectUserId, newStatus };
+  return { reportId, subjectUserId: report.subjectUserId, category, newStatus };
 }
 
 export async function rejectFraud(reportId: string, vetId: string, note?: string) {
@@ -119,6 +132,7 @@ export async function assessUserFraudStatus(userId: string): Promise<UserFraudSt
     where: {
       subjectUserId: userId,
       status: 'CONFIRMED',
+      category: 'SIGNAAL', // FEIT-confirmations are neutral and never cascade (§9)
       confirmationDate: { gte: since },
     },
   });

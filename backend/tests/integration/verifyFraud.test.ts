@@ -166,6 +166,52 @@ describe('fraud cascade (end-to-end)', () => {
   });
 });
 
+describe('feit vs. signaal (§9)', () => {
+  // Fresh subject so the earlier cascade does not interfere.
+  let factSubjectId: string;
+
+  beforeAll(async () => {
+    const subject = await prisma.user.create({
+      data: {
+        email: 'itest-fact-subject@x.nl',
+        passwordHash: 'x',
+        role: 'CHIPPER',
+        verificationStatus: 'VERIFIED',
+      },
+    });
+    factSubjectId = subject.id;
+  });
+
+  it('confirming as FEIT records it but does NOT escalate the cascade', async () => {
+    // File and confirm two reports as neutral FACTS.
+    for (let i = 0; i < 2; i++) {
+      const r = await request(app)
+        .post('/fraud/report')
+        .set('Authorization', `Bearer ${token(reporterId, 'BUYER')}`)
+        .send({ subjectUserId: factSubjectId, type: 'omgekat_paspoort', description: `feit ${i}` });
+      expect(r.status).toBe(201);
+    }
+
+    const pending = await request(app)
+      .get('/fraud/pending')
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    const mine = pending.body.filter((p: any) => p.subjectUserId === factSubjectId);
+    expect(mine.length).toBe(2);
+
+    for (const report of mine) {
+      const res = await request(app)
+        .post(`/fraud/${report.id}/confirm`)
+        .set('Authorization', `Bearer ${token(vetId, 'VET')}`)
+        .send({ category: 'FEIT' });
+      expect(res.body.category).toBe('FEIT');
+    }
+
+    // Two confirmed FACTS — still LEREN (a legal observation is no accusation).
+    const subject = await prisma.user.findUnique({ where: { id: factSubjectId } });
+    expect(subject?.fraudStatus).toBe('LEREN');
+  });
+});
+
 describe('professional notes / card system (§4)', () => {
   // Fresh subject + animal so the fraud cascade above does not interfere.
   const NOTE_CHIP = '900000000000888';

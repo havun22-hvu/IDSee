@@ -24,13 +24,17 @@ export function FraudReview() {
     }
   }
 
-  async function handleConfirm(id: string) {
+  async function handleConfirm(id: string, category: 'SIGNAAL' | 'FEIT' = 'SIGNAAL') {
     setActionId(id);
     setError('');
     setMessage('');
     try {
-      const res = await api.confirmFraud(id, notes[id]);
-      setMessage(`Signaal bevestigd. Verifieerbaarheid van de betrokken keten is nu: ${res.newStatus}.`);
+      const res = await api.confirmFraud(id, notes[id], category);
+      setMessage(
+        category === 'FEIT'
+          ? 'Vastgelegd als neutraal feit — geen beschuldiging, geen escalatie.'
+          : `Fraudesignaal bevestigd. Verifieerbaarheid van de betrokken keten is nu: ${res.newStatus}.`
+      );
       setReports((prev) => prev.filter((r) => r.id !== id));
     } catch (err: any) {
       setError(err.message);
@@ -123,10 +127,17 @@ export function FraudReview() {
                 <div className="actions">
                   <button
                     className="btn-small btn-danger"
-                    onClick={() => handleConfirm(r.id)}
+                    onClick={() => handleConfirm(r.id, 'SIGNAAL')}
                     disabled={actionId === r.id}
                   >
                     Bevestigen als fraudesignaal
+                  </button>
+                  <button
+                    className="btn-small btn-secondary"
+                    onClick={() => handleConfirm(r.id, 'FEIT')}
+                    disabled={actionId === r.id}
+                  >
+                    Vastleggen als feit (geen beschuldiging)
                   </button>
                   <button
                     className="btn-small btn-secondary"

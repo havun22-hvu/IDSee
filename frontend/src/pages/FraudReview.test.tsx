@@ -9,6 +9,7 @@ vi.mock('../lib/api', () => ({
     getPendingFraudReports: vi.fn(),
     confirmFraud: vi.fn(),
     rejectFraud: vi.fn(),
+    addProfessionalNote: vi.fn(),
   },
 }));
 
@@ -51,8 +52,27 @@ describe('FraudReview', () => {
     await userEvent.click(screen.getByRole('button', { name: /Bevestigen als fraudesignaal/ }));
 
     await waitFor(() => {
-      expect(api.confirmFraud).toHaveBeenCalledWith('r1', undefined);
+      expect(api.confirmFraud).toHaveBeenCalledWith('r1', undefined, 'SIGNAAL');
       expect(screen.getByText(/ORANJE/)).toBeInTheDocument();
+    });
+  });
+
+  it('records a report as a neutral FEIT without escalating (§9)', async () => {
+    (api.getPendingFraudReports as ReturnType<typeof vi.fn>).mockResolvedValue([report]);
+    (api.confirmFraud as ReturnType<typeof vi.fn>).mockResolvedValue({
+      subjectUserId: 'u2',
+      category: 'FEIT',
+      newStatus: 'LEREN',
+    });
+
+    render(<FraudReview />);
+    await waitFor(() => screen.getByText('omgekat_paspoort'));
+
+    await userEvent.click(screen.getByRole('button', { name: /Vastleggen als feit/ }));
+
+    await waitFor(() => {
+      expect(api.confirmFraud).toHaveBeenCalledWith('r1', undefined, 'FEIT');
+      expect(screen.getByText(/geen beschuldiging/)).toBeInTheDocument();
     });
   });
 

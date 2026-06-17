@@ -63,7 +63,9 @@ router.get('/pending', authenticateToken, requireVerifiedVet, async (_req: AuthR
 
 router.post('/:id/confirm', authenticateToken, requireVerifiedVet, async (req: AuthRequest, res: Response) => {
   try {
-    res.json(await confirmFraud(req.params.id, req.user!.id, req.body.note));
+    // category: SIGNAAL (default, cascades) | FEIT (neutral, never an accusation) — §9
+    const category = req.body.category === 'FEIT' ? 'FEIT' : 'SIGNAAL';
+    res.json(await confirmFraud(req.params.id, req.user!.id, req.body.note, category));
   } catch (error: any) {
     res.status(400).json({ error: error.message || 'Bevestigen mislukt' });
   }

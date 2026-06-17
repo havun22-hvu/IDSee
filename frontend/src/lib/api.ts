@@ -248,11 +248,12 @@ class ApiClient {
     return this.request<FraudReport[]>('/fraud/pending');
   }
 
-  async confirmFraud(id: string, note?: string) {
-    return this.request<{ subjectUserId: string; newStatus: string }>(`/fraud/${id}/confirm`, {
-      method: 'POST',
-      body: JSON.stringify({ note }),
-    });
+  // category SIGNAAL (cascades) | FEIT (neutral verified fact, no cascade) — §9.
+  async confirmFraud(id: string, note?: string, category: 'SIGNAAL' | 'FEIT' = 'SIGNAAL') {
+    return this.request<{ subjectUserId: string; category: string; newStatus: string }>(
+      `/fraud/${id}/confirm`,
+      { method: 'POST', body: JSON.stringify({ note, category }) }
+    );
   }
 
   async rejectFraud(id: string, note?: string) {

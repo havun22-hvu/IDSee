@@ -235,6 +235,13 @@ model FraudReport {
   type            String   // e.g. omgekat_paspoort, ontbrekende_schakel, dubbele_registratie
   description     String
 
+  // Onderscheid feit vs. signaal (PROPOSITION.md §9). A SIGNAAL is a suspected
+  // irregularity that, once vet-confirmed, escalates the fraud cascade. A FEIT
+  // is a neutral, verified observation (e.g. a legal passport conversion) — it
+  // is recorded but NEVER counts as an accusation and does not cascade. The vet
+  // sets this at confirmation time.
+  category        String   @default("SIGNAAL") // SIGNAAL, FEIT
+
   // PENDING_VET_REVIEW, CONFIRMED, REJECTED
   status          String   @default("PENDING_VET_REVIEW")
   confirmedById   String?  // The verified vet who confirmed/rejected
