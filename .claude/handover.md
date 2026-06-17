@@ -143,6 +143,15 @@ Tests na deze ronde: backend **66 unit + 23 integration**, frontend **21** — g
 - **Import-uitzondering Spanje/Griekenland** (asiel/stichting) — §9, Henk denkt na.
 - **Toestemming-intrekking vs. check-op-koopmoment verankeren** — §9.
 - Multi-account/multi-UBN clustering (fase 2); echte ZKP (nu demo).
+
+### Lopende brainstorm: privacy- & deploy-architectuur (17 juni 2026, WIP)
+
+Open ontwerpdiscussie — **morgen verder**. Volledige vastlegging met alle voors/tegens
+en Henk's gewenste eindbeeld in **`docs/PRIVACY-ARCHITECTUUR.md`**. Kern: server vs.
+on-chain; chip/UBN = (indirect) persoonsgegeven; ZKP/Midnight maakt inhoud anoniem maar
+lost het **orakel-/enumeratieprobleem** niet op; de **€2-check is de rate-limit**;
+convergeert voorlopig naar **Midnight (shielded ZK-OK) + een dunne betaal/rate-limit-poort**.
+Open vraag #1: mag/kan IDSee een OK schrijven/uitlezen bij de officiële chipdatabank?
 - ZK-migratie (Midnight) — `PROPOSITION.md` §9 + blueprint §4 (eigen `/arch`-traject)
 - Frontend dev-only audit: 5 advisories in vite/vitest; fix = `vite@8` (3 majors) — uitgesteld
 - **Code afslanken naar minimale dataset (§3b)** — HealthRecord/Animal dragen meer dan
