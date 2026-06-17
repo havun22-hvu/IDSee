@@ -3,7 +3,12 @@ import { z } from 'zod';
 import { prisma } from '../db.js';
 import { authMiddleware, adminOnly } from '../middleware/auth.js';
 import { getWalletBalance, isDemoMode } from '../services/blockchain.js';
-import { getThresholds, setThresholds } from '../services/systemConfigService.js';
+import {
+  getThresholds,
+  setThresholds,
+  getCardThresholds,
+  setCardThresholds,
+} from '../services/systemConfigService.js';
 import { AuthRequest } from '../middleware/auth.js';
 
 const router = Router();
@@ -18,10 +23,16 @@ const thresholdsSchema = z.object({
   block: z.number().int().min(1),
 });
 
-// GET /admin/config - current fraud-cascade thresholds
+const cardThresholdsSchema = z.object({
+  yellow: z.number().int().min(1),
+  red: z.number().int().min(1),
+});
+
+// GET /admin/config - current fraud-cascade + card thresholds
 router.get('/config', async (_req: AuthRequest, res: Response) => {
   try {
-    res.json(await getThresholds());
+    const [fraud, cards] = await Promise.all([getThresholds(), getCardThresholds()]);
+    res.json({ ...fraud, cards });
   } catch (error) {
     console.error('Get config error:', error);
     res.status(500).json({ error: 'Kon configuratie niet ophalen' });
@@ -43,6 +54,24 @@ router.put('/config', async (req: AuthRequest, res: Response) => {
     }
     console.error('Update config error:', error);
     res.status(500).json({ error: 'Kon configuratie niet bijwerken' });
+  }
+});
+
+// PUT /admin/config/cards - update card thresholds (must be yellow < red)
+router.put('/config/cards', async (req: AuthRequest, res: Response) => {
+  try {
+    const t = cardThresholdsSchema.parse(req.body);
+    if (!(t.yellow < t.red)) {
+      return res.status(400).json({ error: 'Drempels moeten oplopen: geel < rood' });
+    }
+    await setCardThresholds(t);
+    res.json({ message: 'Kaart-drempels bijgewerkt', cards: t });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ error: error.errors[0].message });
+    }
+    console.error('Update card config error:', error);
+    res.status(500).json({ error: 'Kon kaart-configuratie niet bijwerken' });
   }
 });
 

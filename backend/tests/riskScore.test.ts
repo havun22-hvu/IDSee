@@ -57,4 +57,23 @@ describe('scoreFromFactors', () => {
       expect(scoreFromFactors({ ...sound, found: false }, 'ROOD')).toBe('ROOD');
     });
   });
+
+  describe('professional card status (§4)', () => {
+    it('GROEN when the confirming professional has no card', () => {
+      expect(scoreFromFactors(sound, 'LEREN', 'GEEN')).toBe('GROEN');
+    });
+
+    it('downgrades GROEN to ORANJE on a gele kaart (confirmation weighs lighter)', () => {
+      expect(scoreFromFactors(sound, 'LEREN', 'GEEL')).toBe('ORANJE');
+    });
+
+    it('downgrades GROEN to ORANJE on a rode kaart (confirmation no longer carries)', () => {
+      expect(scoreFromFactors(sound, 'LEREN', 'ROOD')).toBe('ORANJE');
+    });
+
+    it('a card never overrides a harder ROOD signal', () => {
+      // disputed chain stays ROOD regardless of card.
+      expect(scoreFromFactors({ ...sound, disputed: true }, 'LEREN', 'GEEL')).toBe('ROOD');
+    });
+  });
 });

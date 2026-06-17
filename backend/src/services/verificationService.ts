@@ -1,7 +1,7 @@
 import { prisma } from '../db.js';
 import type { ScoreFactors, VerifyResult } from '../types/index.js';
 import { scoreFromFactors, UserFraudStatus } from './riskScore.js';
-import { worstFraudStatus } from './fraudPolicy.js';
+import { worstFraudStatus, worstCardStatus, CardStatus } from './fraudPolicy.js';
 
 /**
  * Derive the buyer risk score for a chip (by its privacy hash).
@@ -16,7 +16,7 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
     include: {
       registrations: {
         include: {
-          user: { select: { verificationStatus: true, fraudStatus: true } },
+          user: { select: { verificationStatus: true, fraudStatus: true, cardStatus: true } },
         },
         orderBy: { createdAt: 'desc' },
       },
@@ -34,6 +34,8 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
   let registrationDate: Date | undefined;
   // Cascade: take the worst fraud flag among the chain's registrants.
   let ownerFraudStatus: UserFraudStatus = 'LEREN';
+  // Cascade: take the worst card (§4) among the chain's registrants.
+  let ownerCardStatus: CardStatus = 'GEEN';
 
   if (animal) {
     const confirmed = animal.registrations.find((r) => r.status === 'CONFIRMED');
@@ -46,12 +48,17 @@ export async function calculateRiskScore(chipIdHash: string): Promise<VerifyResu
       .map((r) => r.user?.fraudStatus as UserFraudStatus | undefined)
       .filter((s): s is UserFraudStatus => !!s);
     ownerFraudStatus = worstFraudStatus(flags.length ? flags : ['LEREN']);
+
+    const cards = animal.registrations
+      .map((r) => r.user?.cardStatus as CardStatus | undefined)
+      .filter((s): s is CardStatus => !!s);
+    ownerCardStatus = worstCardStatus(cards.length ? cards : ['GEEN']);
   }
 
   // chipId teruggeven we niet in plaintext bij niet-gevonden; bij gevonden is het al gehasht opgeslagen.
   return {
     chipId: '',
-    riskScore: scoreFromFactors(factors, ownerFraudStatus),
+    riskScore: scoreFromFactors(factors, ownerFraudStatus, ownerCardStatus),
     factors,
     registrationDate,
   };

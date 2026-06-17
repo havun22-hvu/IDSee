@@ -54,6 +54,27 @@ export function FraudReview() {
     }
   }
 
+  // Record the signal as a verified discrepancy NOTE on the professional (§4) —
+  // lighter than a hard fraud signal. Notes accumulate toward a gele/rode kaart.
+  async function handleNote(r: FraudReport) {
+    setActionId(r.id);
+    setError('');
+    setMessage('');
+    try {
+      const res = await api.addProfessionalNote({
+        subjectUserId: r.subjectUserId,
+        type: r.type,
+        description: notes[r.id] || r.description,
+      });
+      setMessage(`Notitie geregistreerd. Kaartstatus van de professional: ${res.newCardStatus}.`);
+      setReports((prev) => prev.filter((x) => x.id !== r.id));
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setActionId(null);
+    }
+  }
+
   if (loading) {
     return <div className="loading">Laden...</div>;
   }
@@ -106,6 +127,13 @@ export function FraudReview() {
                     disabled={actionId === r.id}
                   >
                     Bevestigen als fraudesignaal
+                  </button>
+                  <button
+                    className="btn-small btn-secondary"
+                    onClick={() => handleNote(r)}
+                    disabled={actionId === r.id}
+                  >
+                    Als notitie vastleggen
                   </button>
                   <button
                     className="btn-small btn-secondary"

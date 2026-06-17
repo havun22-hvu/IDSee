@@ -165,3 +165,71 @@ describe('fraud cascade (end-to-end)', () => {
     expect(res.body.riskScore).toBe('ORANJE');
   });
 });
+
+describe('professional notes / card system (§4)', () => {
+  // Fresh subject + animal so the fraud cascade above does not interfere.
+  const NOTE_CHIP = '900000000000888';
+  let noteSubjectId: string;
+
+  beforeAll(async () => {
+    const subject = await prisma.user.create({
+      data: {
+        email: 'itest-note-subject@x.nl',
+        passwordHash: 'x',
+        role: 'CHIPPER',
+        verificationStatus: 'VERIFIED',
+      },
+    });
+    noteSubjectId = subject.id;
+
+    const animal = await prisma.animal.create({
+      data: {
+        chipIdHash: hashChipId(NOTE_CHIP),
+        species: 'dog',
+        motherChipHash: hashChipId('900000000000222'),
+      },
+    });
+    await prisma.registration.create({
+      data: {
+        userId: noteSubjectId,
+        animalId: animal.id,
+        dataHash: 'd',
+        status: 'CONFIRMED',
+        confirmedAt: new Date(),
+      },
+    });
+  });
+
+  it('refuses a note from a non-vet/non-admin', async () => {
+    const res = await request(app)
+      .post('/fraud/note')
+      .set('Authorization', `Bearer ${token(reporterId, 'BUYER')}`)
+      .send({ subjectUserId: noteSubjectId, type: 'chip_mismatch', description: 'x' });
+    expect(res.status).toBe(403);
+  });
+
+  it('a sound chain scores GROEN before any note', async () => {
+    const res = await request(app)
+      .get(`/verify/${NOTE_CHIP}`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    expect(res.body.riskScore).toBe('GROEN');
+  });
+
+  it('three vet notes raise a gele kaart and downgrade the score to ORANJE', async () => {
+    for (let i = 0; i < 3; i++) {
+      const r = await request(app)
+        .post('/fraud/note')
+        .set('Authorization', `Bearer ${token(vetId, 'VET')}`)
+        .send({ subjectUserId: noteSubjectId, type: 'chip_mismatch', description: `note ${i}` });
+      expect(r.status).toBe(201);
+    }
+
+    const subject = await prisma.user.findUnique({ where: { id: noteSubjectId } });
+    expect(subject?.cardStatus).toBe('GEEL');
+
+    const res = await request(app)
+      .get(`/verify/${NOTE_CHIP}`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    expect(res.body.riskScore).toBe('ORANJE');
+  });
+});

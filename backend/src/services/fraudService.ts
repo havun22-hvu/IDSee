@@ -1,6 +1,6 @@
 import { prisma } from '../db.js';
-import { assessFraudStatus } from './fraudPolicy.js';
-import { getThresholds } from './systemConfigService.js';
+import { assessFraudStatus, assessCardStatus, CardStatus } from './fraudPolicy.js';
+import { getThresholds, getCardThresholds } from './systemConfigService.js';
 import { hashChipId } from './blockchain.js';
 import type { UserFraudStatus } from './riskScore.js';
 
@@ -136,6 +136,78 @@ export async function assessUserFraudStatus(userId: string): Promise<UserFraudSt
       // A blocked professional is also suspended from registering.
       isSuspended: newStatus === 'BLOKKADE' ? true : user?.isSuspended ?? false,
     },
+  });
+
+  return newStatus;
+}
+
+/**
+ * Record a verified discrepancy note on a professional (PROPOSITION.md §4).
+ * Notes only ever come from an admin or a verified vet — never a bare buyer
+ * complaint. Adding one re-assesses the professional's card status.
+ */
+export async function addProfessionalNote(params: {
+  subjectUserId?: string;
+  createdById: string;
+  type: string;
+  description: string;
+  animalId?: string;
+  chipId?: string;
+}) {
+  let subjectUserId = params.subjectUserId;
+  let animalId = params.animalId;
+
+  if (!animalId && params.chipId) {
+    const animal = await prisma.animal.findUnique({
+      where: { chipIdHash: hashChipId(params.chipId) },
+    });
+    if (!animal) {
+      throw new Error('Geen dier gevonden voor dit chipnummer');
+    }
+    animalId = animal.id;
+  }
+
+  if (!subjectUserId && animalId) {
+    const reg = await prisma.registration.findFirst({
+      where: { animalId },
+      orderBy: { createdAt: 'desc' },
+    });
+    subjectUserId = reg?.userId;
+  }
+
+  if (!subjectUserId) {
+    throw new Error('Kon de betrokken professional niet bepalen');
+  }
+
+  const note = await prisma.professionalNote.create({
+    data: {
+      subjectUserId,
+      createdById: params.createdById,
+      type: params.type,
+      description: params.description,
+    },
+  });
+
+  const newCardStatus = await assessUserCardStatus(subjectUserId);
+  return { note, subjectUserId, newCardStatus };
+}
+
+/**
+ * Recompute a professional's card status from their total notes. Returns the
+ * new card status. Unlike fraud signals, notes do not expire by default — a
+ * pattern of discrepancies is cumulative (window can be added as a parameter).
+ */
+export async function assessUserCardStatus(userId: string): Promise<CardStatus> {
+  const count = await prisma.professionalNote.count({
+    where: { subjectUserId: userId },
+  });
+
+  const thresholds = await getCardThresholds();
+  const newStatus = assessCardStatus(count, thresholds);
+
+  await prisma.user.update({
+    where: { id: userId },
+    data: { cardStatus: newStatus, lastCardAssessment: new Date() },
   });
 
   return newStatus;

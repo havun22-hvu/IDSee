@@ -48,3 +48,43 @@ export function worstFraudStatus(statuses: UserFraudStatus[]): UserFraudStatus {
     'LEREN'
   );
 }
+
+/**
+ * Notitie-/kaartensysteem (PROPOSITION.md §4) — PURE, fully unit-testable.
+ *
+ * A professional accumulates verified discrepancy NOTES. Above the yellow
+ * threshold they get a gele kaart (their confirmations weigh lighter); above
+ * the red threshold a rode kaart (their confirmations no longer carry a chain).
+ * It is the same graduated cascade as the fraud flag, on a different signal.
+ */
+export type CardStatus = 'GEEN' | 'GEEL' | 'ROOD';
+
+export interface CardThresholds {
+  yellow: number;
+  red: number;
+}
+
+// Voorlopige defaults (PROPOSITION.md §4/§9) — overschrijfbaar via SystemConfig.
+export const DEFAULT_CARD_THRESHOLDS: CardThresholds = {
+  yellow: 3,
+  red: 6,
+};
+
+export function assessCardStatus(
+  noteCount: number,
+  thresholds: CardThresholds = DEFAULT_CARD_THRESHOLDS
+): CardStatus {
+  if (noteCount >= thresholds.red) return 'ROOD';
+  if (noteCount >= thresholds.yellow) return 'GEEL';
+  return 'GEEN';
+}
+
+const CARD_SEVERITY: Record<CardStatus, number> = { GEEN: 0, GEEL: 1, ROOD: 2 };
+
+// Bij meerdere betrokken professionals telt de zwaarste kaart.
+export function worstCardStatus(statuses: CardStatus[]): CardStatus {
+  return statuses.reduce<CardStatus>(
+    (worst, s) => (CARD_SEVERITY[s] > CARD_SEVERITY[worst] ? s : worst),
+    'GEEN'
+  );
+}

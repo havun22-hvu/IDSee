@@ -2,6 +2,8 @@ import {
   assessFraudStatus,
   worstFraudStatus,
   DEFAULT_THRESHOLDS,
+  assessCardStatus,
+  worstCardStatus,
 } from '../src/services/fraudPolicy.js';
 
 describe('assessFraudStatus (defaults: orange=2, red=4, block=10)', () => {
@@ -51,5 +53,40 @@ describe('worstFraudStatus', () => {
 
   it('defaults to LEREN for an empty chain', () => {
     expect(worstFraudStatus([])).toBe('LEREN');
+  });
+});
+
+describe('assessCardStatus (defaults: yellow=3, red=6)', () => {
+  it('stays GEEN below the yellow threshold', () => {
+    expect(assessCardStatus(0)).toBe('GEEN');
+    expect(assessCardStatus(2)).toBe('GEEN');
+  });
+
+  it('escalates to GEEL at the yellow threshold', () => {
+    expect(assessCardStatus(3)).toBe('GEEL');
+    expect(assessCardStatus(5)).toBe('GEEL');
+  });
+
+  it('escalates to ROOD at the red threshold', () => {
+    expect(assessCardStatus(6)).toBe('ROOD');
+    expect(assessCardStatus(20)).toBe('ROOD');
+  });
+
+  it('respects custom thresholds', () => {
+    const strict = { yellow: 1, red: 2 };
+    expect(assessCardStatus(1, strict)).toBe('GEEL');
+    expect(assessCardStatus(2, strict)).toBe('ROOD');
+  });
+});
+
+describe('worstCardStatus', () => {
+  it('returns GEEN for a chain with no cards', () => {
+    expect(worstCardStatus(['GEEN', 'GEEN'])).toBe('GEEN');
+    expect(worstCardStatus([])).toBe('GEEN');
+  });
+
+  it('returns the most severe card in the chain', () => {
+    expect(worstCardStatus(['GEEN', 'GEEL'])).toBe('GEEL');
+    expect(worstCardStatus(['GEEL', 'ROOD', 'GEEN'])).toBe('ROOD');
   });
 });

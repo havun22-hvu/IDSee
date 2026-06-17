@@ -40,6 +40,10 @@ model User {
   fraudStatus       String   @default("LEREN") // LEREN, ORANJE, ROOD, BLOKKADE
   lastFraudAssessment DateTime?
 
+  // Notitie-/kaartensysteem op de professional (PROPOSITION.md §4)
+  cardStatus        String   @default("GEEN") // GEEN, GEEL, ROOD
+  lastCardAssessment DateTime?
+
   // Timestamps
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -52,6 +56,8 @@ model User {
   fraudReported     FraudReport[] @relation("Reporter")
   fraudConfirmed    FraudReport[] @relation("Confirmer")
   fraudAgainst      FraudReport[] @relation("Subject")
+  notesReceived     ProfessionalNote[] @relation("NoteSubject")
+  notesCreated      ProfessionalNote[] @relation("NoteAuthor")
 }
 
 model Animal {
@@ -235,6 +241,27 @@ model FraudReport {
   confirmationDate DateTime?
 
   createdAt       DateTime @default(now())
+}
+
+// A verified discrepancy recorded against a professional (PROPOSITION.md §4).
+// Created only AFTER verification by an admin or a verified vet — never on a
+// bare buyer complaint. Note count drives the professional's card status, part
+// of the same cascade as FraudReport.
+model ProfessionalNote {
+  id            String   @id @default(uuid())
+
+  // The professional the note is about
+  subjectUserId String
+  subject       User     @relation("NoteSubject", fields: [subjectUserId], references: [id])
+
+  // The admin/verified vet who verified the discrepancy
+  createdById   String
+  createdBy     User     @relation("NoteAuthor", fields: [createdById], references: [id])
+
+  type          String   // e.g. chip_mismatch, ubn_mismatch
+  description   String
+
+  createdAt     DateTime @default(now())
 }
 
 // Configurable parameters (cascade thresholds etc.); service falls back to

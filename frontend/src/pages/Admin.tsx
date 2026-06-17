@@ -148,12 +148,19 @@ export function Admin() {
 
 function ThresholdConfig() {
   const [values, setValues] = useState<{ orange: number; red: number; block: number } | null>(null);
+  const [cards, setCards] = useState<{ yellow: number; red: number } | null>(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api.getConfig().then(setValues).catch(() => setError('Kon drempels niet laden'));
+    api
+      .getConfig()
+      .then((c) => {
+        setValues({ orange: c.orange, red: c.red, block: c.block });
+        setCards(c.cards);
+      })
+      .catch(() => setError('Kon drempels niet laden'));
   }, []);
 
   async function save() {
@@ -163,7 +170,7 @@ function ThresholdConfig() {
     setError('');
     try {
       await api.updateConfig(values);
-      setMessage('Drempels opgeslagen.');
+      setMessage('Fraude-drempels opgeslagen.');
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -171,12 +178,32 @@ function ThresholdConfig() {
     }
   }
 
-  if (!values) return null;
+  async function saveCards() {
+    if (!cards) return;
+    setSaving(true);
+    setMessage('');
+    setError('');
+    try {
+      await api.updateCardConfig(cards);
+      setMessage('Kaart-drempels opgeslagen.');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (!values || !cards) return null;
 
   const fields: { key: 'orange' | 'red' | 'block'; label: string }[] = [
     { key: 'orange', label: 'Oranje vanaf' },
     { key: 'red', label: 'Rood vanaf' },
     { key: 'block', label: 'Blokkade vanaf' },
+  ];
+
+  const cardFields: { key: 'yellow' | 'red'; label: string }[] = [
+    { key: 'yellow', label: 'Gele kaart vanaf' },
+    { key: 'red', label: 'Rode kaart vanaf' },
   ];
 
   return (
@@ -206,6 +233,30 @@ function ThresholdConfig() {
       </div>
       <button className="btn-primary" onClick={save} disabled={saving}>
         {saving ? 'Opslaan...' : 'Drempels opslaan'}
+      </button>
+
+      <h2 style={{ marginTop: '2rem' }}>Kaart-drempels (professionals)</h2>
+      <p className="page-intro">
+        Aantal geverifieerde discrepantie-notities waarbij een professional een gele/rode
+        kaart krijgt. Een kaart laat zijn bevestigingen lichter (geel) of niet meer (rood)
+        meewegen in de score.
+      </p>
+      <div className="threshold-form">
+        {cardFields.map(({ key, label }) => (
+          <div className="form-group" key={key}>
+            <label htmlFor={`card-${key}`}>{label}</label>
+            <input
+              id={`card-${key}`}
+              type="number"
+              min={1}
+              value={cards[key]}
+              onChange={(e) => setCards({ ...cards, [key]: Number(e.target.value) })}
+            />
+          </div>
+        ))}
+      </div>
+      <button className="btn-primary" onClick={saveCards} disabled={saving}>
+        {saving ? 'Opslaan...' : 'Kaart-drempels opslaan'}
       </button>
     </section>
   );

@@ -149,11 +149,23 @@ class ApiClient {
   }
 
   async getConfig() {
-    return this.request<{ orange: number; red: number; block: number }>('/admin/config');
+    return this.request<{
+      orange: number;
+      red: number;
+      block: number;
+      cards: { yellow: number; red: number };
+    }>('/admin/config');
   }
 
   async updateConfig(t: { orange: number; red: number; block: number }) {
     return this.request<{ message: string }>('/admin/config', {
+      method: 'PUT',
+      body: JSON.stringify(t),
+    });
+  }
+
+  async updateCardConfig(t: { yellow: number; red: number }) {
+    return this.request<{ message: string }>('/admin/config/cards', {
       method: 'PUT',
       body: JSON.stringify(t),
     });
@@ -248,6 +260,20 @@ class ApiClient {
       method: 'POST',
       body: JSON.stringify({ note }),
     });
+  }
+
+  // Record a verified discrepancy note on a professional (§4).
+  async addProfessionalNote(data: {
+    type: string;
+    description: string;
+    subjectUserId?: string;
+    animalId?: string;
+    chipId?: string;
+  }) {
+    return this.request<{ message: string; subjectUserId: string; newCardStatus: string }>(
+      '/fraud/note',
+      { method: 'POST', body: JSON.stringify(data) }
+    );
   }
 }
 
