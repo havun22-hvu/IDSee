@@ -77,7 +77,6 @@ model Animal {
 
   // Relations
   registrations   Registration[]
-  healthRecords   HealthRecord[]
   importRecord    ImportRecord?
 }
 
@@ -105,27 +104,6 @@ model Registration {
   // Timestamps
   createdAt       DateTime @default(now())
   confirmedAt     DateTime?
-}
-
-model HealthRecord {
-  id              String   @id @default(uuid())
-
-  // Links
-  animalId        String
-  animal          Animal   @relation(fields: [animalId], references: [id])
-  vetUserId       String   // Dierenarts die record toevoegde
-
-  // Record data
-  recordType      String   // vaccination, checkup, surgery, etc.
-  recordDate      DateTime
-  dataHash        String   // Hash of health record
-
-  // Blockchain
-  txHash          String?
-  status          String   @default("PENDING") // PENDING, CONFIRMED, FAILED
-
-  // Timestamps
-  createdAt       DateTime @default(now())
 }
 
 model CreditTransaction {
