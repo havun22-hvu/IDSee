@@ -32,11 +32,17 @@ export interface ScoreFactors {
   importVerified: boolean;
 }
 
+export interface UbnVolume {
+  pupCount: number;
+  damCount: number;
+}
+
 export interface VerifyResult {
   chipId: string;
   riskScore: RiskScore;
   factors: ScoreFactors;
   registrationDate?: string;
+  ubnVolume?: UbnVolume;
 }
 
 export interface Animal {

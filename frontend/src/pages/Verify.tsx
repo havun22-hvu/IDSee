@@ -188,6 +188,19 @@ export function Verify() {
             </p>
           )}
 
+          {result.ubnVolume && (
+            <div className="ubn-volume">
+              <p className="result-meta">
+                Onder dit UBN geregistreerd (12 mnd): <strong>{result.ubnVolume.pupCount} pups</strong>
+                {' · '}<strong>{result.ubnVolume.damCount} moeders</strong>.
+              </p>
+              <small className="form-hint">
+                Objectief gegeven — geen oordeel. Weeg zelf of dit bij een gelegenheidsnestje
+                of een grootschalige fokker past.
+              </small>
+            </div>
+          )}
+
           {sessionId && <SoftReport sessionId={sessionId} />}
 
           <button onClick={handleReset} className="btn-secondary btn-full">

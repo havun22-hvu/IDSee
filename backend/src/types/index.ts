@@ -21,11 +21,19 @@ export interface ScoreFactors {
   importVerified: boolean; // import-schakel volledig: traceerbare herkomst + arts-controle
 }
 
+// Objectief feit per UBN (PROPOSITION.md §4a) — geen oordeel, koper weegt zelf.
+// Alleen aanwezig voor deelnemende UBN-houders met toestemming.
+export interface UbnVolume {
+  pupCount: number;  // pups geregistreerd onder dit UBN (12 mnd)
+  damCount: number;  // verschillende moeders (teven) in die registraties
+}
+
 export interface VerifyResult {
   chipId: string;
   riskScore: RiskScore;
   factors: ScoreFactors;
   registrationDate?: Date;
+  ubnVolume?: UbnVolume;
 }
 
 export interface CreditBundle {

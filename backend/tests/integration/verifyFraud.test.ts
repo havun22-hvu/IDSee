@@ -206,6 +206,67 @@ describe('fraud cascade (end-to-end)', () => {
   });
 });
 
+describe('UBN-volume als objectief feit (§4a)', () => {
+  const VCHIP = '900000000000910';
+
+  it('shows volume only for a consenting UBN holder', async () => {
+    const breeder = await prisma.user.create({
+      data: { email: 'itest-vol-breeder@x.nl', passwordHash: 'x', role: 'BREEDER', idseeConsent: true },
+    });
+    const animal = await prisma.animal.create({
+      data: { chipIdHash: hashChipId(VCHIP), species: 'dog', motherChipHash: hashChipId('900000000000333') },
+    });
+    await prisma.registration.create({
+      data: {
+        userId: subjectId, // a verified chipper
+        animalId: animal.id,
+        dataHash: 'd',
+        status: 'CONFIRMED',
+        confirmedAt: new Date(),
+        breederUbn: 'NL-UBN-VOL',
+        breederUserId: breeder.id,
+        breederConfirmed: true,
+      },
+    });
+
+    const res = await request(app)
+      .get(`/verify/${VCHIP}`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    expect(res.status).toBe(200);
+    expect(res.body.ubnVolume).toBeDefined();
+    expect(res.body.ubnVolume.pupCount).toBeGreaterThanOrEqual(1);
+    expect(res.body.ubnVolume.damCount).toBeGreaterThanOrEqual(1);
+  });
+
+  it('omits volume when the UBN holder has not consented', async () => {
+    const NOCONSENT = '900000000000911';
+    const breeder = await prisma.user.create({
+      data: { email: 'itest-vol-noconsent@x.nl', passwordHash: 'x', role: 'BREEDER', idseeConsent: false },
+    });
+    const animal = await prisma.animal.create({
+      data: { chipIdHash: hashChipId(NOCONSENT), species: 'dog', motherChipHash: hashChipId('900000000000444') },
+    });
+    await prisma.registration.create({
+      data: {
+        userId: subjectId,
+        animalId: animal.id,
+        dataHash: 'd',
+        status: 'CONFIRMED',
+        confirmedAt: new Date(),
+        breederUbn: 'NL-UBN-NOCONSENT',
+        breederUserId: breeder.id,
+        breederConfirmed: true,
+      },
+    });
+
+    const res = await request(app)
+      .get(`/verify/${NOCONSENT}`)
+      .set('Authorization', `Bearer ${token(vetId, 'VET')}`);
+    expect(res.status).toBe(200);
+    expect(res.body.ubnVolume).toBeUndefined();
+  });
+});
+
 describe('feit vs. signaal (§9)', () => {
   // Fresh subject so the earlier cascade does not interfere.
   let factSubjectId: string;
