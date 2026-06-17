@@ -2,7 +2,7 @@
 title: IDSee Handover
 type: claude
 scope: idsee
-last_updated: 2026-06-15
+last_updated: 2026-06-17
 ---
 
 # IDSee — Handover
@@ -89,20 +89,39 @@ flink uitgebreid. Géén code, puur strategie/ontwerp. Kernbeslissingen vastgele
   afbetaling via harde waterval (kosten → reserve → max 30% overschot), €100/mnd
   AI-onkosten. Cardano-pool = wél kostendekking, GÉÉN anoniem betaalkanaal (witwas).
 
-**DATAMODEL-GEVOLGEN voor implementatie (nog te doen):**
-- `IMPORT`-schakeltype náást moeder↔pup-koppeling als geldige ketensluiting
-- 🔵-label apart van groen/oranje/rood in scorelogica + frontend
-- Onderscheid *feit* (paspoort omgezet) vs. *bevestigd signaal* in datamodel
+**DATAMODEL-GEVOLGEN voor implementatie — ✅ verwerkt 17 juni 2026 (zie hieronder).**
 
-> ⚠️ Deze sessie raakte alleen `docs/PROPOSITION.md`. De code (riskScore, fraudService,
-> payment) van eerder vandaag reflecteert deze verfijningen nog NIET volledig — bij
-> volgende code-ronde: import-label 🔵 + datamodel-gevolgen verwerken.
+### §3b/§4/§5/§9-ronde (17 juni 2026)
+
+Code volledig nagekeken tegen `PROPOSITION.md` §3b, §4, §5, §9 + de openstaande
+datamodel-gevolgen. Vier punten in volgorde geïmplementeerd (elk eigen commit):
+
+1. **§5 — chip-hash gepepperd.** `hashChipId` was kale SHA-256 (brute-force-baar op
+   15-cijferig chipnummer) → nu **HMAC met `CHIP_HASH_PEPPER`** (verplicht in prod,
+   dev/test-fallback). `.env.example` bijgewerkt. ⚠️ pepper NOOIT wijzigen na ingebruikname.
+2. **§4 — notitie-/kaartensysteem.** `ProfessionalNote` + `User.cardStatus`
+   (GEEN/GEEL/ROOD). Notitie alleen door admin/geverifieerde arts (`POST /fraud/note`).
+   Gele/rode kaart waardeert de keten-score af (GROEN→ORANJE). Drempels configureerbaar
+   via `/admin/config/cards` (default geel=3, rood=6).
+3. **§3a — 🔵 Geverifieerde import + IMPORT-schakel.** `RiskScore` kreeg `BLAUW`;
+   `ImportRecord` (land, traceerbare herkomst-id, EU-paspoort + omgezet-vlag, arts-controle),
+   `POST /imports` (geverifieerde arts). Geïmporteerde pup wordt op de import-schakel
+   gescoord i.p.v. een (buitenlandse) moeder — eerlijke importeur wordt niet meer gestraft.
+   Frontend: 🔵-badge, import-bewuste factoren, `RegisterImport`-pagina + arts-navlink.
+4. **§9 — feit vs. bevestigd signaal.** `FraudReport.category` (SIGNAAL/FEIT). Arts kan
+   een melding als **neutraal feit** vastleggen (legale paspoort-omzetting = geen
+   beschuldiging, cascadeert niet). Alleen CONFIRMED **SIGNAAL** telt in de cascade.
+
+Tests: backend **64 unit + 19 integration**, frontend **21** — alles groen.
 
 **Nog open — later:**
 - ZK-migratie (Midnight) — `PROPOSITION.md` §9 + blueprint §4 (eigen `/arch`-traject)
 - Frontend dev-only audit: 5 advisories in vite/vitest; fix = `vite@8` (3 majors) — uitgesteld
-- "Zachte" koper-signalen (melden zonder account) — §9
+- **Code afslanken naar minimale dataset (§3b)** — HealthRecord/Animal dragen meer dan
+  identifiers+koppeling+bevestiging; apart implementatietraject (§9).
+- Escalatie-parameters ijken op echte data (leer-marge, tijdvenster, gewicht per signaal) — §9
 - DPIA + juridische review vóór productie — §9
+- `.claude/blueprint.md` (B-traject, 14 juni) is uitgevoerd/stale — kan opgeruimd.
 
 ## Architectuurprincipes
 

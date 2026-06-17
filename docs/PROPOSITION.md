@@ -300,8 +300,10 @@ Eerste artsen via genesis-verificatie (zie VERIFICATION.md §Bootstrapping).
 
 - [ ] ZK-statements exact definiëren (welke feiten voeden de score → ZK-PATTERNS.md).
 - [ ] Break-even doorrekenen (ADA + proof-kosten vs. €2/check).
-- [ ] Datamodel: onderscheid *feit* (paspoort omgezet, herkomst onbekend) vs.
+- [x] Datamodel: onderscheid *feit* (paspoort omgezet, herkomst onbekend) vs.
       *bevestigd signaal* — zodat een legale paspoort-omzetting geen beschuldiging wordt.
+      → `FraudReport.category` (SIGNAAL/FEIT); een arts bevestigt als feit (neutraal,
+      cascadeert niet) of als signaal. Alleen SIGNAAL telt in de cascade (17 juni 2026).
 - [ ] DPIA + juridische review vóór productie.
 - [ ] Drempels/levels voor "zachte" koper-signalen op dier-niveau.
 - [ ] **Escalatie-parameters ijken:** leer-marge (aantal "vergissingen" vóór oranje),
@@ -311,8 +313,11 @@ Eerste artsen via genesis-verificatie (zie VERIFICATION.md §Bootstrapping).
 - [ ] **Code afslanken naar minimale dataset (§3b):** huidige 11 Prisma-modellen met
       volledige dier-/gezondheidsdata zijn zwaarder dan nodig — kern = identifiers +
       koppeling + bevestiging + proof. Apart implementatietraject.
-- [ ] **Notitie-/kaartensysteem (§4)** bouwen: melding → verificatie → notitie → geel → rood,
+- [x] **Notitie-/kaartensysteem (§4)** bouwen: melding → verificatie → notitie → geel → rood,
       gekoppeld aan de bestaande fraude-cascade. Kaarten-drempels als parameters.
+      → `ProfessionalNote` + `User.cardStatus` (GEEN/GEEL/ROOD); notitie alleen door
+      admin/geverifieerde arts; een gele/rode kaart waardeert de score van de keten af
+      (GROEN→ORANJE). Drempels via `/admin/config/cards` (17 juni 2026).
 - [ ] Vertrouwensmodel documenteren naar gebruikers: chain bewijst "arts bevestigde",
       niet "pup is écht NL" — eerlijk communiceren (§3b kanttekening).
 
