@@ -105,6 +105,33 @@ Een geverifieerde getuige-op-locatie, geen papieren bewering. Daardoor:
 > Dit raakt exact de **commerciële volume-handelaar** en spaart de eerlijke fokker /
 > kruimeldief (§4). Het is het mechanisme dat het verplichte register en het UBN missen.
 
+### Het verificatiemoment: het nest-bezoek op locatie
+
+**Praktijk-gevalideerd (Henk, dierenarts):** de moeder is aanwezig bij een **nest-bezoek**
+— vaccineren + chippen van het hele nestje op de fokkerslocatie, vóór 7 weken. Komt een
+**losse pup** alleen om te chippen, of een pup met een **'verkeerd' (omgezet buitenlands)
+boekje**, dan is de moeder er vrijwel nooit. Dat onderscheid is observeerbaar, geen theorie:
+
+| Situatie | Moeder aanwezig? | Groen mogelijk? |
+|----------|------------------|-----------------|
+| Nestje gevaccineerd/gechipt op locatie | Meestal wel | ✅ Ja — arts koppelt moeder-chip |
+| Losse pup komt alleen chippen | Nee | ❌ Nee |
+| Pup met omgezet buitenlands boekje | Vrijwel nooit | ❌ Nee → het signaal |
+
+> **Operationeel gevolg:** 🟢 groen ontstaat **alleen bij het nest-bezoek** waar de moeder
+> fysiek aanwezig is — niet bij elke losse chip-handeling. IDSee werkt het sterkst door aan
+> te hechten aan het verplichte nest-bezoek (vaccineren + chippen) dat tóch al plaatsvindt.
+> De dekking hangt dus af van hoeveel fokkers de arts/chipper op locatie laten komen.
+
+### I&R legt een claim vast; IDSee een waarneming
+
+Het wettelijke I&R-systeem registreert wat de **fokker zelf invoert** bij de geboortemelding
+(UBN-geborgd qua locatie, maar de afstamming niet onafhankelijk gecontroleerd) — een
+**administratieve claim**. IDSee legt vast wat een **onafhankelijke arts/chipper fysiek
+waarnam**: moeder en pup samen, chip aan chip. Dat is het verschil, en het verklaart waarom
+de losse pup en het omgezette boekje per definitie geen groen halen — daar is geen moeder
+om waar te nemen.
+
 ### Datamodel-eis
 
 "Keten sluit" = de pup-registratie verwijst naar een **moeder-chip die in het systeem

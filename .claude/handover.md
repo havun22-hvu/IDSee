@@ -2,7 +2,7 @@
 title: IDSee Handover
 type: claude
 scope: idsee
-last_updated: 2026-06-17
+last_updated: 2026-06-18
 ---
 
 # IDSee — Handover
@@ -159,6 +159,40 @@ Open vraag #1: mag/kan IDSee een OK schrijven/uitlezen bij de officiële chipdat
 - Escalatie-parameters ijken op echte data (leer-marge, tijdvenster, gewicht per signaal) — §9
 - DPIA + juridische review vóór productie — §9
 - `.claude/blueprint.md` (B-traject, 14 juni) is uitgevoerd/stale — kan opgeruimd.
+
+### Strategische pivot naar B2B/B2G (18 juni 2026) — GEEN code
+
+Lange strategie-/twijfelsessie met Henk. Kernuitkomst: **B2C (koper-app) is te zwak als
+fundament** — fraudeurs doen niet mee, eerlijke fokkers tonen de moeder live, niet-stamboom-
+koper is prijsbewust/geen kenner. **Richting verschoven naar B2B/B2G.**
+
+Nieuwe docs aangemaakt (allemaal doc-only, nog te committen bij deze /end):
+- **`docs/PITCH.md`** — 1-pager praatplaat (fokker + koper), met ingebouwde toetsvragen.
+- **`docs/BUSINESSPLAN.md`** — intern: doelgroepen B2B/B2G + betalingsbereidheid, 8 gaten
+  met "wat doen we eraan", 3 rollen (bouwer → blauwdruk → kennis-autoriteit), 3-fasen-plan
+  (Fase 1 = klantvalidatie, GEEN nieuwe code, 3-5 gesprekken; Go/No-Go).
+- **`docs/PROPOSAL.md`** — extern: voorstel voor partners (verzekeraar/marktplaats/NVWA/LNV).
+
+Belangrijke inhoudelijke vondsten deze sessie:
+- **EU-paspoort** wordt afgegeven door gemachtigde dierenarts, los van I&R-databank.
+- **Stamboomdieren (Raad van Beheer) vallen buiten scope** — afstamming al geborgd. IDSee
+  richt zich op het **ongeborgde niet-stamboom-segment** (kruisingen, gelegenheidsnestjes,
+  import).
+- **I&R-realiteit (praktijk-gevalideerd, Henk):** wet eist chip+aanmelding <7 wk door
+  fokker + overdracht door koper, maar dat is een **fokker-CLAIM**, geen geverifieerde
+  moeder-koppeling. Moeder is alleen aanwezig bij **nest-bezoek** (vaccineren+chippen);
+  losse pup / 'verkeerd boekje' → moeder afwezig → geen groen = het signaal. Verwerkt in
+  **PROPOSITION.md §3a** (verificatiemoment + claim-vs-waarneming).
+- **Blockchain:** voor B2B/B2G NIET noodzakelijk; Cardano/Midnight = optionele bewijslaag,
+  geen fundament. Midnight-tooling is wél rijp (mainnet live + Claude-plugins) — apart
+  leerspoor mogelijk, niet door IDSee forceren.
+
+**Henk's huidige doel (eerlijk):** "verkoopvoordeel eerlijke fokker" + markttoets vóór
+doorbouwen. Twijfelt openlijk over zinvolheid; richting B2B/B2G geeft nieuwe energie.
+
+**VOLGENDE STAP = mensen bellen, GEEN code.** Fase 1 klantvalidatie. Eventueel eerst
+gesprekshandleiding per klanttype (Claude kan maken). Operationeel risico vastgelegd
+(BUSINESSPLAN risico #6): dekking hangt aan nest-bezoeken.
 
 ## Architectuurprincipes
 
