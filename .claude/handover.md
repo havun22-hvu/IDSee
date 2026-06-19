@@ -2,7 +2,7 @@
 title: IDSee Handover
 type: claude
 scope: idsee
-last_updated: 2026-06-18
+last_updated: 2026-06-19
 ---
 
 # IDSee — Handover
@@ -193,6 +193,30 @@ doorbouwen. Twijfelt openlijk over zinvolheid; richting B2B/B2G geeft nieuwe ene
 **VOLGENDE STAP = mensen bellen, GEEN code.** Fase 1 klantvalidatie. Eventueel eerst
 gesprekshandleiding per klanttype (Claude kan maken). Operationeel risico vastgelegd
 (BUSINESSPLAN risico #6): dekking hangt aan nest-bezoeken.
+
+### Vervolg 19 juni — opslag, rol, "waarom simpel"
+
+- **I&R praktijk-bevestiging (Henk):** moeder-chip wordt bij aanmelding wél gemeld, maar
+  **ongecontroleerd** (eigenaar geeft nummer op), en komt **niet in het pup-paspoort** —
+  alleen bij registratie/paspoortuitgave. Verwerkt in PROPOSITION §3a: "I&R heeft een
+  *veld*, IDSee een *getuige*". Communicatie-precisie: niet zeggen "I&R legt moeder niet
+  vast" (onjuist), wél "ongecontroleerd opgegeven nummer, niet in paspoort".
+- **Opslag-keuze (Henk):** data uiteindelijk **bij de partner/overheid** (NVWA/databank),
+  IDSee levert het mechanisme — NIET een eigen concurrerend register. ⚠️ Gevolg, nog NIET
+  in docs verwerkt: dit is het **eindbeeld**, niet het beginpunt. Demo/pilot draait tot een
+  deal op een **eigen managed database**; opslaglaag **verwisselbaar** bouwen (logica los
+  van opslag — `src/db.ts` heeft die scheiding deels al). → **nog te doen:** BUSINESSPLAN §6
+  + PROPOSITION §3b hierop aanvullen.
+- **`docs/WAAROM-SIMPEL.md` (nieuw, gecommit):** one-pager voor B2G — waarde zit in het
+  ontwerpprincipe (controle op bestaand moment + fysieke waarneming + nul extra last), niet
+  in software. Wapen tegen "overheid laat groot IT-bedrijf het nabouwen".
+
+**OPEN KERNVRAAG (Henk denkt na, NIET beslissen):** welke rol is onafneembaar naast de
+bestaande regelingen? Beroepsgroep snapt "afkomst moet kloppen" snel zelf (weinig product),
+en overheid belt een groot IT-bedrijf als ze het invoeren. Claude's lijn: de rol zit in het
+**principe-bewijs** (werkend simpel prototype + WAAROM-SIMPEL-argument) + vakautoriteit/
+draagvlak — moeilijker af te pakken dan techniek/data. Opties op tafel: (1) protocol +
+beroepsgroep, (2) techniek-leverancier, (3) volledige dienst. Nog niet gekozen.
 
 ## Architectuurprincipes
 
