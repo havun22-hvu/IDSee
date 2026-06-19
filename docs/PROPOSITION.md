@@ -125,12 +125,23 @@ boekje**, dan is de moeder er vrijwel nooit. Dat onderscheid is observeerbaar, g
 
 ### I&R legt een claim vast; IDSee een waarneming
 
-Het wettelijke I&R-systeem registreert wat de **fokker zelf invoert** bij de geboortemelding
-(UBN-geborgd qua locatie, maar de afstamming niet onafhankelijk gecontroleerd) — een
-**administratieve claim**. IDSee legt vast wat een **onafhankelijke arts/chipper fysiek
-waarnam**: moeder en pup samen, chip aan chip. Dat is het verschil, en het verklaart waarom
-de losse pup en het omgezette boekje per definitie geen groen halen — daar is geen moeder
-om waar te nemen.
+**Praktijk-bevestigd (Henk, juni 2026):** bij de I&R-aanmelding wordt de **moeder-chip wél
+gemeld** — maar:
+
+- de **eigenaar/fokker geeft het nummer zelf op**; er is **geen actieve controle** dat die
+  teef fysiek aanwezig was;
+- het komt **niet in het paspoort van de pup** te staan — alleen in de
+  registratie/paspoortuitgave;
+- het is dus een **ongecontroleerde, opgegeven claim**, niet een geverifieerde koppeling.
+
+I&R heeft daarmee een *veld*; IDSee heeft een *getuige*. IDSee legt vast wat een
+**onafhankelijke arts/chipper fysiek waarnam**: moeder en pup samen, chip aan chip. Dat
+verschil verklaart waarom de losse pup en het omgezette boekje per definitie geen groen
+halen — daar is geen moeder om waar te nemen.
+
+> **Communicatie-precisie (B2G):** zeg niet "I&R legt de moeder niet vast" (het veld
+> bestaat). Zeg: *"I&R legt een ongecontroleerd, opgegeven moeder-nummer vast dat niet eens
+> in het paspoort komt — wij voegen de fysieke verificatie toe."* Verdedigbaar, niet overdreven.
 
 ### Datamodel-eis
 
