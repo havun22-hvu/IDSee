@@ -2,226 +2,139 @@
 title: IDSee Handover
 type: claude
 scope: idsee
-last_updated: 2026-06-19
+last_updated: 2026-07-15
 ---
 
 # IDSee — Handover
 
-> Vul dit aan aan het einde van elke sessie.
+> **Één handover, bijwerken — nooit een sessieblok toevoegen.** Levende status, geen logboek.
+> Afgerond = weg (git bewaart het). Max ~120 regels. Regel:
+> `HavunCore/docs/kb/standards/md-doc-grootte.md`.
 
-## Huidige status
+**Status:** ⏸️ GEPARKEERD (Henk, 02-07-2026) — het demo-prototype werkt end-to-end en het
+inhoudelijke model is uitgekristalliseerd, maar het project wacht op een markttoets (klantgesprekken
+B2B/B2G) vóór er nog een regel code bij komt. "Nog lang niet aan de beurt."
+**Branch:** master (schoon, laatste inhoudelijke commit 20-06-2026)
 
-**Branch:** master (schoon)
+## Waar het project stond bij het parkeren
 
-**Demo-prototype werkt end-to-end** (webapp + backend + demo-blockchain).
-Zie `docs/INDEX.md` voor de volledige status-tabel.
+Het prototype draait volledig lokaal: webapp (React/Vite) + backend (Express/Prisma/SQLite) +
+een gesimuleerde blockchain. De teststack is groen, geverifieerd op 15-07-2026: backend 66 unit +
+23 integration, frontend 21 tests.
 
-### Afgerond (13 juni 2026)
+Inhoudelijk is het herkomst- en scoremodel af en geïmplementeerd conform `docs/PROPOSITION.md`
+(leidend document — bij conflict wint dat boven alle andere docs). De score kent vier uitkomsten:
+🟢 groen (moeder + UBN + houder-bevestiging + geverifieerde arts), 🔵 geverifieerde import,
+🟠 oranje en 🔴 rood (een NL-claim zónder moeder is rood). Daaromheen werken de fraude-cascade op
+arts-bevestigde signalen, het notitie-/kaartensysteem op de professional, de €2-check met
+betaalpoort, en volume-per-UBN als objectief feit. De positionering is bewust *positief
+herkomstbewijs*: een fraudeur haalt geen groen, in plaats van dat hij rood gemaakt wordt.
 
-- [x] **Frontend verificatie-flow** — `Verification.tsx`: e-mailverificatie,
-      aanvraag indienen, peer-verificatie met borg, borg vrijgeven
-- [x] **Frontend bevestigingen** — `Confirmations.tsx`: fokker bevestigt/wijst af + historie
-- [x] **Animal-detailpagina** — `AnimalDetail.tsx` op route `/animals/:id`
-- [x] Bijvangst: `vite-env.d.ts` toegevoegd (build was kapot op `import.meta.env`);
-      `emailVerified` toegevoegd aan `GET /auth/me`
-- [x] **Teststack** — Jest (backend, 19 tests) + Vitest (frontend, 7 tests).
-      `npm test` in beide mappen. Kritieke paden: hashing, JWT/rolchecks, API-client.
+De grootste openstaande beweging is strategisch, niet technisch. Op 18-06-2026 is besloten dat
+B2C (een koper-app) een te zwak fundament is — fraudeurs doen niet mee en de niet-stamboom-koper
+is prijsbewust. De richting is verschoven naar **B2B/B2G**: verzekeraars, marktplaatsen, NVWA/LNV.
+Daarbij hoort `docs/BUSINESSPLAN.md` fase 1 = **klantvalidatie, 3 tot 5 gesprekken, expliciet
+GEEN nieuwe code**, met een Go/No-Go aan het eind. Het project is geparkeerd vóór die gesprekken
+gevoerd zijn. Wie hier weer instapt begint dus bij het telefoonnummer, niet bij de editor.
 
-> ⚠️ De bovenstaande "Afgerond 13 juni"-lijst en de oorspronkelijke openstaande/
-> security-items zijn **ingehaald** door het werk van 14 juni (zie hieronder):
-> Mollie + e-mail (env-gated), integration-tests en security (0 vulns) zijn gedaan.
-> Nog wél open: Cardano uit demo mode + Midnight ZK. Actuele stand: "Nog open" verderop.
+Twee dingen waren bij het parkeren echt onaf. Er liep een **brainstorm over de privacy- en
+deploy-architectuur** die nooit is afgemaakt (`docs/PRIVACY-ARCHITECTUUR.md`, WIP); die
+convergeerde richting Midnight met een dunne betaal-/rate-limit-poort, maar de kernvraag stond
+nog open: mag en kan IDSee een OK schrijven of uitlezen bij de officiële chipdatabank? Daarnaast
+stond er een **onbeantwoorde kernvraag over de rol** van IDSee (zie onder).
 
-### B-traject geïmplementeerd (14 juni 2026)
+## Open — als het weer aan de beurt is
 
-Alle docs afgestemd op `docs/PROPOSITION.md` (leidend), en het B-traject gebouwd in
-3 fasen (plan: `.claude/plan-b-traject.md`):
+**Eerst, vóór alle code — fase 1 klantvalidatie.** 3 tot 5 gesprekken met partners uit
+`docs/BUSINESSPLAN.md`, met `docs/PROPOSAL.md` (extern) en `docs/PITCH.md` (praatplaat) als
+materiaal. Daarna pas Go/No-Go. Een gesprekshandleiding per klanttype bestaat nog niet en kan
+gemaakt worden.
 
-- **Fase 1 — risico-score** 🟢/🟠/🔴 in `/verify` (`riskScore.ts` + `verificationService.ts`)
-- **Fase 3 — fraude-cascade** arts-bevestigd, gradueel (`fraudService.ts`, `FraudReview.tsx`)
-- **Fase 2 — €2-betaling** met demo-provider (`paymentService.ts`, `CheckTransaction`)
+**De open kernvraag (Henk denkt na — NIET voor Claude om te beslissen):** welke rol is
+onafneembaar naast de bestaande regelingen? De beroepsgroep snapt "afkomst moet kloppen" snel
+zelf, en de overheid belt een groot IT-bedrijf zodra ze het invoeren. De lijn tot nu toe: de rol
+zit in het principe-bewijs (werkend simpel prototype + het argument uit `docs/WAAROM-SIMPEL.md`)
+plus vakautoriteit en draagvlak — moeilijker af te pakken dan techniek of data. Drie opties op
+tafel, niets gekozen: (1) protocol plus beroepsgroep, (2) techniek-leverancier, (3) volledige dienst.
 
-Tests: backend 43 / frontend 16, beide builds groen. Schema via `prisma db push`
-(migrate is non-interactief hier — een echte migratie genereren is een open punt voor CI/prod).
+**Technische schuld die klaarligt (geverifieerd 15-07-2026):**
 
-**Afgerond (vervolg 14 juni):**
-- [x] Meld-ingang fraudesignaal in UI (`/report-signal`, melden via chipnummer)
-- [x] `GET /verify/:chipId` achter auth (gratis-lek gedicht)
-- [x] `dev.db` uit git + `.gitignore` gefixt
-- [x] **db/app-refactor**: `src/db.ts` (gedeelde prisma) + `src/app.ts` (createApp) — server-start los
-- [x] **Integration tests** (`jest.integration.config.cjs`): 402-gating + cascade end-to-end
-- [x] **Mollie-provider** (env-gated) + **SMTP-emailservice** (env-gated) — code-compleet, demo default
-- [x] **Security**: productie-deps **0 vulnerabilities** (jws/express/bcrypt@6/nodemailer@9)
+- **Echte Prisma-migratie ontbreekt.** `backend/prisma/migrations/` bevat alleen
+  `20251201195154_init`, en die is aantoonbaar verouderd: hij maakt nog `HealthRecord` aan
+  (inmiddels geschrapt) en mist `CheckTransaction`, `FraudReport`, `ImportRecord`,
+  `ProfessionalNote`, `SystemConfig`, `PeerVerification` en `VerificationRequest`. Al het
+  schemawerk sinds december is via `prisma db push` gegaan omdat de migrate-tooling
+  non-interactief is vanuit Claude. Vóór CI of productie moet dit een echte migratie worden:
+  `cd backend && npx prisma migrate dev --name fraud_payment` (moet Henk zelf draaien).
+- **`@mollie/api-client` staat in de verkeerde `package.json`.** De dependency staat in de
+  root-`package.json` (die verder niets bevat — per ongeluk daar ontstaan), terwijl
+  `backend/src/services/paymentService.ts` hem top-level importeert. Lokaal werkt dat alleen
+  omdat Node hem via de parent-`node_modules` vindt; een schone `cd backend && npm ci` breekt
+  hierop. Verplaats hem naar `backend/package.json` en ruim de root-package.json op.
+  (Nieuw gevonden 15-07, stond nog nergens genoteerd.)
+- **Cardano staat hard in demo mode.** `backend/src/services/blockchain.ts` heeft
+  `const demoMode = true;` gehardcodeerd — geen env-schakelaar. Echte registratie vereist
+  `BLOCKFROST_KEY` + `WALLET_SEED` én het weghalen van die constante. De Aiken-contracten zijn
+  geschreven, nooit gedeployed.
+- **Midnight ZK-migratie.** Volledig ongestart; fase 0 = Academy-cursus (zie vaste context).
+- **Frontend dev-only audit.** `vite` staat op `^5.0.0` met 5 dev-only advisories; fix = `vite@8`
+  (drie majors), bewust uitgesteld. Productie-deps zijn schoon: `npm audit --omit=dev` geeft
+  0 vulnerabilities in frontend én backend.
 
-- [x] **Zachte koper-signalen**: koper meldt na betaalde check (`POST /verify/report-soft`),
-      `source=BUYER`, telt pas na arts-bevestiging
-- [x] **Admin drempel-UI**: cascade-drempels instelbaar via `/admin` (GET/PUT `/admin/config`)
+**Doc-werk dat nog openstaat:**
 
-Tests: backend 47 unit + 10 integration / frontend 19, alles groen.
+- **Opslag-eindbeeld verwerken in de docs.** Henk's keuze (19-06): de data hoort uiteindelijk bij
+  de partner of overheid (NVWA/databank), IDSee levert het mechanisme en wordt nadrukkelijk géén
+  concurrerend eigen register. Maar dat is het *eindbeeld*, niet het beginpunt: demo en pilot
+  draaien tot een deal op een eigen managed database, dus de opslaglaag moet verwisselbaar
+  gebouwd worden (logica los van opslag — `src/db.ts` heeft die scheiding al deels).
+  Geverifieerd: dit staat nog steeds **niet** in `BUSINESSPLAN.md` §6 of `PROPOSITION.md` §3b.
+- **Stale plan-bestanden opruimen:** `.claude/blueprint.md` (B-traject, 14 juni),
+  `.claude/plan-b-traject.md` en `.claude/plan-herkomstmodel.md` zijn alle drie uitgevoerd en
+  gecommit. Git bewaart de historie; ze kunnen weg.
 
-**Nog open — vereist JOUW actie (geen code meer):**
-- Mollie aanzetten: `.env` → `PAYMENT_PROVIDER=mollie` + `MOLLIE_API_KEY` (key bij Mollie ophalen)
-- E-mail aanzetten: `.env` → `EMAIL_PROVIDER=smtp` + `SMTP_*` (zie `.env.example`)
-- Echte Prisma-migratie genereren: `! cd backend && npx prisma migrate dev --name fraud_payment`
-  (tooling is non-interactief vanuit Claude; nu via `db push`)
+**Inhoudelijke vragen die openstaan — uitgewerkt in `PROPOSITION.md` §9, hier alleen de kop:**
+dual-flag eigenaar versus registrant zuiver scheiden (vereist account-koppeling van de fokker);
+import-uitzondering Spanje/Griekenland voor asiel/stichting (Henk denkt na); toestemming-
+intrekking versus check-op-koopmoment verankeren; multi-account/multi-UBN clustering (fase 2);
+code afslanken naar de minimale dataset (`Animal` draagt nu meer dan identifiers, koppeling en
+bevestiging — apart traject); escalatie-parameters ijken (kan pas met echte data); DPIA plus
+juridische review vóór productie.
 
-### Strategie-verfijning PROPOSITION.md (14 juni 2026, avond)
+**Wachtend op Henk (geen code meer nodig, alles staat klaar achter env-vlaggen):** Mollie
+aanzetten via `PAYMENT_PROVIDER=mollie` + `MOLLIE_API_KEY`, en e-mail via `EMAIL_PROVIDER=smtp` +
+de `SMTP_*`-waarden. Zie `backend/.env.example`.
 
-Inhoudelijke sessie met Henk (architect + praktiserend dierenarts) — `docs/PROPOSITION.md`
-flink uitgebreid. Géén code, puur strategie/ontwerp. Kernbeslissingen vastgelegd:
+## Vaste context voor dit project
 
-- **Positionering = beter alternatief** (geen vervangingsclaim wettelijk register).
-- **Score = verifieerbaarheid van de keten, NIET schuld** (juridische kern, §5).
-- **Graduele escalatie**: leren → 🟠 → 🔴 → blokkade. Doel = commerciële volume-handelaar
-  (>10 pups), NIET de eerlijke fokker/kruimeldief. Op patroon+volume, niet één incident.
-- **§3a — De keten die moet sluiten**: kracht zit in moeder-chip ↔ pup-chip, gelegd door
-  een **onafhankelijke geverifieerde arts/chipper** (niet de fokker zelf).
-- **Legale import = eigen label 🔵 "Geverifieerde import"** (geen kleur op NL-schaal),
-  vastgelegd door geverifieerde NL-arts via aparte `IMPORT`-schakel. Onderscheid
-  legaal/illegaal = verifieerbaarheid buitenlandse herkomst, niet wel/geen NL-moeder.
-- **UBN-analyse**: UBN is locatie/dierziekte-systeem, geen herkomst-/anti-fraude. Het
-  versterkt IDSee (officiële identifier om keten aan te hangen + bewijst dat
-  registratie ≠ verifieerbare keten).
-- **§10 — 30%-adoptievraag**: waarde zit in afwezigheid; netwerkeffect aan VRAAGkant
-  (kopers), niet aanbodkant. Faalscenario eerlijk: voorlichtingsstrijd, niet techniek.
-- **§11 — Organisatie**: stichting als schild (4 redenen), géén zelf-bevestiging van
-  fraude door oprichter, **oprichtersvordering €60/u (~500u ≈ €30k), geen plafond**,
-  afbetaling via harde waterval (kosten → reserve → max 30% overschot), €100/mnd
-  AI-onkosten. Cardano-pool = wél kostendekking, GÉÉN anoniem betaalkanaal (witwas).
+**Midnight Network (ZK-proofs).** Fokkers, dierenartsen en chippers bewijzen hun certificering
+zonder hun identiteit prijs te geven. De contracttaal is **Compact**, een TypeScript-achtige DSL —
+dus nadrukkelijk **geen Rust** — en de SDK is Midnight.js. De backend genereert proofs
+server-side; gebruikers zien nooit iets van de blockchain. Fase 0 is de Academy-cursus, vóór
+implementatie. Docs: `docs/midnight/` (OVERVIEW, ZK-PATTERNS, COMPACT-LANGUAGE, INTEGRATION-PLAN).
+Rolverdeling: Cardano = immutable registratie-proof, Midnight = privacylaag voor anonieme
+professional-verificatie — complementair, geen of/of. Nuance uit de B2B/B2G-pivot: voor B2B/B2G is
+blockchain **niet noodzakelijk**; het is een optionele bewijslaag, geen fundament.
 
-**DATAMODEL-GEVOLGEN voor implementatie — ✅ verwerkt 17 juni 2026 (zie hieronder).**
+**Praktijkfeiten die de propositie dragen (door Henk als praktiserend dierenarts gevalideerd).**
+De wet eist chip plus aanmelding binnen 7 weken door de fokker, maar dat is een fokker-*claim*,
+geen geverifieerde moeder-koppeling. De moeder-chip wordt bij aanmelding wél gemeld, maar
+ongecontroleerd (de eigenaar geeft het nummer op) en komt **niet in het pup-paspoort**.
+Communiceer dit precies: niet "I&R legt de moeder niet vast" (onjuist), wél "een ongecontroleerd
+opgegeven nummer, niet in het paspoort". Kort: I&R heeft een *veld*, IDSee een *getuige*. De
+moeder is alleen fysiek aanwezig bij het **nest-bezoek** (vaccineren en chippen) — daar zit het
+verificatiemoment én het operationele risico (BUSINESSPLAN risico #6: de dekking hangt aan die
+bezoeken). Het EU-paspoort wordt afgegeven door een gemachtigde dierenarts, los van de
+I&R-databank. **Stamboomdieren (Raad van Beheer) vallen buiten scope** — afstamming daar is al
+geborgd; IDSee mikt op het ongeborgde niet-stamboom-segment: kruisingen, gelegenheidsnestjes,
+import.
 
-### §3b/§4/§5/§9-ronde (17 juni 2026)
+**Valkuilen.** De `CHIP_HASH_PEPPER` mag **nooit** gewijzigd worden na ingebruikname: alle
+bestaande chip-hashes worden er ongeldig door. Hij is verplicht in productie (min. 16 tekens);
+dev en test vallen terug op een vaste waarde. De score meet **verifieerbaarheid van de keten,
+niet schuld** — dat is de juridische kern (§5) en het moet ook zo gecommuniceerd worden. De
+Cardano-pool is wél kostendekking maar uitdrukkelijk **geen anoniem betaalkanaal** (witwasrisico).
 
-Code volledig nagekeken tegen `PROPOSITION.md` §3b, §4, §5, §9 + de openstaande
-datamodel-gevolgen. Vier punten in volgorde geïmplementeerd (elk eigen commit):
-
-1. **§5 — chip-hash gepepperd.** `hashChipId` was kale SHA-256 (brute-force-baar op
-   15-cijferig chipnummer) → nu **HMAC met `CHIP_HASH_PEPPER`** (verplicht in prod,
-   dev/test-fallback). `.env.example` bijgewerkt. ⚠️ pepper NOOIT wijzigen na ingebruikname.
-2. **§4 — notitie-/kaartensysteem.** `ProfessionalNote` + `User.cardStatus`
-   (GEEN/GEEL/ROOD). Notitie alleen door admin/geverifieerde arts (`POST /fraud/note`).
-   Gele/rode kaart waardeert de keten-score af (GROEN→ORANJE). Drempels configureerbaar
-   via `/admin/config/cards` (default geel=3, rood=6).
-3. **§3a — 🔵 Geverifieerde import + IMPORT-schakel.** `RiskScore` kreeg `BLAUW`;
-   `ImportRecord` (land, traceerbare herkomst-id, EU-paspoort + omgezet-vlag, arts-controle),
-   `POST /imports` (geverifieerde arts). Geïmporteerde pup wordt op de import-schakel
-   gescoord i.p.v. een (buitenlandse) moeder — eerlijke importeur wordt niet meer gestraft.
-   Frontend: 🔵-badge, import-bewuste factoren, `RegisterImport`-pagina + arts-navlink.
-4. **§9 — feit vs. bevestigd signaal.** `FraudReport.category` (SIGNAAL/FEIT). Arts kan
-   een melding als **neutraal feit** vastleggen (legale paspoort-omzetting = geen
-   beschuldiging, cascadeert niet). Alleen CONFIRMED **SIGNAAL** telt in de cascade.
-
-Tests: backend **64 unit + 19 integration**, frontend **21** — alles groen.
-
-### Herkomstmodel-herziening (17 juni 2026, MPC fase 1→3)
-
-Inhoudelijk overleg (zie `docs/PROPOSITION.md` §3/§3a/§4/§4a, herzien) → plan
-(`.claude/plan-herkomstmodel.md`) → code in 5 stappen (elk eigen commit):
-
-- **Stap 0:** `HealthRecord` model geschrapt (geen gezondheidsdata, §3b).
-- **Stap 1:** score-grenzen herzien — **NL-claim zonder moeder → 🔴 ROOD** (was oranje);
-  GROEN vereist nu moeder + UBN + houder-bevestiging + geverifieerde arts. Factoren
-  `ubnPresent`/`breederConfirmed` toegevoegd.
-- **Stap 2:** cascade = **open/niet-herstelde** discrepanties; `resolveFraud` (alleen
-  arts/chipper, nooit eigenaar); drempels herstructureerd naar `{red:3, block:10}`,
-  **geen oranje-persoon-stap**. `FraudReport.resolvedAt/resolvedById/coSubjectProfessionalId`.
-- **Stap 3:** `Registration.motherResidency` (EIGEN_LOCATIE/BIJ_DERDE = feit), `User.idseeConsent`;
-  **dual-flag toerekening** — bij vet-gecontroleerde import-schakel deelt de arts (scenario 2),
-  cascade-teller telt subject OF co-subject. UBN + verblijf in `RegisterAnimal`.
-- **Stap 4:** **volume per UBN** als objectief feit (pups + moeders, 12 mnd), alleen bij
-  `idseeConsent`; getoond onder de score (geen oordeel, §4a).
-
-Positionering aangescherpt: **positief NL-herkomstbewijs**, geen handelaar-jacht — de
-fraudeur *haalt geen groen* i.p.v. *wordt rood gemaakt*. Score nu 🟢/🔵/🟠/🔴.
-
-Tests na deze ronde: backend **66 unit + 23 integration**, frontend **21** — groen.
-
-**Nog open — later:**
-- **Dual-flag eigenaar vs. registrant zuiver scheiden** — nu valt de UBN-houder vaak samen
-  met de registrant; volledige scheiding vereist account-koppeling van de fokker.
-- **Import-uitzondering Spanje/Griekenland** (asiel/stichting) — §9, Henk denkt na.
-- **Toestemming-intrekking vs. check-op-koopmoment verankeren** — §9.
-- Multi-account/multi-UBN clustering (fase 2); echte ZKP (nu demo).
-
-### Lopende brainstorm: privacy- & deploy-architectuur (17 juni 2026, WIP)
-
-Open ontwerpdiscussie — **morgen verder**. Volledige vastlegging met alle voors/tegens
-en Henk's gewenste eindbeeld in **`docs/PRIVACY-ARCHITECTUUR.md`**. Kern: server vs.
-on-chain; chip/UBN = (indirect) persoonsgegeven; ZKP/Midnight maakt inhoud anoniem maar
-lost het **orakel-/enumeratieprobleem** niet op; de **€2-check is de rate-limit**;
-convergeert voorlopig naar **Midnight (shielded ZK-OK) + een dunne betaal/rate-limit-poort**.
-Open vraag #1: mag/kan IDSee een OK schrijven/uitlezen bij de officiële chipdatabank?
-- ZK-migratie (Midnight) — `PROPOSITION.md` §9 + blueprint §4 (eigen `/arch`-traject)
-- Frontend dev-only audit: 5 advisories in vite/vitest; fix = `vite@8` (3 majors) — uitgesteld
-- **Code afslanken naar minimale dataset (§3b)** — HealthRecord/Animal dragen meer dan
-  identifiers+koppeling+bevestiging; apart implementatietraject (§9).
-- Escalatie-parameters ijken op echte data (leer-marge, tijdvenster, gewicht per signaal) — §9
-- DPIA + juridische review vóór productie — §9
-- `.claude/blueprint.md` (B-traject, 14 juni) is uitgevoerd/stale — kan opgeruimd.
-
-### Strategische pivot naar B2B/B2G (18 juni 2026) — GEEN code
-
-Lange strategie-/twijfelsessie met Henk. Kernuitkomst: **B2C (koper-app) is te zwak als
-fundament** — fraudeurs doen niet mee, eerlijke fokkers tonen de moeder live, niet-stamboom-
-koper is prijsbewust/geen kenner. **Richting verschoven naar B2B/B2G.**
-
-Nieuwe docs aangemaakt (allemaal doc-only, nog te committen bij deze /end):
-- **`docs/PITCH.md`** — 1-pager praatplaat (fokker + koper), met ingebouwde toetsvragen.
-- **`docs/BUSINESSPLAN.md`** — intern: doelgroepen B2B/B2G + betalingsbereidheid, 8 gaten
-  met "wat doen we eraan", 3 rollen (bouwer → blauwdruk → kennis-autoriteit), 3-fasen-plan
-  (Fase 1 = klantvalidatie, GEEN nieuwe code, 3-5 gesprekken; Go/No-Go).
-- **`docs/PROPOSAL.md`** — extern: voorstel voor partners (verzekeraar/marktplaats/NVWA/LNV).
-
-Belangrijke inhoudelijke vondsten deze sessie:
-- **EU-paspoort** wordt afgegeven door gemachtigde dierenarts, los van I&R-databank.
-- **Stamboomdieren (Raad van Beheer) vallen buiten scope** — afstamming al geborgd. IDSee
-  richt zich op het **ongeborgde niet-stamboom-segment** (kruisingen, gelegenheidsnestjes,
-  import).
-- **I&R-realiteit (praktijk-gevalideerd, Henk):** wet eist chip+aanmelding <7 wk door
-  fokker + overdracht door koper, maar dat is een **fokker-CLAIM**, geen geverifieerde
-  moeder-koppeling. Moeder is alleen aanwezig bij **nest-bezoek** (vaccineren+chippen);
-  losse pup / 'verkeerd boekje' → moeder afwezig → geen groen = het signaal. Verwerkt in
-  **PROPOSITION.md §3a** (verificatiemoment + claim-vs-waarneming).
-- **Blockchain:** voor B2B/B2G NIET noodzakelijk; Cardano/Midnight = optionele bewijslaag,
-  geen fundament. Midnight-tooling is wél rijp (mainnet live + Claude-plugins) — apart
-  leerspoor mogelijk, niet door IDSee forceren.
-
-**Henk's huidige doel (eerlijk):** "verkoopvoordeel eerlijke fokker" + markttoets vóór
-doorbouwen. Twijfelt openlijk over zinvolheid; richting B2B/B2G geeft nieuwe energie.
-
-**VOLGENDE STAP = mensen bellen, GEEN code.** Fase 1 klantvalidatie. Eventueel eerst
-gesprekshandleiding per klanttype (Claude kan maken). Operationeel risico vastgelegd
-(BUSINESSPLAN risico #6): dekking hangt aan nest-bezoeken.
-
-### Vervolg 19 juni — opslag, rol, "waarom simpel"
-
-- **I&R praktijk-bevestiging (Henk):** moeder-chip wordt bij aanmelding wél gemeld, maar
-  **ongecontroleerd** (eigenaar geeft nummer op), en komt **niet in het pup-paspoort** —
-  alleen bij registratie/paspoortuitgave. Verwerkt in PROPOSITION §3a: "I&R heeft een
-  *veld*, IDSee een *getuige*". Communicatie-precisie: niet zeggen "I&R legt moeder niet
-  vast" (onjuist), wél "ongecontroleerd opgegeven nummer, niet in paspoort".
-- **Opslag-keuze (Henk):** data uiteindelijk **bij de partner/overheid** (NVWA/databank),
-  IDSee levert het mechanisme — NIET een eigen concurrerend register. ⚠️ Gevolg, nog NIET
-  in docs verwerkt: dit is het **eindbeeld**, niet het beginpunt. Demo/pilot draait tot een
-  deal op een **eigen managed database**; opslaglaag **verwisselbaar** bouwen (logica los
-  van opslag — `src/db.ts` heeft die scheiding deels al). → **nog te doen:** BUSINESSPLAN §6
-  + PROPOSITION §3b hierop aanvullen.
-- **`docs/WAAROM-SIMPEL.md` (nieuw, gecommit):** one-pager voor B2G — waarde zit in het
-  ontwerpprincipe (controle op bestaand moment + fysieke waarneming + nul extra last), niet
-  in software. Wapen tegen "overheid laat groot IT-bedrijf het nabouwen".
-
-**OPEN KERNVRAAG (Henk denkt na, NIET beslissen):** welke rol is onafneembaar naast de
-bestaande regelingen? Beroepsgroep snapt "afkomst moet kloppen" snel zelf (weinig product),
-en overheid belt een groot IT-bedrijf als ze het invoeren. Claude's lijn: de rol zit in het
-**principe-bewijs** (werkend simpel prototype + WAAROM-SIMPEL-argument) + vakautoriteit/
-draagvlak — moeilijker af te pakken dan techniek/data. Opties op tafel: (1) protocol +
-beroepsgroep, (2) techniek-leverancier, (3) volledige dienst. Nog niet gekozen.
-
-## Architectuurprincipes
-
-- Gemini = architect (groot contextvenster, blauwdrukken via `/arch`)
-- Claude = validator + executor (implementatie via `/mpc`)
-- Blueprint flow: `/arch [opdracht]` → `.claude/blueprint.md` → `/mpc ga maar`
-- Blockchain-rolverdeling: Cardano = immutable registratie-proof; Midnight = privacy-laag
-  voor anonieme professional-verificatie (complementair, geen of/of)
+**Werkwijze.** Gemini is de architect (groot contextvenster, blauwdrukken via `/arch`), Claude de
+validator en executor (implementatie via `/mpc`). Flow: `/arch [opdracht]` →
+`.claude/blueprint.md` → `/mpc ga maar`.
