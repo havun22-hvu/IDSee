@@ -23,6 +23,8 @@ Handover, context.md, KB-docs, smallwork.md: gewoon bijwerken.
 - NOOIT: "Mag ik de handover bijwerken?" / "Zal ik dit documenteren?"
 - ALTIJD: bijwerken, committen, klaar
 
+
+> **Deploy-discipline:** Codeer lokaal. Staging is een poort, geen werkplek. Eén atomaire feature/fix = één staging-test = één production-deploy — zelfde moment. Zodra staging groen is: direct production-knop klikken, niet uitstellen.
 ---
 
 ## Memory opfrissen (VERPLICHT — EERST)
